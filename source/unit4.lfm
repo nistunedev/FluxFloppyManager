@@ -1,31 +1,32 @@
 object frmGW: TfrmGW
-  Left = 0
-  Height = 700
-  Top = 59
-  Width = 1024
+  Left = 1055
+  Height = 833
+  Top = 496
+  Width = 1482
   Caption = 'Greaseweazle'
-  ClientHeight = 700
-  ClientWidth = 1024
+  ClientHeight = 833
+  ClientWidth = 1482
+  DesignTimePPI = 96
   Position = poMainFormCenter
-  LCLVersion = '4.0.0.4'
+  LCLVersion = '4.4.0.0'
   OnClose = FormClose
   OnShow = FormShow
   object pnSides: TPanel
     Left = 0
-    Height = 700
+    Height = 833
     Top = 0
     Width = 406
     Align = alLeft
     BevelOuter = bvNone
-    ClientHeight = 700
+    ClientHeight = 833
     ClientWidth = 406
     TabOrder = 0
     Visible = False
     object Label1: TLabel
       Left = 14
-      Height = 23
+      Height = 30
       Top = 9
-      Width = 49
+      Width = 61
       Caption = 'Side 0:'
       ParentColor = False
     end
@@ -94,7 +95,7 @@ object frmGW: TfrmGW
       FixedColor = clNone
       Flat = True
       Font.CharSet = ANSI_CHARSET
-      Font.Height = -17
+      Font.Height = -21
       Font.Name = 'Consolas'
       Font.Pitch = fpFixed
       Font.Quality = fqDraft
@@ -120,9 +121,9 @@ object frmGW: TfrmGW
     end
     object Label2: TLabel
       Left = 14
-      Height = 23
+      Height = 30
       Top = 420
-      Width = 49
+      Width = 61
       Caption = 'Side 1:'
       ParentColor = False
     end
@@ -218,20 +219,20 @@ object frmGW: TfrmGW
   end
   object Panel2: TPanel
     Left = 406
-    Height = 700
+    Height = 833
     Top = 0
-    Width = 618
+    Width = 1076
     Align = alClient
     BevelOuter = bvNone
     Caption = 'Panel2'
-    ClientHeight = 700
-    ClientWidth = 618
+    ClientHeight = 833
+    ClientWidth = 1076
     TabOrder = 1
     object Memo1: TMemo
       Left = 28
-      Height = 1177
+      Height = 717
       Top = 42
-      Width = 628
+      Width = 1034
       Anchors = [akTop, akLeft, akRight, akBottom]
       Font.CharSet = ANSI_CHARSET
       Font.Height = -21
@@ -246,16 +247,16 @@ object frmGW: TfrmGW
     end
     object Label3: TLabel
       Left = 14
-      Height = 23
+      Height = 30
       Top = 9
-      Width = 136
+      Width = 175
       Caption = 'Console messages:'
       ParentColor = False
     end
     object Button1: TButton
-      Left = 525
+      Left = 931
       Height = 44
-      Top = 1240
+      Top = 780
       Width = 131
       Anchors = [akRight, akBottom]
       Caption = '&Close'

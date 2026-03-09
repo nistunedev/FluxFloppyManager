@@ -1,4 +1,4 @@
-program FluxMyFluffyFloppy;
+program FluxFloppyEditor;
 
 {$mode objfpc}{$H+}
 
@@ -16,7 +16,8 @@ uses
 
 begin
   RequireDerivedFormResource:=True;
-  Application.Scaled:=False;
+  Application.Title:='Flux Floppy Editor';
+  Application.Scaled:=True;
   Application.Initialize;
   Application.CreateForm(TForm1, Form1);
   Application.CreateForm(TFrmAbout, FrmAbout);

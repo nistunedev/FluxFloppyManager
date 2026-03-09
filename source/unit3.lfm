@@ -1,10 +1,12 @@
 object FrmOptions: TFrmOptions
   Left = 1553
+  Height = 533
   Top = 720
+  Width = 1090
   BorderStyle = bsDialog
   Caption = 'Options'
   ClientHeight = 533
-  ClientWidth = 1024
+  ClientWidth = 1090
   DesignTimePPI = 96
   Position = poMainFormCenter
   LCLVersion = '4.4.0.0'
