@@ -82,6 +82,11 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit4"/>
       </Unit>
+      <Unit>
+        <Filename Value="commonconsts.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="CommonConsts"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

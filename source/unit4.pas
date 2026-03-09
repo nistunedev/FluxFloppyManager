@@ -87,9 +87,9 @@ procedure TfrmGW.FormCreate(Sender: TObject);
 begin
 {$IFDEF WINDOWS}
 {$ELSE}
-  DisableAutoSizing;
-  PixelsPerInch := 96;
-  EnableAutoSizing;
+//  DisableAutoSizing;
+//  PixelsPerInch := 96;
+//  EnableAutoSizing;
 {$ENDIF}
 end;
 

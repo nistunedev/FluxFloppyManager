@@ -30,12 +30,17 @@ interface
 
 const
 
-  GW_INI_FILE = 'FluxMyFluffyFloppy.ini';
+  GW_INI_FILE = 'FluxFloppyEditor.ini';
   GW_APP_NAME = 'Greaseweazle';
   GW_DISKDEF_FOLDER = 'Diskdefs';
   GW_TEMPLATE_FOLDER = 'Template';
   GW_APP_FILE = 'Greaseweazle';
   GW_DOCUMENTS_FOLDER = 'Documents';
+
+  INITIAL_HEIGHT = 1370;
+  INITIAL_WIDTH = 1850;
+  MIN_HEIGHT = 500;
+  MIN_WIDTH = 950;
 
 // INI Main section
   FLUX_INI_NAME = 'FluxMyFluffyFloppy';
@@ -45,6 +50,7 @@ const
   WRITE_TEMPLATE = 'FluxMyFluffyFloppy-Write-Template';
   INI_VERSION = 'Version';
   INI_VERSION_INI = 'VersionINI';
+  INI_VERSION_DEFAULT = 10;
   INI_HEIGHT = 'Height';
   INI_WIDTH = 'Width';
   INI_GW = 'Greaseweazle';
