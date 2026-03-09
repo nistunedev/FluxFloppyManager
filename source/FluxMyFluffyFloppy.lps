@@ -78,6 +78,14 @@
         <UsageCount Value="10"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit>
+      <Unit>
+        <Filename Value="commonconsts.pas"/>
+        <UnitName Value="CommonConsts"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="84"/>
+        <CursorPos X="45" Y="52"/>
+        <UsageCount Value="10"/>
+      </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
@@ -198,7 +206,6 @@
       </Position>
       <Position>
         <Filename Value="unit1.pas"/>
-        <Caret Line="4762" TopLine="4717"/>
       </Position>
     </JumpHistory>
     <RunParams>

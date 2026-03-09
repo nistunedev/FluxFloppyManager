@@ -27,7 +27,7 @@ object FrmAbout: TFrmAbout
       Height = 57
       Top = 0
       Width = 459
-      Caption = 'FluxMyFluffyFloppy'
+      Caption = 'Flux Floppy Editor'
       Font.Color = clWindowText
       Font.Height = -47
       Font.Name = 'Tahoma'
@@ -71,7 +71,7 @@ object FrmAbout: TFrmAbout
       Top = 126
       Width = 612
       AutoSize = False
-      Caption = 'Copyright (c) 2021-2026 FrankieTheFluff'
+      Caption = 'Copyright (c) 2026 NistuneDev'
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
       Font.Height = -21
@@ -111,7 +111,7 @@ object FrmAbout: TFrmAbout
       Height = 23
       Top = 175
       Width = 226
-      Caption = 'fluxmyfluffyfloppy@mail.de'
+      Caption = 'nistunedev@gmail.com'
       Font.Color = clBlue
       Font.Height = -19
       Font.Name = 'Tahoma'
@@ -124,7 +124,7 @@ object FrmAbout: TFrmAbout
       Height = 23
       Top = 206
       Width = 461
-      Caption = 'https://github.com/FrankieTheFluff/FluxMyFluffyFloppy'
+      Caption = 'https://github.com/nistunedev/FluxFloppyEditor'
       Font.Color = clBlue
       Font.Height = -19
       Font.Name = 'Tahoma'

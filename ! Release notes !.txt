@@ -1,10 +1,15 @@
 ﻿-----------------------------------------------------------------
-FluxMyFluffyFloppy 
+Flux Floppy Editor 
 v5.xx
 -----------------------------------------------------------------
 A Microsoft(r) Windows(r) GUI for Greseaweazle Host Tools
 FREEWARE / OpenSource
 License: GNU General Public License v2.0
+
+(c) 2026 NistuneDev
+Web: https://github.com/nistunedev/FluxFloppyEditor
+
+This is a fork based on "FluxMyFluffyFloppy"
 (c) 2021-2026 FrankieTheFluff
 Web: https://github.com/FrankieTheFluff/FluxMyFluffyFloppy
 Mail: fluxmyfluffyfloppy@mail.de
@@ -27,6 +32,15 @@ Release notes
 
 # flag templates (issue 6)
 # Email: Would it be possible to have an option, either checkbox or command, to have your program make a sound when the current task is finished.
+
+v5.2.7.2 - 2026-03-09
+- Bugfix: Fix CMD window for Windows; Add for Linux
+- Bugfix: Remove SQL tools, fix for delays/info button
+
+v5.2.7.1 - 2026-03-09
+* Add Linux specific handling for files, com ports, executing, Common handling for GW exe, commands and parameters
+- Bugfix: Font size and reduce DPI for smaller screens
+- RadioBox to Checkbox fix; 
 
 v5.2.7 - 2026-01-13
 * Requires Greaseweazle 1.23

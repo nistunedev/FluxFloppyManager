@@ -1,19 +1,24 @@
 {
------------------------------------------------------------------
-FluxMyFluffyFloppy 
+-------------------------------------------------------------------
+Flux Floppy Editor
 v5.xx
------------------------------------------------------------------
-A Microsoft(r) Windows(r) GUI for Greseaweazle Host Tools
+-------------------------------------------------------------------
+A Microsoft(r) Windows(r) and Linux GUI for Greseaweazle Host Tools
 FREEWARE / OpenSource
 License: GNU General Public License v2.0
+
+(c) 2026 NistuneDev
+Web: https://github.com/nistunedev/FluxFloppyEditor
+This is a fork based on "FluxMyFluffyFloppy"
+
 (c) 2021-2026 FrankieTheFluff
 Web: https://github.com/FrankieTheFluff/FluxMyFluffyFloppy
 Mail: fluxmyfluffyfloppy@mail.de
------------------------------------------------------------------
+-------------------------------------------------------------------
 Uses code from the following projects:
 UnTerminal 1.0 by Tito Hinostroza 02/10/2020
 https://github.com/t-edson/UnTerminal
------------------------------------------------------------------
+-------------------------------------------------------------------
 }
 unit Unit4;
 
@@ -23,7 +28,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, Grids,
-  ExtCtrls, LConvEncoding, UnTerminal, TermVT;
+  ExtCtrls, LConvEncoding, UnTerminal, TermVT, CommonConsts;
 
 type
 

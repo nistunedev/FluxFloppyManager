@@ -1,0 +1,7 @@
+/source/backup
+/source/lib/x86_64-linux
+/source/lib/x86_64-win64
+/source/release
+source/FluxMyFluffyFloppy
+source/FluxMyFluffyFloppy.exe
+*.bak

@@ -1,11 +1,16 @@
 {
 -------------------------------------------------------------------
-FluxMyFluffyFloppy
+Flux Floppy Editor
 v5.xx
 -------------------------------------------------------------------
 A Microsoft(r) Windows(r) and Linux GUI for Greseaweazle Host Tools
 FREEWARE / OpenSource
 License: GNU General Public License v2.0
+
+(c) 2026 NistuneDev
+Web: https://github.com/nistunedev/FluxFloppyEditor
+This is a fork based on "FluxMyFluffyFloppy"
+
 (c) 2021-2026 FrankieTheFluff
 Web: https://github.com/FrankieTheFluff/FluxMyFluffyFloppy
 Mail: fluxmyfluffyfloppy@mail.de
@@ -24,44 +29,10 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs,
   ComCtrls, DBGrids, StdCtrls, DBCtrls, Menus, EditBtn, Spin, ExtCtrls,
-  IniFiles, Process, FileUtil, LazFileUtils
+  IniFiles, Process, FileUtil, LazFileUtils, CommonConsts
 {$IFDEF WINDOWS}
   , Registry, LCLIntf
 {$ENDIF};
-
-
-const
-  FLUX_INI_NAME = 'FluxMyFluffyFloppy';
-  GW_INI_FILE = 'FluxMyFluffyFloppy.ini';
-  GW_APP_NAME = 'Greaseweazle';
-  GW_DISKDEF_FOLDER = 'Diskdefs';
-  GW_TEMPLATE_FOLDER = 'Template';
-  GW_APP_FILE = 'Greaseweazle';
-  GW_DOCUMENTS_FOLDER = 'Documents';
-
-
-  GW_INI_WRITE_EXT = '.iniw';
-  GW_INI_READ_EXT = '.inir';
-  GW_CONFIG_EXT = '.cfg';
-  GW_PROP_PAGE_READ = 0;
-  GW_PROP_PAGE_WRITE = 1;
-  GW_PROP_PAGE_CONVERT = 2;
-  GW_PROP_PAGE_TOOLS = 3;
-  GW_PROP_PAGE_SETTINGS = 4;
-
-  APP_NAME = 'FluxMyFluffyFloppy ';
-  APP_VERSION = 'v5.2.7.2';
-  APP_DATE = '2026-03-01';
-
-  {$IFDEF WINDOWS}
-    GW_EXECUTABLE = 'greaseweazle\gw.exe';
-    GW_APP = 'gw.exe';
-    PATH_SPECIFIER: char ='\';
-  {$ELSE}
-    GW_EXECUTABLE = 'gw';  // or full path, see note below
-    GW_APP = 'gw';
-    PATH_SPECIFIER: char ='/';
-  {$ENDIF}
 
 type
 
@@ -535,6 +506,7 @@ type
     procedure Get_FormatSpecs_Conv;
     procedure lblToolsEraseHFreqClick(Sender: TObject);
     procedure mnuAboutClick(Sender: TObject);
+    procedure mnuHelpClick(Sender: TObject);
     procedure mnuOptionsClick(Sender: TObject);
     procedure mnuArgumentsClick(Sender: TObject);
     procedure mnuFMFFClick(Sender: TObject);
@@ -750,49 +722,50 @@ begin
   if FileExists(sAppPath + GW_INI_FILE) = False then
     try
      INI := TINIFile.Create(sAppPath + GW_INI_FILE);
-     INI.WriteString(FLUX_INI_NAME, 'Version', sAppVersion);
-     INI.WriteInteger(FLUX_INI_NAME, 'VersionINI', 10);
-     INI.WriteInteger(FLUX_INI_NAME, 'Height', 770);
-     INI.WriteInteger(FLUX_INI_NAME, 'Width', 935);
-     INI.WriteBool(FLUX_INI_NAME, 'ShowArg', true);
-     INI.WriteString(FLUX_INI_NAME, 'Greaseweazle', '');
-     INI.WriteBool(FLUX_INI_NAME, 'SaveBoolGWDevCom', true);
-     INI.WriteString(FLUX_INI_NAME, 'SaveGWDevice', '');
-     INI.WriteBool(FLUX_INI_NAME, 'SaveBoolGWDrive', true);
-     INI.WriteString(FLUX_INI_NAME, 'SaveGWDrive', '');
-     INI.WriteBool(FLUX_INI_NAME, 'CodepageCMD', true);
-     INI.WriteString(FLUX_INI_NAME, 'Diskdefs', sAppPath + GW_DISKDEF_FOLDER + PATH_SPECIFIER);
-     INI.WriteString(FLUX_INI_NAME, 'FolderTemplates', sAppPath + GW_TEMPLATE_FOLDER + PATH_SPECIFIER);
-     INI.WriteString(FLUX_INI_NAME, 'LastFolder_Read_Dest', AppendPathDelim(GetUserDir + GW_DOCUMENTS_FOLDER));
-     INI.WriteString(FLUX_INI_NAME, 'LastFolder_Write_Source', AppendPathDelim(GetUserDir + GW_DOCUMENTS_FOLDER));
-     INI.WriteString(FLUX_INI_NAME, 'LastFolder_Convert_Source', sAppPath);
-     INI.WriteString(FLUX_INI_NAME, 'LastFolder_Convert_Dest', sAppPath);
-     INI.WriteBool(FLUX_INI_NAME, 'Time', cbSetGlobalActionsTime.Checked);
-     INI.WriteBool(FLUX_INI_NAME, 'Backtrace', cbSetGlobalActionsBacktrace.Checked);
+     INI.WriteString(FLUX_INI_NAME, INI_VERSION, sAppVersion);
+     INI.WriteInteger(FLUX_INI_NAME, INI_VERSION_INI, 10);
+     INI.WriteInteger(FLUX_INI_NAME, INI_HEIGHT, 1135);
+     INI.WriteInteger(FLUX_INI_NAME, INI_WIDTH, 1580);
+     INI.WriteBool(FLUX_INI_NAME, INI_SHOWARG, true);
+     INI.WriteString(FLUX_INI_NAME, INI_GW, '');
+     INI.WriteBool(FLUX_INI_NAME, INI_SAVE_DEVICE_FLAG, true);
+     INI.WriteString(FLUX_INI_NAME, INI_SAVE_DEVICE, '');
+     INI.WriteBool(FLUX_INI_NAME, INI_SAVE_DRIVE_FLAG, true);
+     INI.WriteString(FLUX_INI_NAME, INI_SAVE_DRIVE, '');
+     INI.WriteBool(FLUX_INI_NAME, INI_CODE_PAGE_CMD, true);
+     INI.WriteString(FLUX_INI_NAME, INI_FOLDER_DISKDEFS, sAppPath + GW_DISKDEF_FOLDER + PATH_SPECIFIER);
+     INI.WriteString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, sAppPath + GW_TEMPLATE_FOLDER + PATH_SPECIFIER);
+     INI.WriteString(FLUX_INI_NAME, INI_FOLDER_READ_DEST, AppendPathDelim(GetUserDir + GW_DOCUMENTS_FOLDER));
+     INI.WriteString(FLUX_INI_NAME, INI_FOLDER_WRITE_SRC, AppendPathDelim(GetUserDir + GW_DOCUMENTS_FOLDER));
+     INI.WriteString(FLUX_INI_NAME, INI_FOLDER_CONVERT_SRC, sAppPath);
+     INI.WriteString(FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST, sAppPath);
+     INI.WriteBool(FLUX_INI_NAME, INI_TIME, cbSetGlobalActionsTime.Checked);
+     INI.WriteBool(FLUX_INI_NAME, INI_BACKTRACE, cbSetGlobalActionsBacktrace.Checked);
     finally
      ; // end if
     end;
 
+
   INI := TINIFile.Create(sAppPath + GW_INI_FILE);
-  If INI.ReadInteger(FLUX_INI_NAME, 'VersionINI', 00) < 10 then
+  If INI.ReadInteger(FLUX_INI_NAME, INI_VERSION_INI, 00) < 10 then
    begin
-    INI.WriteInteger(FLUX_INI_NAME, 'VersionINI', 10);
-    INI.WriteBool(FLUX_INI_NAME, 'CodepageCMD', true);
+    INI.WriteInteger(FLUX_INI_NAME, INI_VERSION_INI, 10);
+    INI.WriteBool(FLUX_INI_NAME, INI_CODE_PAGE_CMD, true);
    end;
-  If INI.ReadString(FLUX_INI_NAME, 'Diskdefs','') = '' then
+  If INI.ReadString(FLUX_INI_NAME, INI_FOLDER_DISKDEFS,'') = '' then
     begin
-     INI.WriteString(FLUX_INI_NAME, 'Diskdefs', sAppPath + GW_DISKDEF_FOLDER + PATH_SPECIFIER);
+     INI.WriteString(FLUX_INI_NAME, INI_FOLDER_DISKDEFS, sAppPath + GW_DISKDEF_FOLDER + PATH_SPECIFIER);
     end;
   EdGWFile.Text := INI.ReadString(FLUX_INI_NAME, GW_APP_NAME,'');
-  mnuArguments.Checked := INI.ReadBool(FLUX_INI_NAME, 'ShowArg', true);
-  edReadDirDest.Directory := INI.ReadString(FLUX_INI_NAME, 'LastFolder_Read_Dest','');
-  edWriteFilename.InitialDir := INI.ReadString(FLUX_INI_NAME, 'LastFolder_Write_Source','');
-  edConvFileSource.InitialDir := INI.ReadString(FLUX_INI_NAME, 'LastFolder_Convert_Source','');
-  edConvDirDest.Directory := INI.ReadString(FLUX_INI_NAME, 'LastFolder_Convert_Dest','');
+  mnuArguments.Checked := INI.ReadBool(FLUX_INI_NAME, INI_SHOWARG, true);
+  edReadDirDest.Directory := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_READ_DEST,'');
+  edWriteFilename.InitialDir := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_WRITE_SRC,'');
+  edConvFileSource.InitialDir := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_CONVERT_SRC,'');
+  edConvDirDest.Directory := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST,'');
 
   // Form size height/width
-  Form1.Height := INI.ReadInteger(FLUX_INI_NAME, 'Height', 770);
-  Form1.Width := INI.ReadInteger(FLUX_INI_NAME, 'Width', 935);
+  Form1.Height := INI.ReadInteger(FLUX_INI_NAME, INI_HEIGHT, 770);
+  Form1.Width := INI.ReadInteger(FLUX_INI_NAME, INI_WIDTH, 935);
   Set_View;
   // Center
   Form1.Top:=(( Screen.Height-Height)div 2);
@@ -840,15 +813,15 @@ begin
     Get_DeviceCOMLinux;
   {$ENDIF}
 
-  If INI.ReadBool(FLUX_INI_NAME, 'SaveBoolGWDevCom', false) = true then
+  If INI.ReadBool(FLUX_INI_NAME, INI_SAVE_DEVICE_FLAG, false) = true then
    begin
-    cbGWDevCOM.Text := INI.ReadString(FLUX_INI_NAME, 'SaveGWDevice', '');
+    cbGWDevCOM.Text := INI.ReadString(FLUX_INI_NAME, INI_SAVE_DEVICE, '');
    end;
-  If INI.ReadBool(FLUX_INI_NAME, 'SaveBoolGWDrive', false) = true then
+  If INI.ReadBool(FLUX_INI_NAME, INI_SAVE_DRIVE_FLAG, false) = true then
    begin
-    cbGWDrive.Text := INI.ReadString(FLUX_INI_NAME, 'SaveGWDrive', '');
+    cbGWDrive.Text := INI.ReadString(FLUX_INI_NAME, INI_SAVE_DRIVE, '');
    end;
-  cbGWHW.Text := INI.ReadString(FLUX_INI_NAME, 'GWHW', 'Greaseweazle');
+  cbGWHW.Text := INI.ReadString(FLUX_INI_NAME, INI_ACTIONS_GW_HW, INI_GW);
 
   // Where are diskdefs_.cfg located?
   Refresh_Diskdefs_DropDown;
@@ -1748,7 +1721,14 @@ var
 begin
   if edReadDirDest.Text <> '' then
   begin
+  //TODO Cross platform
+  //uses LCLIntf;
+  //OpenDocument(edReadDirDest.Text);
+{$IFDEF WINDOWS}
    SysUtils.ExecuteProcess('explorer.exe', '/n,'+edReadDirDest.Text, []);
+{$ELSE}
+  SysUtils.ExecuteProcess('xdg-open', edReadDirDest.Text, []);
+{$ENDIF}
   end
   else
   begin
@@ -1781,7 +1761,7 @@ var
   tmp : string;
   answer : Integer;
 begin
-  tmp := INI.ReadString(FLUX_INI_NAME, 'FolderTemplates', '');
+  tmp := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
   if DirectoryExists(tmp) = false then
    begin
     answer := MessageDlg('In options defined templates folder does not exist!' + chr(10) + 'Cannot delete the selected template!',mtWarning, [mbOK], 0);
@@ -1847,8 +1827,12 @@ begin
    if answer = mrOk then exit;
  end;
 
- tmp := INI.ReadString(FLUX_INI_NAME, 'FolderTemplates', '');
- if tmp = '' then CreateDir(sAppPath + 'Templates' + PATH_SPECIFIER);
+
+
+
+
+ tmp := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
+ if tmp = '' then CreateDir(sAppPath + PATH_TEMPLATES + PATH_SPECIFIER);
  if DirectoryExists(tmp) = false then
   begin
    answer := MessageDlg('In options defined templates folder does not exist.' + chr(10) + 'Please redefine! Template is not saved.',mtWarning, [mbOK], 0);
@@ -1859,33 +1843,33 @@ begin
    begin
     INIRead := TINIFile.Create(DirCheck(tmp) + cbReadTplName.Text + GW_INI_READ_EXT);
     try
-      INIRead.DeleteKey('Settings','RPM'); // older than 2.00
-      INIRead.WriteString('FluxMyFluffyFloppy-Read-Template', 'Version', sAppVersion_ReadTmpl);
-      INIRead.WriteString('FluxMyFluffyFloppy-Read-Template', 'Name', cbReadTplName.Text);
-      //INIRead.WriteString('FluxMyFluffyFloppy-Read-Template', 'Creator', '');
-      INIRead.WriteString('FluxMyFluffyFloppy-Read-Template', 'Description', edReadTplDesc.Text);
-      INIRead.WriteString('Settings', 'Diskdefs', cbReadTplFormatSrc.Text);
-      INIRead.WriteString('Settings', 'FormatSpec', cbReadTplFormat.Text);
-      INIRead.WriteString('Settings', 'Revs', cbReadTplRevs.Text);
-      INIRead.WriteBool('Settings', 'Raw', cbReadTplRaw.Checked);
-      INIRead.WriteString('Settings', 'Fake-Index', cbReadTplFakeIndex.Text);
-      INIRead.WriteBool('Settings', 'Hard-Sectors', cbReadTplHardSec.Checked);
-      INIRead.WriteString('Settings', 'Adjust-Speed',cbReadTplAdjustSpeed.Text);
-      INIRead.WriteString('Settings', 'Retries', cbReadTplRetries.Text);
-      INIRead.WriteString('Settings', 'Seek-Retries', cbReadTplSeekRetries.Text);
-      INIRead.WriteString('Settings', 'PLL', cbReadTplPLL.Text);
-      INIRead.WriteString('Settings', 'DD', cbReadTplDD.Text);
+      INIRead.DeleteKey(INI_SETTINGS,INI_TEMPLATE_LEGACY_RPM); // older than 2.00
+      INIRead.WriteString(READ_TEMPLATE, INI_VERSION, sAppVersion_ReadTmpl);
+      INIRead.WriteString(READ_TEMPLATE, INI_TEMPLATE_NAME, cbReadTplName.Text);
+      //INIRead.WriteString(READ_TEMPLATE, 'Creator', '');
+      INIRead.WriteString(READ_TEMPLATE, INI_TEMPLATE_DESC, edReadTplDesc.Text);
+      INIRead.WriteString(INI_SETTINGS, INI_FOLDER_DISKDEFS, cbReadTplFormatSrc.Text);
+      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_FORMAT_SPEC, cbReadTplFormat.Text);
+      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_REVS, cbReadTplRevs.Text);
+      INIRead.WriteBool(INI_SETTINGS, INI_TEMPLATE_REVS, cbReadTplRaw.Checked);
+      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_FAKE_INDEX, cbReadTplFakeIndex.Text);
+      INIRead.WriteBool(INI_SETTINGS, INI_TEMPLATE_HARD_SECTORS, cbReadTplHardSec.Checked);
+      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_ADJUST_SPEED,cbReadTplAdjustSpeed.Text);
+      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_RETRIES, cbReadTplRetries.Text);
+      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_SEEK_RETRIES, cbReadTplSeekRetries.Text);
+      INIRead.WriteString(INI_SETTINGS,INI_TEMPLATE_PLL, cbReadTplPLL.Text);
+      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_DD, cbReadTplDD.Text);
 
-      INIRead.WriteString('Settings', 'Cylinders', cbReadTplCyls.Text);
-      INIRead.WriteString('Settings', 'Heads', cbReadTplHeads.Text);
-      INIRead.WriteString('Settings', 'Steps', cbReadTplSteps.Text);
-      INIRead.WriteBool('Settings', 'HSwap', cbReadTplHSwap.Checked);
-      INIRead.WriteString('Settings', 'Flippy', cbReadTplFlippy.Text);
-      INIRead.WriteBool('Settings', 'FlippyReverse', cbReadTplFlippyReverse.Checked);
+      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_CYLINDERS, cbReadTplCyls.Text);
+      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_HEADS, cbReadTplHeads.Text);
+      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_STEPS, cbReadTplSteps.Text);
+      INIRead.WriteBool(INI_SETTINGS, INI_TEMPLATE_HSWAP, cbReadTplHSwap.Checked);
+      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_FLIPPY, cbReadTplFlippy.Text);
+      INIRead.WriteBool(INI_SETTINGS, INI_TEMPLATE_FLIPPY_REV, cbReadTplFlippyReverse.Checked);
 
-      INIRead.WriteBool('Settings', 'Log_Param', cbReadTplLogParam.Checked);
-      INIRead.WriteBool('Settings', 'Log_Output', cbReadTplLogOutput.Checked);
-      INIRead.WriteBool('Settings', 'Log_InOneFile', cbReadTplLogBoth.Checked);
+      INIRead.WriteBool(INI_SETTINGS, INI_TEMPLATE_LOG_PARAM, cbReadTplLogParam.Checked);
+      INIRead.WriteBool(INI_SETTINGS, INI_TEMPLATE_LOG_OUTPUT, cbReadTplLogOutput.Checked);
+      INIRead.WriteBool(INI_SETTINGS, INI_TEMPLATE_LOG_ONEFILE, cbReadTplLogBoth.Checked);
 
       INIRead.Free;
 
@@ -1930,7 +1914,7 @@ var
  tmp : string;
  answer : Integer;
 begin
-  tmp := INI.ReadString(FLUX_INI_NAME, 'FolderTemplates', '');
+  tmp := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
   if DirectoryExists(tmp) = false then
    begin
     answer := MessageDlg('In options defined templates folder does not exist!' + chr(10) + 'Cannot delete the selected template!',mtWarning, [mbOK], 0);
@@ -1990,8 +1974,8 @@ begin
    if answer = mrOk then exit;
   end;
 
- tmp := INI.ReadString(FLUX_INI_NAME, 'FolderTemplates', '');
- if tmp = '' then CreateDir(sAppPath + 'Templates' + PATH_SPECIFIER);
+ tmp := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
+ if tmp = '' then CreateDir(sAppPath + PATH_TEMPLATES + PATH_SPECIFIER);
  if DirectoryExists(tmp) = false then
   begin
    answer := MessageDlg('In options defined templates folder does not exist.' + chr(10) + 'Please redefine! Template is not saved.',mtWarning, [mbOK], 0);
@@ -2002,30 +1986,30 @@ begin
   begin
    IniWrite := TINIFile.Create(DirCheck(tmp) + cbWriteTplName.Text + GW_INI_WRITE_EXT);
    try
-    IniWrite.DeleteKey('Settings','RPM'); // older than 2.00
-    IniWrite.DeleteKey('Settings','Erase-Empty'); // older than 2.00
-    IniWrite.DeleteKey('Settings','No-Verify'); // older than 2.00
-    IniWrite.WriteString('FluxMyFluffyFloppy-Write-Template', 'Version', '3.00');
-    IniWrite.WriteString('FluxMyFluffyFloppy-Write-Template', 'Name', cbWriteTplName.Text);
-    //IniWrite.WriteString('FluxMyFluffyFloppy-Write-Template', 'Creator', '');
-    IniWrite.WriteString('FluxMyFluffyFloppy-Write-Template', 'Description', edWriteTplDesc.Text);
-    INIWrite.WriteString('Settings', 'Diskdefs', cbWriteTplFormatSrc.Text);
-    IniWrite.WriteString('Settings', 'FormatSpec', cbWriteTplFormat.Text);
-    IniWrite.WriteBool('Settings', 'EraseEmpty', cbWriteTplEraseEmpty.Checked);
-    IniWrite.WriteString('Settings', 'Fake-Index', cbWriteTplFakeIndex.Text);
-    IniWrite.WriteBool('Settings', 'Hard-Sectors', cbWriteTplHardSec.Checked);
-    IniWrite.WriteBool('Settings', 'NoVerify', cbWriteTplNoVerify.Checked);
-    IniWrite.WriteString('Settings', 'Retries', cbWriteTplRetries.Text);
-    IniWrite.WriteString('Settings', 'Precomp', cbWriteTplPrecomp.Text);
-    IniWrite.WriteBool('Settings', 'Pre-Erase', cbWriteTplPreErase.Checked);
-    IniWrite.WriteString('Settings', 'DD', cbWriteTplDensel.Text);
-    IniWrite.WriteBool('Settings', 'TP43Pin2', cbWriteTplTplTP43Pin2.Checked);
-    IniWrite.WriteString('Settings', 'Cylinders', cbWriteTplCyls.Text);
-    IniWrite.WriteString('Settings', 'Heads', cbWriteTplHeads.Text);
-    IniWrite.WriteString('Settings', 'Steps', cbWriteTplSteps.Text);
-    IniWrite.WriteBool('Settings', 'HSwap', cbWriteTplHSwap.Checked);
-    IniWrite.WriteString('Settings', 'Flippy', cbWriteTplFlippy.Text);
-    IniWrite.WriteBool('Settings', 'FlippyReverse', cbWriteTplFlippyReverse.Checked);
+    IniWrite.DeleteKey(INI_SETTINGS,INI_TEMPLATE_LEGACY_RPM); // older than 2.00
+    IniWrite.DeleteKey(INI_SETTINGS,INI_TEMPLATE_LEGACY_ERASE_EMPTY); // older than 2.00
+    IniWrite.DeleteKey(INI_SETTINGS,INI_TEMPLATE_LEGACY_NO_VERIFY); // older than 2.00
+    IniWrite.WriteString(WRITE_TEMPLATE, INI_VERSION, '3.00');
+    IniWrite.WriteString(WRITE_TEMPLATE, INI_TEMPLATE_NAME, cbWriteTplName.Text);
+    //IniWrite.WriteString(WRITE_TEMPLATE, 'Creator', '');
+    IniWrite.WriteString(WRITE_TEMPLATE, INI_TEMPLATE_DESC, edWriteTplDesc.Text);
+    IniWrite.WriteString(INI_SETTINGS, INI_FOLDER_DISKDEFS, cbWriteTplFormatSrc.Text);
+    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_FORMAT_SPEC, cbWriteTplFormat.Text);
+    IniWrite.WriteBool(INI_SETTINGS, INI_TEMPLATE_ERASE_EMPTY, cbWriteTplEraseEmpty.Checked);
+    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_FAKE_INDEX, cbWriteTplFakeIndex.Text);
+    IniWrite.WriteBool(INI_SETTINGS, INI_TEMPLATE_HARD_SECTORS, cbWriteTplHardSec.Checked);
+    IniWrite.WriteBool(INI_SETTINGS, INI_TEMPLATE_NO_VERIFY, cbWriteTplNoVerify.Checked);
+    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_RETRIES, cbWriteTplRetries.Text);
+    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_PRE_COMP, cbWriteTplPrecomp.Text);
+    IniWrite.WriteBool(INI_SETTINGS, INI_TEMPLATE_PRE_ERASE, cbWriteTplPreErase.Checked);
+    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_DD, cbWriteTplDensel.Text);
+    IniWrite.WriteBool(INI_SETTINGS, INI_TEMPLATE_TP43_PIN2, cbWriteTplTplTP43Pin2.Checked);
+    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_CYLINDERS, cbWriteTplCyls.Text);
+    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_HEADS, cbWriteTplHeads.Text);
+    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_STEPS, cbWriteTplSteps.Text);
+    IniWrite.WriteBool(INI_SETTINGS, INI_TEMPLATE_HSWAP, cbWriteTplHSwap.Checked);
+    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_FLIPPY, cbWriteTplFlippy.Text);
+    IniWrite.WriteBool(INI_SETTINGS, INI_TEMPLATE_FLIPPY_REV, cbWriteTplFlippyReverse.Checked);
 
     IniWrite.Free;
 
@@ -2061,7 +2045,7 @@ var
 begin
   try
     INITmplFolder := TINIFile.Create(sAppPath + GW_INI_FILE);
-    TmplFolder := INITmplFolder.ReadString(FLUX_INI_NAME, 'FolderTemplates', '');
+    TmplFolder := INITmplFolder.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
     If TmplFolder = '' then exit;
     INITmplFolder.Free;
 
@@ -2097,35 +2081,35 @@ var
 begin
   //Read-Template
   INITmplFolder := TINIFile.Create(sAppPath + GW_INI_FILE);
-  TmplFolder := INITmplFolder.ReadString(FLUX_INI_NAME, 'FolderTemplates', '');
+  TmplFolder := INITmplFolder.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
   If TmplFolder = '' then exit;
   INITmplFolder.Free;
 
   iniRefreshWrite := TINIFile.Create(DirCheck(TmplFolder) + cbWriteTplName.Text + GW_INI_WRITE_EXT);
   try
-    //ver := iniRefreshRead.ReadString('FluxMyFluffyFloppy-Write-Template','Version','');
-    //name := iniRefreshRead.ReadString('FluxMyFluffyFloppy-Write-Template', 'Name', '');
-    //creator := iniRefreshRead.ReadString('FluxMyFluffyFloppy-Write-Template', 'Creator', '');
-    cbWriteTplFormatSrc.Text := iniRefreshWrite.ReadString('Settings', 'DiskDefs', 'Internal');
+    //ver := iniRefreshRead.ReadString(WRITE_TEMPLATE,INI_VERSION,'');
+    //name := iniRefreshRead.ReadString(WRITE_TEMPLATE, INI_TEMPLATE_NAME, '');
+    //creator := iniRefreshRead.ReadString(WRITE_TEMPLATE, 'Creator', '');
+    cbWriteTplFormatSrc.Text := iniRefreshWrite.ReadString(INI_SETTINGS, INI_FOLDER_DISKDEFS, 'Internal');
     Refresh_WriteFormSpec;
-    cbWriteTplFormat.Text := iniRefreshWrite.ReadString('Settings', 'FormatSpec', '');
-    edWriteTplDesc.Text   := iniRefreshWrite.ReadString('FluxMyFluffyFloppy-Write-Template', 'Description', '');
-    cbWriteTplEraseEmpty.checked := iniRefreshWrite.ReadBool('Settings', 'EraseEmpty', false);
-    cbWriteTplFakeIndex.Text:= iniRefreshWrite.ReadString('Settings', 'Fake-Index', '');
-    cbWriteTplHardSec.checked := iniRefreshWrite.ReadBool('Settings', 'Hard-Sectors', false);
-    cbWriteTplNoVerify.checked := iniRefreshWrite.ReadBool('Settings', 'NoVerify', false);
-    cbWriteTplRetries.Text:= iniRefreshWrite.ReadString('Settings', 'Retries', '');
-    cbWriteTplPrecomp.Text:= iniRefreshWrite.ReadString('Settings', 'Precomp', '');
-    cbWriteTplPreErase.Checked:= iniRefreshWrite.ReadBool('Settings', 'Pre-Erase', false);
-    cbWriteTplDensel.Text:= iniRefreshWrite.ReadString('Settings', 'DD', '');
-    cbWriteTplTplTP43Pin2.Checked := IniRefreshWrite.ReadBool('Settings', 'TP43Pin2', false);
+    cbWriteTplFormat.Text := iniRefreshWrite.ReadString(INI_SETTINGS, INI_TEMPLATE_FORMAT_SPEC, '');
+    edWriteTplDesc.Text   := iniRefreshWrite.ReadString(WRITE_TEMPLATE, INI_TEMPLATE_DESC, '');
+    cbWriteTplEraseEmpty.checked := iniRefreshWrite.ReadBool(INI_SETTINGS, INI_TEMPLATE_ERASE_EMPTY, false);
+    cbWriteTplFakeIndex.Text:= iniRefreshWrite.ReadString(INI_SETTINGS, INI_TEMPLATE_FAKE_INDEX, '');
+    cbWriteTplHardSec.checked := iniRefreshWrite.ReadBool(INI_SETTINGS, INI_TEMPLATE_HARD_SECTORS, false);
+    cbWriteTplNoVerify.checked := iniRefreshWrite.ReadBool(INI_SETTINGS, INI_TEMPLATE_NO_VERIFY, false);
+    cbWriteTplRetries.Text:= iniRefreshWrite.ReadString(INI_SETTINGS, INI_TEMPLATE_RETRIES, '');
+    cbWriteTplPrecomp.Text:= iniRefreshWrite.ReadString(INI_SETTINGS, INI_TEMPLATE_PRE_COMP, '');
+    cbWriteTplPreErase.Checked:= iniRefreshWrite.ReadBool(INI_SETTINGS, INI_TEMPLATE_PRE_ERASE, false);
+    cbWriteTplDensel.Text:= iniRefreshWrite.ReadString(INI_SETTINGS, INI_TEMPLATE_DD, '');
+    cbWriteTplTplTP43Pin2.Checked := IniRefreshWrite.ReadBool(INI_SETTINGS, INI_TEMPLATE_TP43_PIN2, false);
 
-    cbWriteTplCyls.Text:= iniRefreshWrite.ReadString('Settings', 'Cylinders', '');
-    cbWriteTplHeads.Text:= iniRefreshWrite.ReadString('Settings', 'Heads', '');
-    cbWriteTplSteps.Text:= iniRefreshWrite.ReadString('Settings', 'Steps', '');
-    cbWriteTplHSwap.Checked:= iniRefreshWrite.ReadBool('Settings', 'HSwap', false);
-    cbWriteTplFlippy.Text:= iniRefreshWrite.ReadString('Settings', 'Flippy', '');
-    cbWriteTplFlippyReverse.checked := iniRefreshWrite.ReadBool('Settings', 'FlippyReverse', false);
+    cbWriteTplCyls.Text:= iniRefreshWrite.ReadString(INI_SETTINGS, INI_TEMPLATE_CYLINDERS, '');
+    cbWriteTplHeads.Text:= iniRefreshWrite.ReadString(INI_SETTINGS, INI_TEMPLATE_HEADS, '');
+    cbWriteTplSteps.Text:= iniRefreshWrite.ReadString(INI_SETTINGS, INI_TEMPLATE_STEPS, '');
+    cbWriteTplHSwap.Checked:= iniRefreshWrite.ReadBool(INI_SETTINGS, INI_TEMPLATE_HSWAP, false);
+    cbWriteTplFlippy.Text:= iniRefreshWrite.ReadString(INI_SETTINGS, INI_TEMPLATE_FLIPPY, '');
+    cbWriteTplFlippyReverse.checked := iniRefreshWrite.ReadBool(INI_SETTINGS, INI_TEMPLATE_FLIPPY_REV, false);
 
     iniRefreshWrite.Free;
   finally
@@ -2142,7 +2126,7 @@ var
 begin
   try
     INITmplFolder := TINIFile.Create(sAppPath + GW_INI_FILE);
-    TmplFolder := INITmplFolder.ReadString(FLUX_INI_NAME, 'FolderTemplates', '');
+    TmplFolder := INITmplFolder.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
     If TmplFolder = '' then exit;
     INITmplFolder.Free;
 
@@ -2178,37 +2162,37 @@ var
 begin
   //Read-Template
   INITmplFolder := TINIFile.Create(sAppPath + GW_INI_FILE);
-  TmplFolder := INITmplFolder.ReadString(FLUX_INI_NAME, 'FolderTemplates', '');
+  TmplFolder := INITmplFolder.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
   If TmplFolder = '' then exit;
   INITmplFolder.Free;
 
   iniRefreshRead := TINIFile.Create(DirCheck(TmplFolder) + cbReadTplName.Text + GW_INI_READ_EXT);
   try
-    edReadTplDesc.Text := iniRefreshRead.ReadString('FluxMyFluffyFloppy-Read-Template', 'Description', '');
+    edReadTplDesc.Text := iniRefreshRead.ReadString(READ_TEMPLATE, INI_TEMPLATE_DESC, '');
 
-    cbReadTplFormatSrc.Text        := iniRefreshRead.ReadString('Settings', 'DiskDefs', 'Internal');
+    cbReadTplFormatSrc.Text        := iniRefreshRead.ReadString(INI_SETTINGS, INI_FOLDER_DISKDEFS, 'Internal');
     Refresh_ReadFormSpec;
-    cbReadTplFormat.Text           := iniRefreshRead.ReadString('Settings', 'FormatSpec', '');
-    cbReadTplRevs.Text             := iniRefreshRead.ReadString('Settings', 'Revs', '');
-    cbReadTplRaw.Checked           := iniRefreshRead.ReadBool('Settings', 'Raw', false);
-    cbReadTplFakeIndex.Text        := iniRefreshRead.ReadString('Settings', 'Fake-Index', '');
-    cbReadTplHardSec.Checked       := iniRefreshRead.ReadBool('Settings', 'Hard-Sectors', false);
-    cbReadTplAdjustSpeed.Text      := iniRefreshRead.ReadString('Settings', 'Adjust-Speed', '');
-    cbReadTplRetries.Text          := iniRefreshRead.ReadString('Settings', 'Retries', '');
-    cbReadTplSeekRetries.Text      := iniRefreshRead.ReadString('Settings', 'Seek-Retries', '');
-    cbReadTplPLL.Text              := iniRefreshRead.ReadString('Settings', 'PLL', '');
-    cbReadTplDD.Text               := iniRefreshRead.ReadString('Settings', 'DD', '');
+    cbReadTplFormat.Text           := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FORMAT_SPEC, '');
+    cbReadTplRevs.Text             := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_REVS, '');
+    cbReadTplRaw.Checked           := iniRefreshRead.ReadBool(INI_SETTINGS, INI_TEMPLATE_REVS, false);
+    cbReadTplFakeIndex.Text        := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FAKE_INDEX, '');
+    cbReadTplHardSec.Checked       := iniRefreshRead.ReadBool(INI_SETTINGS, INI_TEMPLATE_HARD_SECTORS, false);
+    cbReadTplAdjustSpeed.Text      := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_ADJUST_SPEED, '');
+    cbReadTplRetries.Text          := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_RETRIES, '');
+    cbReadTplSeekRetries.Text      := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_SEEK_RETRIES, '');
+    cbReadTplPLL.Text              := iniRefreshRead.ReadString(INI_SETTINGS,INI_TEMPLATE_PLL, '');
+    cbReadTplDD.Text               := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_DD, '');
 
-    cbReadTplCyls.Text             := iniRefreshRead.ReadString('Settings', 'Cylinders', '');
-    cbReadTplHeads.Text            := iniRefreshRead.ReadString('Settings', 'Heads', '');
-    cbReadTplSteps.Text            := iniRefreshRead.ReadString('Settings', 'Steps', '');
-    cbReadTplHSwap.Checked         := iniRefreshRead.ReadBool('Settings', 'HSwap', false);
-    cbReadTplFlippy.Text           := iniRefreshRead.ReadString('Settings', 'Flippy', '');
-    cbReadTplFlippyReverse.Checked := iniRefreshRead.ReadBool('Settings', 'FlippyReverse', false);
+    cbReadTplCyls.Text             := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_CYLINDERS, '');
+    cbReadTplHeads.Text            := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_HEADS, '');
+    cbReadTplSteps.Text            := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_STEPS, '');
+    cbReadTplHSwap.Checked         := iniRefreshRead.ReadBool(INI_SETTINGS, INI_TEMPLATE_HSWAP, false);
+    cbReadTplFlippy.Text           := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FLIPPY, '');
+    cbReadTplFlippyReverse.Checked := iniRefreshRead.ReadBool(INI_SETTINGS, INI_TEMPLATE_FLIPPY_REV, false);
 
-    cbReadTplLogParam.Checked      := iniRefreshRead.ReadBool('Settings', 'Log_Param', false);
-    cbReadTplLogOutput.Checked     := iniRefreshRead.ReadBool('Settings', 'Log_Output', false);
-    cbReadTplLogBoth.Checked       := iniRefreshRead.ReadBool('Settings', 'Log_InOneFile', false);
+    cbReadTplLogParam.Checked      := iniRefreshRead.ReadBool(INI_SETTINGS, INI_TEMPLATE_LOG_PARAM, false);
+    cbReadTplLogOutput.Checked     := iniRefreshRead.ReadBool(INI_SETTINGS, INI_TEMPLATE_LOG_OUTPUT, false);
+    cbReadTplLogBoth.Checked       := iniRefreshRead.ReadBool(INI_SETTINGS, INI_TEMPLATE_LOG_ONEFILE, false);
 
     iniRefreshRead.Free;
   finally
@@ -2346,7 +2330,7 @@ end;
 procedure TForm1.cbSrcAsDesDirChange(Sender: TObject);
 begin
  if cbSrcAsDesDir.Checked then edConvDirDest.Directory:= DirCheck(ExtractfileDir(edConvFileSource.Text));
- if cbSrcAsDesDir.Checked = false then edConvDirDest.Directory :=INI.ReadString(FLUX_INI_NAME, 'LastFolder_Convert_Dest','');
+ if cbSrcAsDesDir.Checked = false then edConvDirDest.Directory :=INI.ReadString(FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST,'');
 end;
 
 procedure TForm1.cbSrcAsDesFileChange(Sender: TObject);
@@ -2893,6 +2877,11 @@ begin
   FrmAbout.showmodal;
 end;
 
+procedure TForm1.mnuHelpClick(Sender: TObject);
+begin
+
+end;
+
 procedure TForm1.mnuOptionsClick(Sender: TObject);
 begin
   FrmOptions.showmodal;
@@ -2984,7 +2973,7 @@ end;
 
 procedure TForm1.mnuFMFFClick(Sender: TObject);
 begin
-  LaunchURL('https://github.com/FrankieTheFluff/FluxMyFluffyFloppy');
+  LaunchURL('https://github.com/nistunedev/FluxFloppyEditor');
 end;
 
 procedure TForm1.mnuGWDownloadClick(Sender: TObject);
@@ -3641,7 +3630,7 @@ procedure TForm1.edConvFileSourceAcceptFileName(Sender: TObject;
   var Value: String);
 begin
   if cbSrcAsDesDir.Checked then edConvDirDest.Directory:= DirCheck(ExtractfileDir(edConvFileSource.Text));
-  if cbSrcAsDesDir.Checked = false then edConvDirDest.Directory :=INI.ReadString(FLUX_INI_NAME, 'LastFolder_Convert_Dest','');
+  if cbSrcAsDesDir.Checked = false then edConvDirDest.Directory :=INI.ReadString(FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST,'');
   if cbSrcAsDesFile.Checked then edConvFilename.text:= ExtractFileNameOnly(edConvFileSource.Text);
   if cbSrcAsDesFile.Checked = false then edConvFilename.text:= '';
   if edConvFileSource.Text <> '' then
@@ -3655,7 +3644,7 @@ end;
 procedure TForm1.edConvFileSourceChange(Sender: TObject);
 begin
  if cbSrcAsDesDir.Checked then edConvDirDest.Directory:= DirCheck(ExtractfileDir(edConvFileSource.Text));
- if cbSrcAsDesDir.Checked = false then edConvDirDest.Directory :=INI.ReadString(FLUX_INI_NAME, 'LastFolder_Convert_Dest','');
+ if cbSrcAsDesDir.Checked = false then edConvDirDest.Directory :=INI.ReadString(FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST,'');
  if cbSrcAsDesFile.Checked then edConvFilename.text:= ExtractFileNameOnly(edConvFileSource.Text);
  if cbSrcAsDesFile.Checked = false then edConvFilename.text:= '';
  if edConvFileSource.Text <> '' then
@@ -3853,28 +3842,28 @@ end;
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
  INI := TINIFile.Create(sAppPath + GW_INI_FILE);
- INI.WriteInteger(FLUX_INI_NAME, 'Height', Form1.Height);
- INI.WriteInteger(FLUX_INI_NAME, 'Width', Form1.Width);
- INI.WriteBool(FLUX_INI_NAME, 'ShowArg', mnuArguments.Checked);
- INI.WriteString(FLUX_INI_NAME, 'Greaseweazle', EdGWFile.Text);
- If INI.ReadBool(FLUX_INI_NAME, 'SaveBoolGWDevCom', false) = true then
+ INI.WriteInteger(FLUX_INI_NAME, INI_HEIGHT, Form1.Height);
+ INI.WriteInteger(FLUX_INI_NAME, INI_WIDTH, Form1.Width);
+ INI.WriteBool(FLUX_INI_NAME, INI_SHOWARG, mnuArguments.Checked);
+ INI.WriteString(FLUX_INI_NAME, INI_GW, EdGWFile.Text);
+ If INI.ReadBool(FLUX_INI_NAME, INI_SAVE_DEVICE_FLAG, false) = true then
   begin
-   INI.WriteString(FLUX_INI_NAME, 'SaveGWDevice', cbGWDevCOM.Text);
+   INI.WriteString(FLUX_INI_NAME, INI_SAVE_DEVICE, cbGWDevCOM.Text);
   end
- else INI.WriteString(FLUX_INI_NAME, 'SaveGWDevice', '');
- If INI.ReadBool(FLUX_INI_NAME, 'SaveBoolGWDrive', false) = true then
+ else INI.WriteString(FLUX_INI_NAME, INI_SAVE_DEVICE, '');
+ If INI.ReadBool(FLUX_INI_NAME, INI_SAVE_DRIVE_FLAG, false) = true then
   begin
-   INI.WriteString(FLUX_INI_NAME, 'SaveGWDrive', cbGWDrive.Text);
+   INI.WriteString(FLUX_INI_NAME, INI_SAVE_DRIVE, cbGWDrive.Text);
   end
- else INI.WriteString(FLUX_INI_NAME, 'SaveGWDrive', '');
- INI.WriteString(FLUX_INI_NAME, 'GWHW', cbGWHW.Text);
- INI.WriteString(FLUX_INI_NAME, 'LastFolder_Read_Dest', edReadDirDest.Directory);
- INI.WriteString(FLUX_INI_NAME, 'LastFolder_Write_Source',ExtractFilePath(edWriteFilename.Text));
- INI.WriteString(FLUX_INI_NAME, 'LastFolder_Convert_Source',ExtractFilePath(edConvFileSource.Text));
- INI.WriteString(FLUX_INI_NAME, 'LastFolder_Convert_Dest',edConvDirDest.Directory);
- INI.WriteBool(FLUX_INI_NAME, 'cbSetGlobalActionsTime', cbSetGlobalActionsTime.Checked);
- INI.WriteBool(FLUX_INI_NAME, 'cbSetGlobalActionsShellWindow', false);
- INI.WriteBool(FLUX_INI_NAME, 'cbSetGlobalActionsBacktrace', cbSetGlobalActionsBacktrace.Checked);
+ else INI.WriteString(FLUX_INI_NAME, INI_SAVE_DRIVE, '');
+ INI.WriteString(FLUX_INI_NAME, INI_ACTIONS_GW_HW, cbGWHW.Text);
+ INI.WriteString(FLUX_INI_NAME, INI_FOLDER_READ_DEST, edReadDirDest.Directory);
+ INI.WriteString(FLUX_INI_NAME, INI_FOLDER_WRITE_SRC,ExtractFilePath(edWriteFilename.Text));
+ INI.WriteString(FLUX_INI_NAME, INI_FOLDER_CONVERT_SRC,ExtractFilePath(edConvFileSource.Text));
+ INI.WriteString(FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST,edConvDirDest.Directory);
+ INI.WriteBool(FLUX_INI_NAME, INI_ACTIONS_TIME, cbSetGlobalActionsTime.Checked);
+ INI.WriteBool(FLUX_INI_NAME, INI_ACTIONS_SHELL, false);
+ INI.WriteBool(FLUX_INI_NAME, INI_ACTIONS_BACKTRACE, cbSetGlobalActionsBacktrace.Checked);
  INI.Free;
 end;
 

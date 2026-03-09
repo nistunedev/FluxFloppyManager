@@ -3,7 +3,7 @@ object Form1: TForm1
   Height = 1212
   Top = 360
   Width = 1860
-  Caption = 'FluxMyFluffyFloppy'
+  Caption = 'Flux Floppy Editor'
   ClientHeight = 1212
   ClientWidth = 1860
   DesignTimePPI = 168
@@ -3404,7 +3404,7 @@ object Form1: TForm1
     object mnuHelp: TMenuItem
       Caption = '&Help'
       object mnuFMFF: TMenuItem
-        Caption = '&FluxMyFluffyFloppy (GitHub)'
+        Caption = '&Flux Floppy Editor (GitHub)'
         OnClick = mnuFMFFClick
       end
       object mnuGitHub: TMenuItem

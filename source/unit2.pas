@@ -1,19 +1,24 @@
 {
------------------------------------------------------------------
-FluxMyFluffyFloppy
+-------------------------------------------------------------------
+Flux Floppy Editor
 v5.xx
------------------------------------------------------------------
-A Microsoft(r) Windows(r) GUI for Greseaweazle Host Tools
+-------------------------------------------------------------------
+A Microsoft(r) Windows(r) and Linux GUI for Greseaweazle Host Tools
 FREEWARE / OpenSource
 License: GNU General Public License v2.0
+
+(c) 2026 NistuneDev
+Web: https://github.com/nistunedev/FluxFloppyEditor
+This is a fork based on "FluxMyFluffyFloppy"
+
 (c) 2021-2026 FrankieTheFluff
 Web: https://github.com/FrankieTheFluff/FluxMyFluffyFloppy
 Mail: fluxmyfluffyfloppy@mail.de
------------------------------------------------------------------
+-------------------------------------------------------------------
 Uses code from the following projects:
 UnTerminal 1.0 by Tito Hinostroza 02/10/2020
 https://github.com/t-edson/UnTerminal
------------------------------------------------------------------
+-------------------------------------------------------------------
 }
 unit Unit2;
 
@@ -22,7 +27,7 @@ unit Unit2;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls, LCLIntf;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls, LCLIntf, CommonConsts;
 
 type
 
@@ -79,7 +84,7 @@ uses
 
 procedure TFrmAbout.lblAboutEmailClick(Sender: TObject);
 begin
- OpenURL('mailto:fluxmyfluffyfloppy@mail.de?subject=FluxMyFluffyFloppy&body=');
+ OpenURL('mailto:nistunedev@gmail.com?subject=Flo&body=');
 end;
 
 procedure TFrmAbout.btOKClick(Sender: TObject);
@@ -96,7 +101,7 @@ end;
 
 procedure TFrmAbout.lblAboutGithubClick(Sender: TObject);
 begin
-  OpenURL('https://github.com/FrankieTheFluff/FluxMyFluffyFloppy');
+  OpenURL('https://github.com/nistundev/FluxFloppyEditor');
 end;
 
 procedure TFrmAbout.lblAboutLicenseClick(Sender: TObject);

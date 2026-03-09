@@ -1,19 +1,24 @@
 {
------------------------------------------------------------------
-FluxMyFluffyFloppy
+-------------------------------------------------------------------
+Flux Floppy Editor
 v5.xx
------------------------------------------------------------------
-A Microsoft(r) Windows(r) GUI for Greseaweazle Host Tools
+-------------------------------------------------------------------
+A Microsoft(r) Windows(r) and Linux GUI for Greseaweazle Host Tools
 FREEWARE / OpenSource
 License: GNU General Public License v2.0
+
+(c) 2026 NistuneDev
+Web: https://github.com/nistunedev/FluxFloppyEditor
+This is a fork based on "FluxMyFluffyFloppy"
+
 (c) 2021-2026 FrankieTheFluff
 Web: https://github.com/FrankieTheFluff/FluxMyFluffyFloppy
 Mail: fluxmyfluffyfloppy@mail.de
------------------------------------------------------------------
+-------------------------------------------------------------------
 Uses code from the following projects:
 UnTerminal 1.0 by Tito Hinostroza 02/10/2020
 https://github.com/t-edson/UnTerminal
------------------------------------------------------------------
+-------------------------------------------------------------------
 }
 unit Unit3;
 
@@ -22,7 +27,7 @@ unit Unit3;
 interface
 
 uses
-  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, EditBtn;
+  Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, EditBtn, CommonConsts;
 
 type
 
@@ -68,20 +73,20 @@ end;
 
 procedure TFrmOptions.FormShow(Sender: TObject);
 begin
- cbSaveGWDevCom.Checked := INI.ReadBool('FluxMyFluffyFloppy', 'SaveBoolGWDevCom', false);
- cbSaveGWDrive.Checked := INI.ReadBool('FluxMyFluffyFloppy', 'SaveBoolGWDrive', false);
- cbCodepageCMD.Checked := INI.ReadBool('FluxMyFluffyFloppy', 'CodepageCMD', true);
- fileDiskdefs.Text := INI.ReadString('FluxMyFluffyFloppy', 'Diskdefs', '');
- folderTemplates.Directory := INI.ReadString('FluxMyFluffyFloppy', 'FolderTemplates', '');
+ cbSaveGWDevCom.Checked := INI.ReadBool(FLUX_INI_NAME, INI_SAVE_DEVICE_FLAG, false);
+ cbSaveGWDrive.Checked := INI.ReadBool(FLUX_INI_NAME, INI_SAVE_DRIVE_FLAG, false);
+ cbCodepageCMD.Checked := INI.ReadBool(FLUX_INI_NAME, INI_CODE_PAGE_CMD, true);
+ fileDiskdefs.Text := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_DISKDEFS, '');
+ folderTemplates.Directory := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
 end;
 
 procedure TFrmOptions.OKClick(Sender: TObject);
 begin
- INI.WriteBool('FluxMyFluffyFloppy', 'SaveBoolGWDevCom', cbSaveGWDevCom.Checked);
- INI.WriteBool('FluxMyFluffyFloppy', 'SaveBoolGWDrive', cbSaveGWDrive.Checked);
- INI.WriteBool('FluxMyFluffyFloppy', 'CodepageCMD', cbCodepageCMD.Checked);
- INI.WriteString('FluxMyFluffyFloppy', 'Diskdefs', fileDiskdefs.Text);
- INI.WriteString('FluxMyFluffyFloppy', 'FolderTemplates', folderTemplates.Directory);
+ INI.WriteBool(FLUX_INI_NAME, INI_SAVE_DEVICE_FLAG, cbSaveGWDevCom.Checked);
+ INI.WriteBool(FLUX_INI_NAME, INI_SAVE_DRIVE_FLAG, cbSaveGWDrive.Checked);
+ INI.WriteBool(FLUX_INI_NAME, INI_CODE_PAGE_CMD, cbCodepageCMD.Checked);
+ INI.WriteString(FLUX_INI_NAME, INI_FOLDER_DISKDEFS, fileDiskdefs.Text);
+ INI.WriteString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, folderTemplates.Directory);
  if fileDiskdefs.Text <> '' then
   begin
    Form1.Refresh_Diskdefs_DropDown;
