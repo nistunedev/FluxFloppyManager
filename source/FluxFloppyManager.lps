@@ -8,8 +8,6 @@
       <Unit>
         <Filename Value="FluxFloppyManager.lpr"/>
         <IsPartOfProject Value="True"/>
-        <UnitName Value="FluxFloppyManager"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="5"/>
         <CursorPos X="33" Y="5"/>
         <UsageCount Value="28"/>
@@ -22,6 +20,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="2959"/>
         <CursorPos X="61" Y="2976"/>
         <UsageCount Value="28"/>
@@ -73,7 +72,6 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="CommonConsts"/>
         <EditorIndex Value="4"/>
-        <TopLine Value="16"/>
         <CursorPos X="53" Y="11"/>
         <UsageCount Value="21"/>
         <Loaded Value="True"/>
@@ -100,7 +98,7 @@
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="29">
+    <JumpHistory HistoryIndex="28">
       <Position>
         <Filename Value="unit1.pas"/>
         <Caret Line="3937" Column="39" TopLine="3934"/>
@@ -216,10 +214,6 @@
       <Position>
         <Filename Value="unit4.pas"/>
         <Caret Line="11" Column="53"/>
-      </Position>
-      <Position>
-        <Filename Value="commonconsts.pas"/>
-        <Caret Line="11" Column="53" TopLine="16"/>
       </Position>
     </JumpHistory>
     <RunParams>
