@@ -1,6 +1,6 @@
 {
 -------------------------------------------------------------------
-Flux Floppy Editor
+Flux Floppy Manager
 v5.xx
 -------------------------------------------------------------------
 A Microsoft(r) Windows(r) and Linux GUI for Greseaweazle Host Tools
@@ -8,7 +8,7 @@ FREEWARE / OpenSource
 License: GNU General Public License v2.0
 
 (c) 2026 NistuneDev
-Web: https://github.com/nistunedev/FluxFloppyEditor
+Web: https://github.com/nistunedev/FluxFloppyManager
 This is a fork based on "FluxMyFluffyFloppy"
 
 (c) 2021-2026 FrankieTheFluff
@@ -2973,7 +2973,7 @@ end;
 
 procedure TForm1.mnuFMFFClick(Sender: TObject);
 begin
-  LaunchURL('https://github.com/nistunedev/FluxFloppyEditor');
+  LaunchURL('https://github.com/nistunedev/FluxFloppyManager');
 end;
 
 procedure TForm1.mnuGWDownloadClick(Sender: TObject);

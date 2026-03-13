@@ -1,9 +1,14 @@
 ----------------------------------------
-FluxMyFluffyFloppy v5.2.7.1 - 2026-02-15
+FluxFloppyManager v5.2.x - 2026-02-15
 ----------------------------------------
-A Microsoft(r) Windows(r) and Linux GUI for
-Greseaweazle Host Tools (c) Keir Fraser
+A Microsoft(r) Windows(r) GUI for Greseaweazle Host Tools
 FREEWARE / OpenSource
-GNU General Public License v2.0
+License: GNU General Public License v2.0
+
+(c) 2026 NistuneDev
+Web: https://github.com/nistunedev/FluxFloppyManager
+
+This is a fork based on "FluxMyFluffyFloppy"
 (c) 2021-2026 FrankieTheFluff
-Web: https://github.com/FrankieTheFluff
+Web: https://github.com/FrankieTheFluff/FluxMyFluffyFloppy
+Mail: fluxmyfluffyfloppy@mail.de

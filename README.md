@@ -1,6 +1,6 @@
 -----------------------------------------------------------------
 
-Flux Floppy Editor v5.2.7.2 -  2026-03-09
+Flux Floppy Manager v5.2.7.2 -  2026-03-13
 -
 
 A Microsoft(r) Windows(r) and Linux GUI for the "Greaseweazle Host Tools"
@@ -10,7 +10,7 @@ FREEWARE / OpenSource
 License: GNU General Public License v2.0
 
 (c) 2026 NistuneDev
-Web: https://github.com/nistunedev/FluxFloppyEditor
+Web: https://github.com/nistunedev/FluxFloppyManager
 
 Mail: nistunedev@gmail.com
 

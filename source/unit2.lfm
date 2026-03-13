@@ -1,12 +1,12 @@
 object FrmAbout: TFrmAbout
   Left = 1703
-  Height = 730
+  Height = 912
   Top = 618
-  Width = 1024
+  Width = 1280
   Caption = 'About'
-  ClientHeight = 730
-  ClientWidth = 1024
-  DesignTimePPI = 96
+  ClientHeight = 912
+  ClientWidth = 1280
+  DesignTimePPI = 120
   Position = poMainFormCenter
   LCLVersion = '4.4.0.0'
   OnShow = FormShow
@@ -16,48 +16,48 @@ object FrmAbout: TFrmAbout
     Top = 0
     Width = 1014
     Align = alClient
-    BorderSpacing.Left = 5
-    BorderSpacing.Right = 5
-    BorderSpacing.Bottom = 5
+    BorderSpacing.Left = 6
+    BorderSpacing.Right = 6
+    BorderSpacing.Bottom = 6
     ClientHeight = 690
     ClientWidth = 1010
     TabOrder = 0
     object lblAbout: TLabel
-      Left = 19
+      Left = 24
       Height = 57
       Top = 0
       Width = 459
-      Caption = 'Flux Floppy Editor'
+      Caption = 'Flux Floppy Manager'
       Font.Color = clWindowText
-      Font.Height = -47
+      Font.Height = -59
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentColor = False
       ParentFont = False
     end
     object lblAboutVer: TLabel
-      Left = 19
+      Left = 24
       Height = 23
-      Top = 61
+      Top = 76
       Width = 12
       Caption = '5'
       Font.Color = clWindowText
-      Font.Height = -19
+      Font.Height = -24
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
       ParentColor = False
       ParentFont = False
     end
     object lblAboutCopy1: TLabel
-      Left = 19
-      Height = 26
-      Top = 98
-      Width = 606
+      Left = 24
+      Height = 32
+      Top = 122
+      Width = 758
       AutoSize = False
       Caption = 'The Freeware GUI for "Greaseweazle Host Tools"'
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
-      Font.Height = -21
+      Font.Height = -26
       Font.Name = 'Segoe UI'
       Font.Pitch = fpVariable
       Font.Quality = fqDraft
@@ -66,15 +66,15 @@ object FrmAbout: TFrmAbout
       ParentFont = False
     end
     object lblAboutCopy: TLabel
-      Left = 19
-      Height = 26
-      Top = 126
-      Width = 612
+      Left = 24
+      Height = 32
+      Top = 158
+      Width = 765
       AutoSize = False
       Caption = 'Copyright (c) 2026 NistuneDev'
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
-      Font.Height = -21
+      Font.Height = -26
       Font.Name = 'Segoe UI'
       Font.Pitch = fpVariable
       Font.Quality = fqDraft
@@ -83,64 +83,64 @@ object FrmAbout: TFrmAbout
       ParentFont = False
     end
     object lblEmail: TLabel
-      Left = 19
+      Left = 24
       Height = 23
-      Top = 175
+      Top = 219
       Width = 52
       Caption = 'Email:'
       Font.Color = clWindowText
-      Font.Height = -19
+      Font.Height = -24
       Font.Name = 'Tahoma'
       ParentColor = False
       ParentFont = False
     end
     object lblDownload: TLabel
-      Left = 19
+      Left = 24
       Height = 23
-      Top = 206
+      Top = 258
       Width = 98
       Caption = 'Homepage:'
       Font.Color = clWindowText
-      Font.Height = -19
+      Font.Height = -24
       Font.Name = 'Tahoma'
       ParentColor = False
       ParentFont = False
     end
     object lblAboutEmail: TLabel
-      Left = 150
+      Left = 188
       Height = 23
-      Top = 175
+      Top = 219
       Width = 226
       Caption = 'nistunedev@gmail.com'
       Font.Color = clBlue
-      Font.Height = -19
+      Font.Height = -24
       Font.Name = 'Tahoma'
       ParentColor = False
       ParentFont = False
       OnClick = lblAboutEmailClick
     end
     object lblAboutGithub: TLabel
-      Left = 150
+      Left = 188
       Height = 23
-      Top = 206
+      Top = 258
       Width = 461
-      Caption = 'https://github.com/nistunedev/FluxFloppyEditor'
+      Caption = 'https://github.com/nistunedev/FluxFloppyManager'
       Font.Color = clBlue
-      Font.Height = -19
+      Font.Height = -24
       Font.Name = 'Tahoma'
       ParentColor = False
       ParentFont = False
       OnClick = lblAboutGithubClick
     end
     object lblGW: TLabel
-      Left = 19
+      Left = 24
       Height = 30
-      Top = 308
+      Top = 385
       Width = 5
       Caption = '.'
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
-      Font.Height = -21
+      Font.Height = -26
       Font.Name = 'Segoe UI'
       Font.Pitch = fpVariable
       Font.Quality = fqDraft
@@ -148,15 +148,15 @@ object FrmAbout: TFrmAbout
       ParentFont = False
     end
     object Label2: TLabel
-      Left = 19
-      Height = 28
-      Top = 345
-      Width = 606
+      Left = 24
+      Height = 35
+      Top = 431
+      Width = 758
       AutoSize = False
       Caption = 'The "Greaseweazle" project is developed by Keir Fraser:'
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
-      Font.Height = -21
+      Font.Height = -26
       Font.Name = 'Segoe UI'
       Font.Pitch = fpVariable
       Font.Quality = fqDraft
@@ -164,15 +164,15 @@ object FrmAbout: TFrmAbout
       ParentFont = False
     end
     object lblAboutURLGW: TLabel
-      Left = 19
-      Height = 26
-      Top = 383
-      Width = 606
+      Left = 24
+      Height = 32
+      Top = 479
+      Width = 758
       AutoSize = False
       Caption = 'https://github.com/keirf/Greaseweazle'
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlue
-      Font.Height = -21
+      Font.Height = -26
       Font.Name = 'Segoe UI'
       Font.Pitch = fpVariable
       Font.Quality = fqDraft
@@ -181,15 +181,15 @@ object FrmAbout: TFrmAbout
       OnClick = lblAboutURLGWClick
     end
     object lblDisclaimer1: TLabel
-      Left = 19
-      Height = 26
-      Top = 574
-      Width = 102
+      Left = 24
+      Height = 32
+      Top = 718
+      Width = 128
       AutoSize = False
       Caption = 'Disclaimer:'
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
-      Font.Height = -21
+      Font.Height = -26
       Font.Name = 'Segoe UI'
       Font.Pitch = fpVariable
       Font.Quality = fqDraft
@@ -199,15 +199,15 @@ object FrmAbout: TFrmAbout
       WordWrap = True
     end
     object lblDisclaimer2: TLabel
-      Left = 19
-      Height = 28
-      Top = 604
-      Width = 975
+      Left = 24
+      Height = 35
+      Top = 755
+      Width = 1219
       AutoSize = False
       Caption = 'You can use this software completly free ! But there is no liability for misuse or damage...'
       Font.CharSet = ANSI_CHARSET
       Font.Color = clBlack
-      Font.Height = -21
+      Font.Height = -26
       Font.Name = 'Segoe UI'
       Font.Pitch = fpVariable
       Font.Quality = fqDraft
@@ -216,11 +216,11 @@ object FrmAbout: TFrmAbout
       WordWrap = True
     end
     object Img: TImage
-      Left = 693
-      Height = 434
+      Left = 866
+      Height = 542
       Hint = 'My first attempt of a working Greaseweazle F1 in 2021 :)'
-      Top = 19
-      Width = 308
+      Top = 24
+      Width = 385
       ParentShowHint = False
       Picture.Data = {
         0A544A706567496D61676559350000FFD8FFE000104A46494600010101006000
@@ -658,89 +658,89 @@ object FrmAbout: TFrmAbout
       Transparent = True
     end
     object btOK: TButton
-      Left = 870
-      Height = 44
-      Top = 639
-      Width = 131
+      Left = 1088
+      Height = 55
+      Top = 799
+      Width = 164
       Caption = 'OK'
       Default = True
       TabOrder = 0
       OnClick = btOKClick
     end
     object lblLicense: TLabel
-      Left = 19
+      Left = 24
       Height = 23
-      Top = 238
+      Top = 298
       Width = 68
       Caption = 'License:'
       Font.Color = clWindowText
-      Font.Height = -19
+      Font.Height = -24
       Font.Name = 'Tahoma'
       ParentColor = False
       ParentFont = False
     end
     object lblAboutLicense: TLabel
-      Left = 150
+      Left = 188
       Height = 23
-      Top = 238
+      Top = 298
       Width = 461
       Caption = 'https://www.gnu.org/licenses/old-licenses/gpl-2.0.html'
       Font.Color = clBlue
-      Font.Height = -19
+      Font.Height = -24
       Font.Name = 'Tahoma'
       ParentColor = False
       ParentFont = False
       OnClick = lblAboutLicenseClick
     end
     object lblContains: TLabel
-      Left = 19
+      Left = 24
       Height = 30
-      Top = 462
+      Top = 578
       Width = 310
       Caption = 'Uses code from following project:'
       ParentColor = False
     end
     object lblUnTerminal: TLabel
-      Left = 19
+      Left = 24
       Height = 30
-      Top = 490
+      Top = 612
       Width = 312
       Caption = 'UnTerminal 1.0 by Tito Hinostroza'
       ParentColor = False
     end
     object lblAboutUnTerminal: TLabel
-      Left = 350
+      Left = 438
       Height = 23
-      Top = 490
+      Top = 612
       Width = 331
       Caption = 'https://github.com/t-edson/UnTerminal'
       Font.Color = clBlue
-      Font.Height = -19
+      Font.Height = -24
       Font.Name = 'Tahoma'
       ParentColor = False
       ParentFont = False
       OnClick = lblAboutUnTerminalClick
     end
     object lblDivider1: TLabel
-      Left = 19
+      Left = 24
       Height = 30
-      Top = 273
+      Top = 341
       Width = 312
       Caption = '---------------------------------------'
       ParentColor = False
     end
     object lblDivider2: TLabel
-      Left = 19
+      Left = 24
       Height = 30
-      Top = 427
+      Top = 534
       Width = 312
       Caption = '---------------------------------------'
       ParentColor = False
     end
     object lblDivider3: TLabel
-      Left = 19
+      Left = 24
       Height = 30
-      Top = 532
+      Top = 665
       Width = 312
       Caption = '---------------------------------------'
       ParentColor = False

@@ -1,39 +1,40 @@
 object frmGW: TfrmGW
   Left = -220
-  Height = 678
+  Height = 848
   Top = 273
-  Width = 1060
+  Width = 1325
   Caption = 'Greaseweazle'
-  ClientHeight = 678
-  ClientWidth = 1060
+  ClientHeight = 848
+  ClientWidth = 1325
+  DesignTimePPI = 120
   Position = poMainFormCenter
-  LCLVersion = '4.0.0.4'
+  LCLVersion = '4.4.0.0'
   OnClose = FormClose
   OnShow = FormShow
   object pnSides: TPanel
     Left = 0
     Height = 678
     Top = 0
-    Width = 396
+    Width = 495
     Align = alLeft
     BevelOuter = bvNone
     ClientHeight = 678
-    ClientWidth = 396
+    ClientWidth = 495
     TabOrder = 0
     Visible = False
     object Label1: TLabel
-      Left = 14
+      Left = 18
       Height = 15
-      Top = 9
+      Top = 11
       Width = 35
       Caption = 'Side 0:'
       ParentColor = False
     end
     object StrGrid_s0: TStringGrid
-      Left = 26
-      Height = 282
-      Top = 42
-      Width = 350
+      Left = 32
+      Height = 352
+      Top = 52
+      Width = 438
       AlternateColor = clNone
       AutoFillColumns = True
       ColCount = 11
@@ -41,52 +42,52 @@ object frmGW: TfrmGW
         item
           Alignment = taCenter
           Title.Caption = '0'
-          Width = 31
+          Width = 40
         end      
         item
           Alignment = taCenter
           Title.Caption = '1'
-          Width = 31
+          Width = 40
         end      
         item
           Alignment = taCenter
           Title.Caption = '2'
-          Width = 31
+          Width = 40
         end      
         item
           Alignment = taCenter
           Title.Caption = '3'
-          Width = 31
+          Width = 40
         end      
         item
           Alignment = taCenter
           Title.Caption = '4'
-          Width = 30
+          Width = 40
         end      
         item
           Alignment = taCenter
           Title.Caption = '5'
-          Width = 30
+          Width = 40
         end      
         item
           Alignment = taCenter
           Title.Caption = '6'
-          Width = 30
+          Width = 40
         end      
         item
           Alignment = taCenter
           Title.Caption = '7'
-          Width = 30
+          Width = 39
         end      
         item
           Alignment = taCenter
           Title.Caption = '8'
-          Width = 30
+          Width = 39
         end      
         item
           Alignment = taCenter
           Title.Caption = '9'
-          Width = 30
+          Width = 39
         end>
       DefaultDrawing = False
       Enabled = False
@@ -94,7 +95,7 @@ object frmGW: TfrmGW
       FixedColor = clNone
       Flat = True
       Font.CharSet = ANSI_CHARSET
-      Font.Height = -21
+      Font.Height = -26
       Font.Name = 'Consolas'
       Font.Pitch = fpFixed
       Font.Quality = fqDraft
@@ -105,32 +106,32 @@ object frmGW: TfrmGW
       RowCount = 10
       TabOrder = 0
       ColWidths = (
-        32
-        31
-        31
-        31
-        31
-        30
-        30
-        30
-        30
-        30
-        30
+        40
+        40
+        40
+        40
+        40
+        40
+        40
+        40
+        39
+        39
+        39
       )
     end
     object Label2: TLabel
-      Left = 14
+      Left = 18
       Height = 15
-      Top = 344
+      Top = 430
       Width = 35
       Caption = 'Side 1:'
       ParentColor = False
     end
     object StrGrid_s1: TStringGrid
-      Left = 22
-      Height = 280
-      Top = 376
-      Width = 354
+      Left = 28
+      Height = 350
+      Top = 470
+      Width = 442
       AlternateColor = clNone
       AutoFillColumns = True
       ColCount = 11
@@ -138,52 +139,52 @@ object frmGW: TfrmGW
         item
           Alignment = taCenter
           Title.Caption = '0'
-          Width = 31
+          Width = 41
         end      
         item
           Alignment = taCenter
           Title.Caption = '1'
-          Width = 31
+          Width = 40
         end      
         item
           Alignment = taCenter
           Title.Caption = '2'
-          Width = 31
+          Width = 40
         end      
         item
           Alignment = taCenter
           Title.Caption = '3'
-          Width = 31
+          Width = 40
         end      
         item
           Alignment = taCenter
           Title.Caption = '4'
-          Width = 31
+          Width = 40
         end      
         item
           Alignment = taCenter
           Title.Caption = '5'
-          Width = 31
+          Width = 40
         end      
         item
           Alignment = taCenter
           Title.Caption = '6'
-          Width = 31
+          Width = 40
         end      
         item
           Alignment = taCenter
           Title.Caption = '7'
-          Width = 31
+          Width = 40
         end      
         item
           Alignment = taCenter
           Title.Caption = '8'
-          Width = 30
+          Width = 40
         end      
         item
           Alignment = taCenter
           Title.Caption = '9'
-          Width = 30
+          Width = 40
         end>
       DefaultDrawing = False
       Enabled = False
@@ -191,7 +192,7 @@ object frmGW: TfrmGW
       FixedColor = clNone
       Flat = True
       Font.CharSet = ANSI_CHARSET
-      Font.Height = -21
+      Font.Height = -26
       Font.Name = 'Consolas'
       Font.Pitch = fpFixed
       Font.Quality = fqDraft
@@ -202,17 +203,17 @@ object frmGW: TfrmGW
       RowCount = 10
       TabOrder = 1
       ColWidths = (
-        32
-        31
-        31
-        31
-        31
-        31
-        31
-        31
-        31
-        30
-        30
+        40
+        41
+        40
+        40
+        40
+        40
+        40
+        40
+        40
+        40
+        40
       )
     end
   end
@@ -228,13 +229,13 @@ object frmGW: TfrmGW
     ClientWidth = 664
     TabOrder = 1
     object Memo1: TMemo
-      Left = 28
-      Height = 578
-      Top = 42
-      Width = 622
+      Left = 35
+      Height = 554
+      Top = 52
+      Width = 611
       Anchors = [akTop, akLeft, akRight, akBottom]
       Font.CharSet = ANSI_CHARSET
-      Font.Height = -12
+      Font.Height = -15
       Font.Name = 'Sans'
       Font.Pitch = fpFixed
       Font.Quality = fqDraft
@@ -244,18 +245,18 @@ object frmGW: TfrmGW
       TabOrder = 0
     end
     object Label3: TLabel
-      Left = 14
+      Left = 18
       Height = 15
-      Top = 9
+      Top = 11
       Width = 100
       Caption = 'Console messages:'
       ParentColor = False
     end
     object Button1: TButton
-      Left = 521
-      Height = 28
-      Top = 628
-      Width = 131
+      Left = 485
+      Height = 35
+      Top = 615
+      Width = 164
       Anchors = [akRight, akBottom]
       Caption = '&Close'
       TabOrder = 1

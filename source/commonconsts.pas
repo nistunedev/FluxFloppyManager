@@ -1,6 +1,6 @@
 {
 -------------------------------------------------------------------
-Flux Floppy Editor
+Flux Floppy Manager
 v5.xx
 -------------------------------------------------------------------
 A Microsoft(r) Windows(r) and Linux GUI for Greseaweazle Host Tools
@@ -8,7 +8,7 @@ FREEWARE / OpenSource
 License: GNU General Public License v2.0
 
 (c) 2026 NistuneDev
-Web: https://github.com/nistunedev/FluxFloppyEditor
+Web: https://github.com/nistunedev/FluxFloppyManager
 This is a fork based on "FluxMyFluffyFloppy"
 
 (c) 2021-2026 FrankieTheFluff
@@ -30,17 +30,17 @@ interface
 
 const
 
-  GW_INI_FILE = 'FluxFloppyEditor.ini';
+  GW_INI_FILE = 'FluxFloppyManager.ini';
   GW_APP_NAME = 'Greaseweazle';
   GW_DISKDEF_FOLDER = 'Diskdefs';
   GW_TEMPLATE_FOLDER = 'Template';
   GW_APP_FILE = 'Greaseweazle';
   GW_DOCUMENTS_FOLDER = 'Documents';
 
-  INITIAL_HEIGHT = 1370;
+  INITIAL_HEIGHT = 920;
   INITIAL_WIDTH = 1850;
   MIN_HEIGHT = 500;
-  MIN_WIDTH = 950;
+  MIN_WIDTH = 920;
 
 // INI Main section
   FLUX_INI_NAME = 'FluxMyFluffyFloppy';
@@ -124,7 +124,7 @@ const
   GW_PROP_PAGE_TOOLS = 3;
   GW_PROP_PAGE_SETTINGS = 4;
 
-  APP_NAME = 'Flux Floppy Editor ';
+  APP_NAME = 'Flux Floppy Manager ';
   APP_VERSION = 'v5.2.7.2';
   APP_DATE = '2026-03-09';
 

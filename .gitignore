@@ -2,10 +2,8 @@
 /source/lib/x86_64-linux
 /source/lib/x86_64-win64
 /source/release
-source/FluxMyFluffyFloppy
-source/FluxMyFluffyFloppy.exe
 *.bak
 *.exe
 /source/lib/aarch64-linux
-source/FluxFloppyEditor.x86_64-linux-gnu
-source/FluxFloppyEditor
+source/FluxFloppyManager.x86_64-linux-gnu
+source/FluxFloppyManager
