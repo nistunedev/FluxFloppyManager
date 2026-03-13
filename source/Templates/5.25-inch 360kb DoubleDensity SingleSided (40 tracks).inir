@@ -1,0 +1,26 @@
+[FluxMyFluffyFloppy-Read-Template]
+Version=v4.00
+Name=5.25-inch 360kb DoubleDensity SingleSided (40 tracks)
+Description=5.25-inch 360kb "DoubleDensity" SingleSided "double step" " 40 tracks" "48 tpi"
+
+[Settings]
+Diskdefs=Internal
+FormatSpec=ibm.160
+Revs=
+Raw=0
+Fake-Index=
+Hard-Sectors=0
+Adjust-Speed=
+Retries=
+Seek-Retries=
+PLL=
+DD=
+Cylinders=0-39
+Heads=0
+Steps=2
+HSwap=0
+Flippy=
+FlippyReverse=0
+Log_Param=0
+Log_Output=0
+Log_InOneFile=0

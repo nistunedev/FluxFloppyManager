@@ -1,0 +1,25 @@
+[FluxMyFluffyFloppy-Read-Template]
+Version=2.00
+Name=5.25-inch 1.2mb HighDensity DoubleSided (80 tracks)
+Description=5.25-inch 1.2mb "HighDensity" "DoubleSided" "80 tracks" "96 tpi"
+
+[Settings]
+COM=
+DrvSel=
+Cylinders=
+Steps=
+Heads=
+Revs=
+Retries=
+Flippy=
+CommandsRead=read --format ibm.1200
+Greaseweazle=
+FormatSpec=ibm.1200
+HSwap=
+Raw=
+Fake-index=
+Adjust-speed=
+No-Clobber=
+Log_Param=
+Log_Output=
+Log_InOneFile=

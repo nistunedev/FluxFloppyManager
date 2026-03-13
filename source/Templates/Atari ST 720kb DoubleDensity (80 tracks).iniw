@@ -1,0 +1,25 @@
+[FluxMyFluffyFloppy-Write-Template]
+Version=2.00
+Name=Atari ST 720kb DoubleDensity (80 tracks)
+Description=Atari ST 720kb DoubleDensity DoubleSided (80 tracks) 9 sectors
+
+[Settings]
+COM=
+DrvSel=
+FormatSpec=atarist.720
+Cylinders=
+Steps=
+Heads=
+HSwap=
+Flippy=
+Retries=
+NoVerify=
+Precompensate=
+EraseEmpty=
+CommandsWrite=write --format atarist.720
+Greaseweazle=
+Fake-index=
+Precomp=
+Log_Param=
+Log_Output=
+Log_InOneFile=

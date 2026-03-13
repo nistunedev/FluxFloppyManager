@@ -1,0 +1,29 @@
+[FluxMyFluffyFloppy-Read-Template]
+Version=v4.00
+Name=Atari ST 800kb DoubleDensity (80 tracks)
+Description=Atari ST 800kb DoubleDensity DoubleSided (80 tracks)
+
+[Settings]
+COM=
+DrvSel=
+FormatSpec=atarist.800
+Cylinders=
+Steps=
+Heads=
+HSwap=0
+Revs=
+Retries=
+Flippy=
+Raw=0
+CommandsRead=read --format atarist.800
+Greaseweazle=
+Fake-index=
+Adjust-speed=
+No-Clobber=
+Log_Param=0
+Log_Output=0
+Log_InOneFile=0
+Diskdefs=Internal
+Seek-Retries=
+PLL=
+DD=

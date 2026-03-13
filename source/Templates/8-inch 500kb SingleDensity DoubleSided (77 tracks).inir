@@ -1,0 +1,25 @@
+[FluxMyFluffyFloppy-Read-Template]
+Version=2.00
+Name=8-inch 500kb SingleDensity DoubleSided (77 tracks)
+Description=8-inch 500kb SingleDensity DoubleSided (77 tracks)
+
+[Settings]
+COM=
+DrvSel=
+Cylinders=0-76
+Steps=1
+Heads=0,1
+Revs=3
+Retries=
+Flippy=
+CommandsRead=read --tracks=c=0-76:h=0,1:step=1 --revs=3 --rpm=360
+Greaseweazle=
+FormatSpec=
+HSwap=
+Raw=
+Fake-index=
+Adjust-speed=
+No-Clobber=
+Log_Param=
+Log_Output=
+Log_InOneFile=

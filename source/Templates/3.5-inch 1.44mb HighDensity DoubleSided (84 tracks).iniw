@@ -1,0 +1,25 @@
+[FluxMyFluffyFloppy-Write-Template]
+Version=2.00
+Name=3.5-inch 1.44mb HighDensity DoubleSided (84 tracks)
+Description=3.5-inch 1.44mb "HighDensity" "DoubleSided" "84 tracks" "135 tpi"
+
+[Settings]
+COM=
+DrvSel=
+Cylinders=0-83
+Steps=
+Heads=
+Flippy=
+Precompensate=
+EraseEmpty=
+Greaseweazle=
+CommandsWrite=write --format ibm.1440 --tracks=c=0-83
+Retries=
+NoVerify=
+FormatSpec=ibm.1440
+HSwap=
+Fake-index=
+Precomp=
+Log_Param=
+Log_Output=
+Log_InOneFile=

@@ -1,0 +1,31 @@
+[FluxMyFluffyFloppy-Read-Template]
+Version=v4.00
+Name=3.5-inch 720kb DoubleDensity SingleSided (80 tracks)
+Description=3.5-inch 720kb "DoubleDensity" "SingleSided" "80 tracks" "135 tpi"
+
+[Settings]
+COM=
+DrvSel=
+Cylinders=0-79
+Steps=1
+Heads=0
+Revs=3
+Retries=
+Flippy=
+CommandsRead=read --tracks=c=0-79:h=0:step=1 --revs=3 --rpm=300
+Greaseweazle=
+FormatSpec=ibm.720
+HSwap=0
+Raw=0
+Fake-index=
+Adjust-speed=
+No-Clobber=
+Log_Param=0
+Log_Output=0
+Log_InOneFile=0
+Diskdefs=Internal
+Hard-Sectors=0
+Seek-Retries=
+PLL=
+DD=
+FlippyReverse=0

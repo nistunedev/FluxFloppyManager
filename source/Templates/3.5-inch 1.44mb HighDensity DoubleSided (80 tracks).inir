@@ -1,0 +1,26 @@
+[FluxMyFluffyFloppy-Read-Template]
+Version=v4.00
+Name=3.5-inch 1.44mb HighDensity DoubleSided (80 tracks)
+Description=3.5-inch 1.44mb "HighDensity" "DoubleSided" "80 tracks" "135 tpi"
+
+[Settings]
+Diskdefs=Internal
+FormatSpec=ibm.1440
+Revs=
+Raw=0
+Fake-Index=
+Hard-Sectors=0
+Adjust-Speed=
+Retries=
+Seek-Retries=
+PLL=
+DD=
+Cylinders=0-79
+Heads=
+Steps=
+HSwap=0
+Flippy=
+FlippyReverse=0
+Log_Param=0
+Log_Output=0
+Log_InOneFile=0

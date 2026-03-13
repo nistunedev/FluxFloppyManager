@@ -1,0 +1,26 @@
+[FluxMyFluffyFloppy-Read-Template]
+Version=2.00
+Name=Commodore C64 170kb SingleSided 35 tracks
+Creator=Richard Verlinden
+Description=Commodore C64 170kb 48-TPI floppy disks (35 tracks) 
+
+[Settings]
+COM=3
+DrvSel=B
+Cylinders=0-39
+Steps=2
+Heads=0
+Revs=5
+Retries=
+Flippy=
+CommandsRead=read --tracks=c=0-39:h=0 --revs=5 --rpm=360
+Greaseweazle=
+FormatSpec=commodore.1541
+HSwap=
+Raw=
+Fake-index=
+Adjust-speed=
+No-Clobber=
+Log_Param=
+Log_Output=
+Log_InOneFile=

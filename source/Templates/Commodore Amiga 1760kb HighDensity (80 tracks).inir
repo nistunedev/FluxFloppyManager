@@ -1,0 +1,25 @@
+[FluxMyFluffyFloppy-Read-Template]
+Version=2.00
+Name=Commodore Amiga 1760kb HighDensity (80 tracks)
+Description=Commodore Amiga 1760kb HighDensity DoubleSided (80 tracks)
+
+[Settings]
+COM=
+DrvSel=
+Cylinders=0-79
+Steps=1
+Heads=0,1
+Revs=3
+Retries=
+Flippy=
+CommandsRead=read --tracks=c=0-79:h=0,1:step=1 --revs=3 --rpm=150
+Greaseweazle=
+FormatSpec=
+HSwap=
+Raw=
+Fake-index=
+Adjust-speed=
+No-Clobber=
+Log_Param=
+Log_Output=
+Log_InOneFile=

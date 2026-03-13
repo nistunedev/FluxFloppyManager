@@ -1,0 +1,25 @@
+[FluxMyFluffyFloppy-Read-Template]
+Version=2.00
+Name=Commodore C64 800kb DoubleSided (80 tracks)
+Description=Commodore C64 800kb DoubleSided (80 tracks)
+
+[Settings]
+COM=
+DrvSel=
+Cylinders=0-79
+Steps=2
+Heads=0,1
+Revs=5
+Retries=
+Flippy=
+CommandsRead=read --tracks=c=0-79:h=0,1:step=2 --revs=5 --rpm=300
+Greaseweazle=
+FormatSpec=
+HSwap=
+Raw=
+Fake-index=
+Adjust-speed=
+No-Clobber=
+Log_Param=
+Log_Output=
+Log_InOneFile=

@@ -1,0 +1,23 @@
+[FluxMyFluffyFloppy-Read-Template]
+Version=v4.00
+Name=3.5-inch 720kb DoubleDensity SingleSided (40 tracks) CPC
+Description=3.5-inch 720kb "DoubleDensity" "SingleSided" "40 tracks" "135 tpi" CPC
+
+[Settings]
+Diskdefs=Internal
+FormatSpec=
+Revs=5
+Raw=0
+Fake-Index=
+Adjust-Speed=
+Retries=
+Seek-Retries=
+PLL=
+Cylinders=0-39
+Heads=0
+Steps=1
+HSwap=0
+Flippy=
+Log_Param=0
+Log_Output=0
+Log_InOneFile=0

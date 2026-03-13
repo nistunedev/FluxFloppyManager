@@ -1,0 +1,17 @@
+[FluxMyFluffyFloppy-Write-Template]
+Version=3.00
+Name=3.5-inch 720kb DoubleDensity DoubleSided (80 tracks) CPC
+Description=3.5-inch 720kb "DoubleDensity" "DoubleSided" "80 tracks" "135 tpi" CPC
+
+[Settings]
+FormatSpec=
+EraseEmpty=0
+Fake-Index=
+NoVerify=0
+Retries=2
+Precomp=
+Cylinders=0-79
+Heads=0
+Steps=1
+HSwap=0
+Flippy=

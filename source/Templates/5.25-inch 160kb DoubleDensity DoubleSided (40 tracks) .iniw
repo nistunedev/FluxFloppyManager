@@ -1,0 +1,23 @@
+[FluxMyFluffyFloppy-Write-Template]
+Version=3.00
+Name=5.25-inch 160kb DoubleDensity DoubleSided (40 tracks)
+Description=5.25-inch 160kb DoubleDensity DoubleSided "40 tracks" "48 tpi" stepped
+
+[Settings]
+Diskdefs=Internal
+FormatSpec=ibm.160
+EraseEmpty=0
+Fake-Index=
+Hard-Sectors=0
+NoVerify=0
+Retries=
+Precomp=
+Pre-Erase=0
+DD=
+TP43Pin2=0
+Cylinders=0-39
+Heads=0
+Steps=2
+HSwap=0
+Flippy=
+FlippyReverse=0

@@ -1,0 +1,23 @@
+[FluxMyFluffyFloppy-Write-Template]
+Version=3.00
+Name=3.0 inch 180kb DoubleDensity SingleSided (40 tracks)
+Description=3.0 inch 180kb DoubleDensity SingleSided (40 tracks)
+
+[Settings]
+Diskdefs=Internal
+FormatSpec=raw.250
+EraseEmpty=0
+Fake-Index=
+Hard-Sectors=0
+NoVerify=0
+Retries=
+Precomp=
+Pre-Erase=0
+DD=
+TP43Pin2=0
+Cylinders=0-39
+Heads=
+Steps=
+HSwap=0
+Flippy=
+FlippyReverse=0

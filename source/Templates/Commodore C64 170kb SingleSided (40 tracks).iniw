@@ -1,0 +1,23 @@
+[FluxMyFluffyFloppy-Write-Template]
+Version=3.00
+Name=Commodore C64 170kb SingleSided (40 tracks)
+Description=Commodore C64 170kb 48-TPI floppy disks (40 tracks)
+
+[Settings]
+Diskdefs=Internal
+FormatSpec=commodore.1541
+EraseEmpty=0
+Fake-Index=
+Hard-Sectors=0
+NoVerify=0
+Retries=2
+Precomp=
+Pre-Erase=0
+DD=
+TP43Pin2=0
+Cylinders=0-39
+Heads=0
+Steps=2
+HSwap=0
+Flippy=
+FlippyReverse=0

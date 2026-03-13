@@ -1,0 +1,25 @@
+[FluxMyFluffyFloppy-Read-Template]
+Version=2.00
+Name=Commodore Amiga 1520kb HighDensity (80 tracks)
+Description=Commodore Amiga 1520kb HighDensity DoubleSided (80 tracks) GCR
+
+[Settings]
+COM=
+DrvSel=
+Cylinders=
+Steps=
+Heads=
+Revs=
+Retries=
+Flippy=
+CommandsRead=read --format amiga.amigados_hd
+Greaseweazle=
+FormatSpec=amiga.amigados_hd
+HSwap=
+Raw=
+Fake-index=
+Adjust-speed=
+No-Clobber=
+Log_Param=
+Log_Output=
+Log_InOneFile=

@@ -1,0 +1,24 @@
+[FluxMyFluffyFloppy-Read-Template]
+Version=v4.00
+Name=3-inch 320x2kb DoubleDensity SingleSided (40 tracks) CPC
+Description=3-inch 320x2kb "DoubleDensity" "SingleSided" "40 tracks" "96 tpi" CPC
+
+[Settings]
+Diskdefs=Internal
+FormatSpec=
+Revs=3
+Raw=0
+Fake-Index=
+Adjust-Speed=
+Retries=
+Seek-Retries=
+PLL=
+DD=
+Cylinders=0-39
+Heads=0
+Steps=1
+HSwap=0
+Flippy=
+Log_Param=0
+Log_Output=0
+Log_InOneFile=0

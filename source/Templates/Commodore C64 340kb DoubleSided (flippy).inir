@@ -1,0 +1,25 @@
+[FluxMyFluffyFloppy-Read-Template]
+Version=2.00
+Name=Commodore C64 340kb DoubleSided (flippy)
+Description=Commodore C64 340kb DoubleSided (flippy) -8 (minus!) tracks side 2 (head 1) Half tracks
+
+[Settings]
+COM=
+DrvSel=
+Cylinders=0-79
+Steps=
+Heads=0,1
+Revs=5
+Retries=
+Flippy=h1.off=-8
+CommandsRead=read --track=c=0-79:h=0,1:h1.off=-8 --revs=5 --rpm=300
+Greaseweazle=
+FormatSpec=
+Raw=
+Fake-index=
+Adjust-speed=
+No-Clobber=
+HSwap=
+Log_Param=
+Log_Output=
+Log_InOneFile=

@@ -1,0 +1,25 @@
+[FluxMyFluffyFloppy-Read-Template]
+Version=2.00
+Name=5.25-inch 360kb DoubleDensity DoubleSided (42 tracks)
+Description=5.25-inch 360kb "DoubleDensity" "DoubleSided" "double step" " 42 tracks" "48 tpi"
+
+[Settings]
+COM=
+DrvSel=
+Cylinders=0-41
+Steps=2
+Heads=0,1
+Revs=
+Retries=
+Flippy=
+CommandsRead=read --tracks=c=0-41:h=0,1:step=2
+Greaseweazle=
+FormatSpec=
+HSwap=
+Raw=
+Fake-index=
+Adjust-speed=
+No-Clobber=
+Log_Param=
+Log_Output=
+Log_InOneFile=
