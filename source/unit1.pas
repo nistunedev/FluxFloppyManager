@@ -29,7 +29,8 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs,
   ComCtrls, DBGrids, StdCtrls, DBCtrls, Menus, EditBtn, Spin, ExtCtrls,
-  IniFiles, Process, FileUtil, LazFileUtils, CommonConsts
+  IniFiles, Process, FileUtil, LazFileUtils, CommonConsts, DOM, XMLRead
+
 {$IFDEF WINDOWS}
   , Registry, LCLIntf
 {$ENDIF};
@@ -535,7 +536,8 @@ type
     procedure Refresh_Templates_Write;
     procedure Refresh_WriteFormSpec;
     procedure Set_View;
-
+    procedure LoadXML(const FileName: string);
+//    procedure LoadOption(OptionNode: TDOMNode; var Opt: TFormatOption);
     procedure performModalCmdAction(const command: string);
 
     procedure performCmdAction(const cmd: string;
@@ -543,7 +545,6 @@ type
                                const specifyDevice: boolean;
                                const specifyDrive: boolean);
 
-//    procedure LaunchURL(const URL: string);
   private
     FInClick: Boolean;
   public
@@ -556,6 +557,18 @@ function ExtractFileName_WithoutExt(const AFilename: string): string;
 function Trackset(aCommand: string;aCyl: string; aHeads: string; aSteps: string; aHSwap: boolean; aFlippy: string):string;
 function SelectFile(title, defaultDir, Filter: String): String;
 
+type
+  TFormatOption = record
+    Name: string;
+    Value: array of string;
+  end;
+
+  THfeFormatEntry = record
+    BitRate: TFormatOption;
+    DiskInterface: TFormatOption;
+    Encoding: TFormatOption;
+  end;
+
 var
   Form1: TForm1;
   INI: TIniFile;
@@ -566,6 +579,9 @@ var
   sAppName, sAppPath, sAppVersion, sAppDate, AboutGW, sAppVersion_ReadTmpl, sAppVersion_WriteTmpl : String;
   dd : String; // Diskdefs.cfg
   aLine : String; // GreaseWeazle (frmGW)
+
+  SCPFormatOptions: TFormatOption;
+  HFEFormatOptions: THfeFormatEntry;
 
 implementation
 uses
@@ -704,6 +720,7 @@ end;
 procedure TForm1.FormShow(Sender: TObject);
 var
   gw :string;
+  xmlFile: String;
 begin
   sAppName := APP_NAME;
   sAppVersion := APP_VERSION;
@@ -717,6 +734,20 @@ begin
   if DirectoryExists(sAppPath + GW_DISKDEF_FOLDER) = false then CreateDir(sAppPath + GW_DISKDEF_FOLDER);
   if DirectoryExists(sAppPath + GW_TEMPLATE_FOLDER) = false then CreateDir(sAppPath + GW_TEMPLATE_FOLDER);
   if DirectoryExists(sAppPath + GW_APP_FILE) = false then CreateDir(sAppPath + GW_APP_FILE);
+
+  xmlFile := sAppPath + FLUX_XML_FILE;
+  if FileExists(xmlFile) = True then
+  begin
+    LoadXML(xmlFile);
+  end
+  else
+  begin
+    MessageDlg('File not found',
+               'Formats definitions file ' + xmlFile + ' does not exist.' + sLineBreak +
+               'Check this file is in your installation',
+               mtWarning, [mbOk], 0);
+  end;
+
 
   // No INI
   if FileExists(sAppPath + GW_INI_FILE) = False then
@@ -826,493 +857,8 @@ begin
   // Where are diskdefs_.cfg located?
   Refresh_Diskdefs_DropDown;
 
-  // Create StringLists Read/Conv Destination fileextension
-  // TODO: Read these from a configuration file
-  FormatDest_Ext := TStringList.Create;
-  FormatDest_Ext.Add('');
-  FormatDest_Ext.Add('A2R (Applesauce)');
-  FormatDest_Ext.Add('ADF (AmigaDOS)');
-  FormatDest_Ext.Add('ADS (Acorn)');
-  FormatDest_Ext.Add('ADM (Acorn)');
-  FormatDest_Ext.Add('ADL (Acorn)');
-  FormatDest_Ext.Add('CTR (CT Raw)');
-  FormatDest_Ext.Add('D1M (CMD FD2000 DD)');
-  FormatDest_Ext.Add('D2M (CMD FD2000 HD)');
-  FormatDest_Ext.Add('D4M (CMD FD4000 ED)');
-  FormatDest_Ext.Add('D64 (Commodore 1541)');
-  FormatDest_Ext.Add('D71 (Commodore 1571)');
-  FormatDest_Ext.Add('D81 (Commodore 1581)');
-  FormatDest_Ext.Add('D88 (D88)');
-  FormatDest_Ext.Add('DCP (DCP)');
-  FormatDest_Ext.Add('DIM (DIM)');
-  FormatDest_Ext.Add('DMK (TRS80 Tandy Dragon MSX)');
-  FormatDest_Ext.Add('DO (Apple II)');
-  FormatDest_Ext.Add('DSD (Acorn)');
-  FormatDest_Ext.Add('DSK (DSK)');
-  FormatDest_Ext.Add('EDSK (EDSK, use: format=ibm.scan)');
-  FormatDest_Ext.Add('FD (FD)');
-  FormatDest_Ext.Add('FDI (FDI)');
-  FormatDest_Ext.Add('HDM (HDM)');
-  FormatDest_Ext.Add('HFE (HxC Floppy Emulator)');
-  FormatDest_Ext.Add('IMA (Disk Image)');
-  FormatDest_Ext.Add('IMG (Disk Image)');
-  FormatDest_Ext.Add('IMD (ImageDisk)');
-  FormatDest_Ext.Add('IPF (IPF)');
-  FormatDest_Ext.Add('MGT (Disciple/+D)');
-  FormatDest_Ext.Add('MSA (Atari ST)');
-  FormatDest_Ext.Add('NFD (T98-Next)');    // v1.19 read only
-  FormatDest_Ext.Add('NSI (NS DOS Northstar)');
-  FormatDest_Ext.Add('PO (Apple II)');
-  FormatDest_Ext.Add('RAW (KryoFlux)');
-  FormatDest_Ext.Add('SF7 (SEGA)');
-  FormatDest_Ext.Add('SCP (SuperCardPro)');
-  FormatDest_Ext.Add('SSD (Acorn)');
-  FormatDest_Ext.Add('ST (Atari ST)');
-  FormatDest_Ext.Add('TD0 (Teledisk)');
-  FormatDest_Ext.Add('XDF (XDF)');
-
-  EdGWFile.Filter := 'gw.exe|*.exe|gw';
-  EdWriteFileName.Filter := 'Floppy-Images (*.*)|*.a2r;*.adf;*.adm;*.adl;*.ads;*.ctr;*.d1m;*.d2m;*.d4m;*.d64;*.d71;*.d81;*.d88;*.dcp;*.dim;*.dmk;*.do;*.dsd;*.dsk;*.edsk;*.fd;*.fdi;*hdm;*hfe;*.img;*.ima;*.imd;*.ipf;*.msa;*.nsi;*.po;*.raw;*.scp;*.sf7;*.ssd;*.st;*.td0;*.xdf|Applesauce (a2r)|*.a2r|Acorn (adl)|*.adl|Acorn (adm)|*.adm|Acorn (ads)|*.ads|Acorn (dsd)|*.dsd|Acorn (ssd)|*.ssd|AmigaDOS (adf)|*.adf|Apple II (do)|*.do||Apple II (po)|*.po|Atari ST (msa)|*.msa|Atari ST (st)|*.st|Commodore 1541 (d64)|*.d64|Commodore 1571 (d71)|*.d71|Commodore 1581 (d81)|*.d81|CT Raw (ctr)|*.ctr|Disciple (mgt)|*.mgt|DSK (dsk)|*.dsk|EDSK (edsk)|*.edsk|Floppy image (ima)|*.ima|Floppy image (img)|*.img|HDM (hdm)|*.hdm|HFE (HxC Floppy Emulator) (hfe)|*.hfe|ImageDisk image (imd)|*.imd|IPF (ipf)|*.ipf|Kryoflux (raw)|*.raw|NS DOS Northstar (nsi)|*.nis|SEGA (sf7)|*.sf7|SuperCardPro (scp)|*.scp';
-  edConvFileSource.Filter := 'Floppy-Images (*.*)|*.a2r;*.adf;*.adm;*.adl;*.ads;*.ctr;*.d1m;*.d2m;*.d4m;*.d64;*.d71;*.d81;*.d88;*.dcp;*.dim;*.dmk;*.do;*.dsd;*.dsk;*.edsk;*.fd;*.fdi;*hdm;*hfe;*.img;*.ima;*.imd;*.ipf;*.msa;*.nsi;*.po;*.raw;*.scp;*.sf7;*.ssd;*.st;*.td0;*.xdf|Applesauce (a2r)|*.a2r|Acorn (adl)|*.adl|Acorn (adm)|*.adm|Acorn (ads)|*.ads|Acorn (dsd)|*.dsd|Acorn (ssd)|*.ssd|AmigaDOS (adf)|*.adf|Apple II (do)|*.do||Apple II (po)|*.po|Atari ST (msa)|*.msa|Atari ST (st)|*.st|Commodore 1541 (d64)|*.d64|Commodore 1571 (d71)|*.d71|Commodore 1581 (d81)|*.d81|CT Raw (ctr)|*.ctr|Disciple (mgt)|*.mgt|DSK (dsk)|*.dsk|EDSK (edsk)|*.edsk|Floppy image (ima)|*.ima|Floppy image (img)|*.img|HDM (hdm)|*.hdm|HFE (HxC Floppy Emulator) (hfe)|*.hfe|ImageDisk image (imd)|*.imd|IPF (ipf)|*.ipf|Kryoflux (raw)|*.raw|NS DOS Northstar (nsi)|*.nis|SEGA (sf7)|*.sf7|SuperCardPro (scp)|*.scp';
-
   // Create StringList Read Diskdefs
   // TODO: Read these from a configuration file
-  FormatSpecs_Read := TStringList.Create;
-  FormatSpecs_Read.Add('');
-  FormatSpecs_Read.Add('acorn.adfs.160');
-  FormatSpecs_Read.Add('acorn.adfs.1600');
-  FormatSpecs_Read.Add('acorn.adfs.320');
-  FormatSpecs_Read.Add('acorn.adfs.640');
-  FormatSpecs_Read.Add('acorn.adfs.800');
-  FormatSpecs_Read.Add('acorn.dfs.ds');
-  FormatSpecs_Read.Add('acorn.dfs.ds80');
-  FormatSpecs_Read.Add('acorn.dfs.ss');
-  FormatSpecs_Read.Add('acorn.dfs.ss80');
-  FormatSpecs_Read.Add('akai.1600');
-  FormatSpecs_Read.Add('akai.800');
-  FormatSpecs_Read.Add('amiga.amigados');
-  FormatSpecs_Read.Add('amiga.amigados_hd');
-  FormatSpecs_Read.Add('apple2.appledos.140');
-  FormatSpecs_Read.Add('apple2.nofs.140');
-  FormatSpecs_Read.Add('apple2.prodos.140');
-  FormatSpecs_Read.Add('atari.130');
-  FormatSpecs_Read.Add('atari.90');
-  FormatSpecs_Read.Add('atarist.360');
-  FormatSpecs_Read.Add('atarist.400');
-  FormatSpecs_Read.Add('atarist.440');
-  FormatSpecs_Read.Add('atarist.720');
-  FormatSpecs_Read.Add('atarist.800');
-  FormatSpecs_Read.Add('atarist.880');
-  FormatSpecs_Read.Add('coco.decb');
-  FormatSpecs_Read.Add('coco.decb.40t');
-  FormatSpecs_Read.Add('coco.os9.40ds');
-  FormatSpecs_Read.Add('coco.os9.40ss');
-  FormatSpecs_Read.Add('coco.os9.80ds');
-  FormatSpecs_Read.Add('coco.os9.80ss');
-  FormatSpecs_Read.Add('commodore.1541');
-  FormatSpecs_Read.Add('commodore.1571');
-  FormatSpecs_Read.Add('commodore.1581');
-  FormatSpecs_Read.Add('commodore.fd2000.dd');
-  FormatSpecs_Read.Add('commodore.fd2000.hd');
-  FormatSpecs_Read.Add('commodore.fd4000.ed');
-  FormatSpecs_Read.Add('datageneral.2f');
-  FormatSpecs_Read.Add('dec.rx01');
-  FormatSpecs_Read.Add('dec.rx02');
-  FormatSpecs_Read.Add('dragon.40ds');
-  FormatSpecs_Read.Add('dragon.40ss');
-  FormatSpecs_Read.Add('dragon.80ds');
-  FormatSpecs_Read.Add('dragon.80ss');
-  FormatSpecs_Read.Add('eagle.dsqd.800');
-  FormatSpecs_Read.Add('eagle.ssqd.400');
-  FormatSpecs_Read.Add('ensoniq.1600');
-  FormatSpecs_Read.Add('ensoniq.800');
-  FormatSpecs_Read.Add('ensoniq.mirage');
-  FormatSpecs_Read.Add('epson.qx10.320');
-  FormatSpecs_Read.Add('epson.qx10.396');
-  FormatSpecs_Read.Add('epson.qx10.399');
-  FormatSpecs_Read.Add('epson.qx10.400');
-  FormatSpecs_Read.Add('epson.qx10.booter');
-  FormatSpecs_Read.Add('epson.qx10.logo');
-  FormatSpecs_Read.Add('gem.1600');
-  FormatSpecs_Read.Add('hp.mmfm.9885');
-  FormatSpecs_Read.Add('hp.mmfm.9895');
-  FormatSpecs_Read.Add('ibm.1200');
-  FormatSpecs_Read.Add('ibm.1440');
-  FormatSpecs_Read.Add('ibm.160');
-  FormatSpecs_Read.Add('ibm.1680');
-  FormatSpecs_Read.Add('ibm.180');
-  FormatSpecs_Read.Add('ibm.2880');
-  FormatSpecs_Read.Add('ibm.320');
-  FormatSpecs_Read.Add('ibm.360');
-  FormatSpecs_Read.Add('ibm.720');
-  FormatSpecs_Read.Add('ibm.800');
-  FormatSpecs_Read.Add('ibm.dmf');
-  FormatSpecs_Read.Add('ibm.scan');
-  FormatSpecs_Read.Add('kaypro.dsdd.40');
-  FormatSpecs_Read.Add('kaypro.dsdd.80');
-  FormatSpecs_Read.Add('kaypro.ssdd.40');
-  FormatSpecs_Read.Add('luxor.1000.abcnet');
-  FormatSpecs_Read.Add('luxor.1000.data');
-  FormatSpecs_Read.Add('luxor.1000.program');
-  FormatSpecs_Read.Add('luxor.160');
-  FormatSpecs_Read.Add('luxor.320');
-  FormatSpecs_Read.Add('luxor.640');
-  FormatSpecs_Read.Add('luxor.80');
-  FormatSpecs_Read.Add('mac.400');
-  FormatSpecs_Read.Add('mac.800');
-  FormatSpecs_Read.Add('micropolis.100tpi.ds');
-  FormatSpecs_Read.Add('micropolis.100tpi.ds.275');
-  FormatSpecs_Read.Add('micropolis.100tpi.ss');
-  FormatSpecs_Read.Add('micropolis.100tpi.ss.275');
-  FormatSpecs_Read.Add('micropolis.48tpi.ds');
-  FormatSpecs_Read.Add('micropolis.48tpi.ds.275');
-  FormatSpecs_Read.Add('micropolis.48tpi.ss');
-  FormatSpecs_Read.Add('micropolis.48tpi.ss.275');
-  FormatSpecs_Read.Add('mm1.os9.80dshd_32');
-  FormatSpecs_Read.Add('mm1.os9.80dshd_33');
-  FormatSpecs_Read.Add('mm1.os9.80dshd_36');
-  FormatSpecs_Read.Add('mm1.os9.80dshd_37');
-  FormatSpecs_Read.Add('msx.1d');
-  FormatSpecs_Read.Add('msx.1dd');
-  FormatSpecs_Read.Add('msx.2d');
-  FormatSpecs_Read.Add('msx.2dd');
-  FormatSpecs_Read.Add('northstar.fm.ds');
-  FormatSpecs_Read.Add('northstar.fm.ss');
-  FormatSpecs_Read.Add('northstar.mfm.ds');
-  FormatSpecs_Read.Add('northstar.mfm.ss');
-  FormatSpecs_Read.Add('occ1.dd');
-  FormatSpecs_Read.Add('occ1.sd');
-  FormatSpecs_Read.Add('olivetti.m20');
-  FormatSpecs_Read.Add('pc98.2d');
-  FormatSpecs_Read.Add('pc98.2dd');
-  FormatSpecs_Read.Add('pc98.2hd');
-  FormatSpecs_Read.Add('pc98.2hs');
-  FormatSpecs_Read.Add('pc98.n88basic.hd');
-  FormatSpecs_Read.Add('raw.125');
-  FormatSpecs_Read.Add('raw.250');
-  FormatSpecs_Read.Add('raw.500');
-  FormatSpecs_Read.Add('sci.prophet');
-  FormatSpecs_Read.Add('sega.sf7000');
-  FormatSpecs_Read.Add('thomson.1s160');
-  FormatSpecs_Read.Add('thomson.1s320');
-  FormatSpecs_Read.Add('thomson.1s80');
-  FormatSpecs_Read.Add('thomson.2s160');
-  FormatSpecs_Read.Add('thomson.2s320');
-  FormatSpecs_Read.Add('tsc.flex.dsdd');
-  FormatSpecs_Read.Add('tsc.flex.ssdd');
-  FormatSpecs_Read.Add('xerox.860.dssd');
-  FormatSpecs_Read.Add('xerox.860.ss');
-  FormatSpecs_Read.Add('zx.3dos.ds80');
-  FormatSpecs_Read.Add('zx.3dos.ss40');
-  FormatSpecs_Read.Add('zx.d80.ds80');
-  FormatSpecs_Read.Add('zx.fdd3000.ds80');
-  FormatSpecs_Read.Add('zx.fdd3000.ss40');
-  FormatSpecs_Read.Add('zx.kempston.ds80');
-  FormatSpecs_Read.Add('zx.kempston.ss40');
-  FormatSpecs_Read.Add('zx.opus.ds80');
-  FormatSpecs_Read.Add('zx.opus.ss40');
-  FormatSpecs_Read.Add('zx.plusd.ds80');
-  FormatSpecs_Read.Add('zx.quorum.ds80');
-  FormatSpecs_Read.Add('zx.rocky.ds80');
-  FormatSpecs_Read.Add('zx.rocky.ss40');
-  FormatSpecs_Read.Add('zx.trdos.ds80');
-  FormatSpecs_Read.Add('zx.turbodrive.ds40');
-  FormatSpecs_Read.Add('zx.turbodrive.ds80');
-  FormatSpecs_Read.Add('zx.watford.ds80');
-  FormatSpecs_Read.Add('zx.watford.ss40');
-
-
-  // Create Stringlist Write Diskdefs
-  // TODO: Read these from a configuration file
-  FormatSpecs_Write := TStringList.Create;
-  FormatSpecs_Write.Add('');
-  FormatSpecs_Write.Add('acorn.adfs.160');
-  FormatSpecs_Write.Add('acorn.adfs.1600');
-  FormatSpecs_Write.Add('acorn.adfs.320');
-  FormatSpecs_Write.Add('acorn.adfs.640');
-  FormatSpecs_Write.Add('acorn.adfs.800');
-  FormatSpecs_Write.Add('acorn.dfs.ds');
-  FormatSpecs_Write.Add('acorn.dfs.ds80');
-  FormatSpecs_Write.Add('acorn.dfs.ss');
-  FormatSpecs_Write.Add('acorn.dfs.ss80');
-  FormatSpecs_Write.Add('akai.1600');
-  FormatSpecs_Write.Add('akai.800');
-  FormatSpecs_Write.Add('amiga.amigados');
-  FormatSpecs_Write.Add('amiga.amigados_hd');
-  FormatSpecs_Write.Add('apple2.appledos.140');
-  FormatSpecs_Write.Add('apple2.nofs.140');
-  FormatSpecs_Write.Add('apple2.prodos.140');
-  FormatSpecs_Write.Add('atari.130');
-  FormatSpecs_Write.Add('atari.90');
-  FormatSpecs_Write.Add('atarist.360');
-  FormatSpecs_Write.Add('atarist.400');
-  FormatSpecs_Write.Add('atarist.440');
-  FormatSpecs_Write.Add('atarist.720');
-  FormatSpecs_Write.Add('atarist.800');
-  FormatSpecs_Write.Add('atarist.880');
-  FormatSpecs_Write.Add('coco.decb');
-  FormatSpecs_Write.Add('coco.decb.40t');
-  FormatSpecs_Write.Add('coco.os9.40ds');
-  FormatSpecs_Write.Add('coco.os9.40ss');
-  FormatSpecs_Write.Add('coco.os9.80ds');
-  FormatSpecs_Write.Add('coco.os9.80ss');
-  FormatSpecs_Write.Add('commodore.1541');
-  FormatSpecs_Write.Add('commodore.1571');
-  FormatSpecs_Write.Add('commodore.1581');
-  FormatSpecs_Write.Add('commodore.fd2000.dd');
-  FormatSpecs_Write.Add('commodore.fd2000.hd');
-  FormatSpecs_Write.Add('commodore.fd4000.ed');
-  FormatSpecs_Write.Add('datageneral.2f');
-  FormatSpecs_Write.Add('dec.rx01');
-  FormatSpecs_Write.Add('dec.rx02');
-  FormatSpecs_Write.Add('dragon.40ds');
-  FormatSpecs_Write.Add('dragon.40ss');
-  FormatSpecs_Write.Add('dragon.80ds');
-  FormatSpecs_Write.Add('dragon.80ss');
-  FormatSpecs_Write.Add('eagle.dsqd.800');
-  FormatSpecs_Write.Add('eagle.ssqd.400');
-  FormatSpecs_Write.Add('ensoniq.1600');
-  FormatSpecs_Write.Add('ensoniq.800');
-  FormatSpecs_Write.Add('ensoniq.mirage');
-  FormatSpecs_Write.Add('epson.qx10.320');
-  FormatSpecs_Write.Add('epson.qx10.396');
-  FormatSpecs_Write.Add('epson.qx10.399');
-  FormatSpecs_Write.Add('epson.qx10.400');
-  FormatSpecs_Write.Add('epson.qx10.booter');
-  FormatSpecs_Write.Add('epson.qx10.logo');
-  FormatSpecs_Write.Add('gem.1600');
-  FormatSpecs_Write.Add('hp.mmfm.9885');
-  FormatSpecs_Write.Add('hp.mmfm.9895');
-  FormatSpecs_Write.Add('ibm.1200');
-  FormatSpecs_Write.Add('ibm.1440');
-  FormatSpecs_Write.Add('ibm.160');
-  FormatSpecs_Write.Add('ibm.1680');
-  FormatSpecs_Write.Add('ibm.180');
-  FormatSpecs_Write.Add('ibm.2880');
-  FormatSpecs_Write.Add('ibm.320');
-  FormatSpecs_Write.Add('ibm.360');
-  FormatSpecs_Write.Add('ibm.720');
-  FormatSpecs_Write.Add('ibm.800');
-  FormatSpecs_Write.Add('ibm.dmf');
-  FormatSpecs_Write.Add('ibm.scan');
-  FormatSpecs_Write.Add('kaypro.dsdd.40');
-  FormatSpecs_Write.Add('kaypro.dsdd.80');
-  FormatSpecs_Write.Add('kaypro.ssdd.40');
-  FormatSpecs_Write.Add('luxor.1000.abcnet');
-  FormatSpecs_Write.Add('luxor.1000.data');
-  FormatSpecs_Write.Add('luxor.1000.program');
-  FormatSpecs_Write.Add('luxor.160');
-  FormatSpecs_Write.Add('luxor.320');
-  FormatSpecs_Write.Add('luxor.640');
-  FormatSpecs_Write.Add('luxor.80');
-  FormatSpecs_Write.Add('mac.400');
-  FormatSpecs_Write.Add('mac.800');
-  FormatSpecs_Write.Add('micropolis.100tpi.ds');
-  FormatSpecs_Write.Add('micropolis.100tpi.ds.275');
-  FormatSpecs_Write.Add('micropolis.100tpi.ss');
-  FormatSpecs_Write.Add('micropolis.100tpi.ss.275');
-  FormatSpecs_Write.Add('micropolis.48tpi.ds');
-  FormatSpecs_Write.Add('micropolis.48tpi.ds.275');
-  FormatSpecs_Write.Add('micropolis.48tpi.ss');
-  FormatSpecs_Write.Add('micropolis.48tpi.ss.275');
-  FormatSpecs_Write.Add('mm1.os9.80dshd_32');
-  FormatSpecs_Write.Add('mm1.os9.80dshd_33');
-  FormatSpecs_Write.Add('mm1.os9.80dshd_36');
-  FormatSpecs_Write.Add('mm1.os9.80dshd_37');
-  FormatSpecs_Write.Add('msx.1d');
-  FormatSpecs_Write.Add('msx.1dd');
-  FormatSpecs_Write.Add('msx.2d');
-  FormatSpecs_Write.Add('msx.2dd');
-  FormatSpecs_Write.Add('northstar.fm.ds');
-  FormatSpecs_Write.Add('northstar.fm.ss');
-  FormatSpecs_Write.Add('northstar.mfm.ds');
-  FormatSpecs_Write.Add('northstar.mfm.ss');
-  FormatSpecs_Write.Add('occ1.dd');
-  FormatSpecs_Write.Add('occ1.sd');
-  FormatSpecs_Write.Add('olivetti.m20');
-  FormatSpecs_Write.Add('pc98.2d');
-  FormatSpecs_Write.Add('pc98.2dd');
-  FormatSpecs_Write.Add('pc98.2hd');
-  FormatSpecs_Write.Add('pc98.2hs');
-  FormatSpecs_Write.Add('pc98.n88basic.hd');
-  FormatSpecs_Write.Add('raw.125');
-  FormatSpecs_Write.Add('raw.250');
-  FormatSpecs_Write.Add('raw.500');
-  FormatSpecs_Write.Add('sci.prophet');
-  FormatSpecs_Write.Add('sega.sf7000');
-  FormatSpecs_Write.Add('thomson.1s160');
-  FormatSpecs_Write.Add('thomson.1s320');
-  FormatSpecs_Write.Add('thomson.1s80');
-  FormatSpecs_Write.Add('thomson.2s160');
-  FormatSpecs_Write.Add('thomson.2s320');
-  FormatSpecs_Write.Add('tsc.flex.dsdd');
-  FormatSpecs_Write.Add('tsc.flex.ssdd');
-  FormatSpecs_Write.Add('xerox.860.dssd');
-  FormatSpecs_Write.Add('xerox.860.ss');
-  FormatSpecs_Write.Add('zx.3dos.ds80');
-  FormatSpecs_Write.Add('zx.3dos.ss40');
-  FormatSpecs_Write.Add('zx.d80.ds80');
-  FormatSpecs_Write.Add('zx.fdd3000.ds80');
-  FormatSpecs_Write.Add('zx.fdd3000.ss40');
-  FormatSpecs_Write.Add('zx.kempston.ds80');
-  FormatSpecs_Write.Add('zx.kempston.ss40');
-  FormatSpecs_Write.Add('zx.opus.ds80');
-  FormatSpecs_Write.Add('zx.opus.ss40');
-  FormatSpecs_Write.Add('zx.plusd.ds80');
-  FormatSpecs_Write.Add('zx.quorum.ds80');
-  FormatSpecs_Write.Add('zx.rocky.ds80');
-  FormatSpecs_Write.Add('zx.rocky.ss40');
-  FormatSpecs_Write.Add('zx.trdos.ds80');
-  FormatSpecs_Write.Add('zx.turbodrive.ds40');
-  FormatSpecs_Write.Add('zx.turbodrive.ds80');
-  FormatSpecs_Write.Add('zx.watford.ds80');
-  FormatSpecs_Write.Add('zx.watford.ss40');
-
-  // Create StringList Convert  Diskdefs
-  // TODO: Read these from a configuration file
-  FormatSpecs_Conv := TStringList.Create;
-  FormatSpecs_Conv.Add('');
-  FormatSpecs_Conv.Add('acorn.adfs.160');
-  FormatSpecs_Conv.Add('acorn.adfs.1600');
-  FormatSpecs_Conv.Add('acorn.adfs.320');
-  FormatSpecs_Conv.Add('acorn.adfs.640');
-  FormatSpecs_Conv.Add('acorn.adfs.800');
-  FormatSpecs_Conv.Add('acorn.dfs.ds');
-  FormatSpecs_Conv.Add('acorn.dfs.ds80');
-  FormatSpecs_Conv.Add('acorn.dfs.ss');
-  FormatSpecs_Conv.Add('acorn.dfs.ss80');
-  FormatSpecs_Conv.Add('akai.1600');
-  FormatSpecs_Conv.Add('akai.800');
-  FormatSpecs_Conv.Add('amiga.amigados');
-  FormatSpecs_Conv.Add('amiga.amigados_hd');
-  FormatSpecs_Conv.Add('apple2.appledos.140');
-  FormatSpecs_Conv.Add('apple2.nofs.140');
-  FormatSpecs_Conv.Add('apple2.prodos.140');
-  FormatSpecs_Conv.Add('atari.130');
-  FormatSpecs_Conv.Add('atari.90');
-  FormatSpecs_Conv.Add('atarist.360');
-  FormatSpecs_Conv.Add('atarist.400');
-  FormatSpecs_Conv.Add('atarist.440');
-  FormatSpecs_Conv.Add('atarist.720');
-  FormatSpecs_Conv.Add('atarist.800');
-  FormatSpecs_Conv.Add('atarist.880');
-  FormatSpecs_Conv.Add('coco.decb');
-  FormatSpecs_Conv.Add('coco.decb.40t');
-  FormatSpecs_Conv.Add('coco.os9.40ds');
-  FormatSpecs_Conv.Add('coco.os9.40ss');
-  FormatSpecs_Conv.Add('coco.os9.80ds');
-  FormatSpecs_Conv.Add('coco.os9.80ss');
-  FormatSpecs_Conv.Add('commodore.1541');
-  FormatSpecs_Conv.Add('commodore.1571');
-  FormatSpecs_Conv.Add('commodore.1581');
-  FormatSpecs_Conv.Add('commodore.fd2000.dd');
-  FormatSpecs_Conv.Add('commodore.fd2000.hd');
-  FormatSpecs_Conv.Add('commodore.fd4000.ed');
-  FormatSpecs_Conv.Add('datageneral.2f');
-  FormatSpecs_Conv.Add('dec.rx01');
-  FormatSpecs_Conv.Add('dec.rx02');
-  FormatSpecs_Conv.Add('dragon.40ds');
-  FormatSpecs_Conv.Add('dragon.40ss');
-  FormatSpecs_Conv.Add('dragon.80ds');
-  FormatSpecs_Conv.Add('dragon.80ss');
-  FormatSpecs_Conv.Add('eagle.dsqd.800');
-  FormatSpecs_Conv.Add('eagle.ssqd.400');
-  FormatSpecs_Conv.Add('ensoniq.1600');
-  FormatSpecs_Conv.Add('ensoniq.800');
-  FormatSpecs_Conv.Add('ensoniq.mirage');
-  FormatSpecs_Conv.Add('epson.qx10.320');
-  FormatSpecs_Conv.Add('epson.qx10.396');
-  FormatSpecs_Conv.Add('epson.qx10.399');
-  FormatSpecs_Conv.Add('epson.qx10.400');
-  FormatSpecs_Conv.Add('epson.qx10.booter');
-  FormatSpecs_Conv.Add('epson.qx10.logo');
-  FormatSpecs_Conv.Add('gem.1600');
-  FormatSpecs_Conv.Add('hp.mmfm.9885');
-  FormatSpecs_Conv.Add('hp.mmfm.9895');
-  FormatSpecs_Conv.Add('ibm.1200');
-  FormatSpecs_Conv.Add('ibm.1440');
-  FormatSpecs_Conv.Add('ibm.160');
-  FormatSpecs_Conv.Add('ibm.1680');
-  FormatSpecs_Conv.Add('ibm.180');
-  FormatSpecs_Conv.Add('ibm.2880');
-  FormatSpecs_Conv.Add('ibm.320');
-  FormatSpecs_Conv.Add('ibm.360');
-  FormatSpecs_Conv.Add('ibm.720');
-  FormatSpecs_Conv.Add('ibm.800');
-  FormatSpecs_Conv.Add('ibm.dmf');
-  FormatSpecs_Conv.Add('ibm.scan');
-  FormatSpecs_Conv.Add('kaypro.dsdd.40');
-  FormatSpecs_Conv.Add('kaypro.dsdd.80');
-  FormatSpecs_Conv.Add('kaypro.ssdd.40');
-  FormatSpecs_Conv.Add('luxor.1000.abcnet');
-  FormatSpecs_Conv.Add('luxor.1000.data');
-  FormatSpecs_Conv.Add('luxor.1000.program');
-  FormatSpecs_Conv.Add('luxor.160');
-  FormatSpecs_Conv.Add('luxor.320');
-  FormatSpecs_Conv.Add('luxor.640');
-  FormatSpecs_Conv.Add('luxor.80');
-  FormatSpecs_Conv.Add('mac.400');
-  FormatSpecs_Conv.Add('mac.800');
-  FormatSpecs_Conv.Add('micropolis.100tpi.ds');
-  FormatSpecs_Conv.Add('micropolis.100tpi.ds.275');
-  FormatSpecs_Conv.Add('micropolis.100tpi.ss');
-  FormatSpecs_Conv.Add('micropolis.100tpi.ss.275');
-  FormatSpecs_Conv.Add('micropolis.48tpi.ds');
-  FormatSpecs_Conv.Add('micropolis.48tpi.ds.275');
-  FormatSpecs_Conv.Add('micropolis.48tpi.ss');
-  FormatSpecs_Conv.Add('micropolis.48tpi.ss.275');
-  FormatSpecs_Conv.Add('mm1.os9.80dshd_32');
-  FormatSpecs_Conv.Add('mm1.os9.80dshd_33');
-  FormatSpecs_Conv.Add('mm1.os9.80dshd_36');
-  FormatSpecs_Conv.Add('mm1.os9.80dshd_37');
-  FormatSpecs_Conv.Add('msx.1d');
-  FormatSpecs_Conv.Add('msx.1dd');
-  FormatSpecs_Conv.Add('msx.2d');
-  FormatSpecs_Conv.Add('msx.2dd');
-  FormatSpecs_Conv.Add('northstar.fm.ds');
-  FormatSpecs_Conv.Add('northstar.fm.ss');
-  FormatSpecs_Conv.Add('northstar.mfm.ds');
-  FormatSpecs_Conv.Add('northstar.mfm.ss');
-  FormatSpecs_Conv.Add('occ1.dd');
-  FormatSpecs_Conv.Add('occ1.sd');
-  FormatSpecs_Conv.Add('olivetti.m20');
-  FormatSpecs_Conv.Add('pc98.2d');
-  FormatSpecs_Conv.Add('pc98.2dd');
-  FormatSpecs_Conv.Add('pc98.2hd');
-  FormatSpecs_Conv.Add('pc98.2hs');
-  FormatSpecs_Conv.Add('pc98.n88basic.hd');
-  FormatSpecs_Conv.Add('raw.125');
-  FormatSpecs_Conv.Add('raw.250');
-  FormatSpecs_Conv.Add('raw.500');
-  FormatSpecs_Conv.Add('sci.prophet');
-  FormatSpecs_Conv.Add('sega.sf7000');
-  FormatSpecs_Conv.Add('thomson.1s160');
-  FormatSpecs_Conv.Add('thomson.1s320');
-  FormatSpecs_Conv.Add('thomson.1s80');
-  FormatSpecs_Conv.Add('thomson.2s160');
-  FormatSpecs_Conv.Add('thomson.2s320');
-  FormatSpecs_Conv.Add('tsc.flex.dsdd');
-  FormatSpecs_Conv.Add('tsc.flex.ssdd');
-  FormatSpecs_Conv.Add('xerox.860.dssd');
-  FormatSpecs_Conv.Add('xerox.860.ss');
-  FormatSpecs_Conv.Add('zx.3dos.ds80');
-  FormatSpecs_Conv.Add('zx.3dos.ss40');
-  FormatSpecs_Conv.Add('zx.d80.ds80');
-  FormatSpecs_Conv.Add('zx.fdd3000.ds80');
-  FormatSpecs_Conv.Add('zx.fdd3000.ss40');
-  FormatSpecs_Conv.Add('zx.kempston.ds80');
-  FormatSpecs_Conv.Add('zx.kempston.ss40');
-  FormatSpecs_Conv.Add('zx.opus.ds80');
-  FormatSpecs_Conv.Add('zx.opus.ss40');
-  FormatSpecs_Conv.Add('zx.plusd.ds80');
-  FormatSpecs_Conv.Add('zx.quorum.ds80');
-  FormatSpecs_Conv.Add('zx.rocky.ds80');
-  FormatSpecs_Conv.Add('zx.rocky.ss40');
-  FormatSpecs_Conv.Add('zx.trdos.ds80');
-  FormatSpecs_Conv.Add('zx.turbodrive.ds40');
-  FormatSpecs_Conv.Add('zx.turbodrive.ds80');
-  FormatSpecs_Conv.Add('zx.watford.ds80');
-  FormatSpecs_Conv.Add('zx.watford.ss40');
 
   cbReadTplFormat.items.Text := FormatSpecs_Read.Text;
   cbReadFormat.Items.Text := FormatDest_Ext.Text;        // bspw. .msa
@@ -2484,63 +2030,44 @@ begin
 end;
 
 procedure TForm1.cbConvFileFormatChange(Sender: TObject);
+var
+  index: Integer;
+  entryLine: String;
 begin
  cbConvFormatOption.ItemIndex := -1;
  cbConvFormatOption.Items.Clear;
  cbConvFormatOption.Enabled:= false;
 
- //TODO: Read these form an XML file
+ // SCP Options
  if cbConvFileFormat.Text = 'SCP (SuperCardPro)' then
  begin
   cbConvFormatOption.Enabled:= true;
   cbConvFormatOption.Items.Clear;
   cbConvFormatOption.ItemIndex := -1;
   cbConvFormatOption.Items.Add('');
-  cbConvFormatOption.Items.Add('::disktype=amiga');
-  cbConvFormatOption.Items.Add('::disktype=amigahd');
-  cbConvFormatOption.Items.Add('::disktype=c64');
-  cbConvFormatOption.Items.Add('::disktype=amstrad-cpc');
-  cbConvFormatOption.Items.Add('::disktype=apple-1m44');
-  cbConvFormatOption.Items.Add('::disktype=apple-400k');
-  cbConvFormatOption.Items.Add('::disktype=apple-800k');
-  cbConvFormatOption.Items.Add('::disktype=appleii');
-  cbConvFormatOption.Items.Add('::disktype=appleiipro');
-  cbConvFormatOption.Items.Add('::disktype=atari800-dd');
-  cbConvFormatOption.Items.Add('::disktype=atari800-ed ');
-  cbConvFormatOption.Items.Add('::disktype=atari800-sd');
-  cbConvFormatOption.Items.Add('::disktype=atarist-ds');
-  cbConvFormatOption.Items.Add('::disktype=atarist-ss');
-  cbConvFormatOption.Items.Add('::disktype=hdd-mfm');
-  cbConvFormatOption.Items.Add('::disktype=hdd-rll');
-  cbConvFormatOption.Items.Add('::disktype=ibmpc-1m2');
-  cbConvFormatOption.Items.Add('::disktype=ibmpc-1m44');
-  cbConvFormatOption.Items.Add('::disktype=ibmpc-360k');
-  cbConvFormatOption.Items.Add('::disktype=ibmpc-720k');
-  cbConvFormatOption.Items.Add('::disktype=other-1m2');
-  cbConvFormatOption.Items.Add('::disktype=other-1m44');
-  cbConvFormatOption.Items.Add('::disktype=other-320k');
-  cbConvFormatOption.Items.Add('::disktype=other-720k');
-  cbConvFormatOption.Items.Add('::disktype=roland-d20');
-  cbConvFormatOption.Items.Add('::disktype=tape-gcr1');
-  cbConvFormatOption.Items.Add('::disktype=tape-gcr2');
-  cbConvFormatOption.Items.Add('::disktype=tape-mfm');
-  cbConvFormatOption.Items.Add('::disktype=ti-99/4a');
-  cbConvFormatOption.Items.Add('::disktype=trs80_dsdd');
-  cbConvFormatOption.Items.Add('::disktype=trs80_dssd');
-  cbConvFormatOption.Items.Add('::disktype=trs80_ssdd');
-  cbConvFormatOption.Items.Add('::disktype=trs80_sssd');
+  // DiskType
+  for index := 0 to High(SCPFormatOptions.Value) do
+  begin
+    entryLine := '::' + SCPFormatOptions.Name + '=' + SCPFormatOptions.Value[index];
+    cbConvFormatOption.Items.Add(entryLine);
+  end;
   cbConvFormatOption.ItemIndex := 0;
  end;
+
+ // HFE Options
  if cbConvFileFormat.Text = 'HFE (HxC Floppy Emulator)' then
  begin
   cbConvFormatOption.Enabled:= true;
   cbConvFormatOption.ItemIndex := -1;
   cbConvFormatOption.Items.Clear;
   cbConvFormatOption.Items.Add('');
-  cbConvFormatOption.Items.Add('::bitrate=125');
-  cbConvFormatOption.Items.Add('::bitrate=250');
-  cbConvFormatOption.Items.Add('::bitrate=300');
-  cbConvFormatOption.Items.Add('::bitrate=500');
+
+  // BitRate
+  for index := 0 to High(HFEFormatOptions.BitRate.Value) do
+  begin
+    entryLine := '::' + HFEFormatOptions.BitRate.Name + '=' + HFEFormatOptions.BitRate.Value[index];
+    cbConvFormatOption.Items.Add(entryLine);
+  end;
   cbConvFormatOption.ItemIndex := 0;
 
   //HFEVersion
@@ -2552,24 +2079,11 @@ begin
   cbConvFormatOptionHFEInt.ItemIndex := -1;
   cbConvFormatOptionHFEInt.Enabled:= true;
   cbConvFormatOptionHFEInt.Items.Add('');
-  cbConvFormatOptionHFEInt.Items.Add('::interface=IBMPC_DD');
-  cbConvFormatOptionHFEInt.Items.Add('::interface=IBMPC_HD');
-  cbConvFormatOptionHFEInt.Items.Add('::interface=ATARIST_DD');
-  cbConvFormatOptionHFEInt.Items.Add('::interface=ATARIST_HD');
-  cbConvFormatOptionHFEInt.Items.Add('::interface=AMIGA_DD');
-  cbConvFormatOptionHFEInt.Items.Add('::interface=AMIGA_HD');
-  cbConvFormatOptionHFEInt.Items.Add('::interface=CPC_DD');
-  cbConvFormatOptionHFEInt.Items.Add('::interface=GENERIC_SHUGART_DD');
-  cbConvFormatOptionHFEInt.Items.Add('::interface=IBMPC_ED');
-  cbConvFormatOptionHFEInt.Items.Add('::interface=MSX2_DD');
-  cbConvFormatOptionHFEInt.Items.Add('::interface=C64_DD');
-  cbConvFormatOptionHFEInt.Items.Add('::interface=EMU_SHUGART');
-  cbConvFormatOptionHFEInt.Items.Add('::interface=S950_DD');
-  cbConvFormatOptionHFEInt.Items.Add('::interface=S950_HD');
-  cbConvFormatOptionHFEInt.Items.Add('::interface=S950_DD_HD');
-  cbConvFormatOptionHFEInt.Items.Add('::interface=IBMPC_DD_HD');
-  cbConvFormatOptionHFEInt.Items.Add('::interface=QUICKDISK');
-  cbConvFormatOptionHFEInt.Items.Add('::interface=UNKNOWN');
+  for index := 0 to High(HFEFormatOptions.DiskInterface.Value) do
+  begin
+    entryLine := '::' + HFEFormatOptions.DiskInterface.Name + '=' + HFEFormatOptions.DiskInterface.Value[index];
+    cbConvFormatOptionHFEInt.Items.Add(entryLine);
+  end;
   cbConvFormatOptionHFEInt.ItemIndex := 0;
 
   //HLE EncodingType
@@ -2577,28 +2091,11 @@ begin
   cbConvFormatOptionHFEEnc.ItemIndex := -1;
   cbConvFormatOptionHFEEnc.Enabled:= true;
   cbConvFormatOptionHFEEnc.Items.Add('');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=ISOIBM_MFM');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=AMIGA_MFM');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=ISOIBM_FM');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=EMU_FM');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=TYCOM_FM');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=MEMBRAIN_MFM');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=APPLEII_GCR1');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=APPLEII_GCR2');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=APPLEII_HDDD_A2_GCR1');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=APPLEII_HDDD_A2_GCR2');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=ARBURGDAT');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=ARBURGSYS');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=AED6200P_MFM');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=NORTHSTAR_HS_MFM');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=HEATHKIT_HS_FM');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=DEC_RX02_M2FM');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=APPLEMAC_GCR');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=QD_MO5');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=C64_GCR');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=VICTOR9K_GCR');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=MICRALN_HS_FM');
-  cbConvFormatOptionHFEEnc.Items.Add('::encoding=UNKNOWN');
+  for index := 0 to High(HFEFormatOptions.Encoding.Value) do
+  begin
+    entryLine := '::' + HFEFormatOptions.Encoding.Name + '=' + HFEFormatOptions.Encoding.Value[index];
+    cbConvFormatOptionHFEEnc.Items.Add(entryLine);
+  end;
   cbConvFormatOptionHFEEnc.ItemIndex := 0;
  end;
  Create_Filename;
@@ -3696,64 +3193,44 @@ begin
 end;
 
 procedure TForm1.cbReadFormatChange(Sender: TObject);
+var
+  entryLine : string;
+  index: Integer;
 begin
   cbReadFormatOption.Items.Clear;
   cbReadFormatOption.ItemIndex := -1;
   cbReadFormatOption.Enabled:= false;
 
-  //TODO: read from XML file
+  // SCP Options
   if cbReadFormat.Text = 'SCP (SuperCardPro)' then
   begin
    cbReadFormatOption.Items.Clear;
    cbReadFormatOption.ItemIndex := -1;
    cbReadFormatOption.Enabled:= true;
    cbReadFormatOption.Items.Add('');
-   cbReadFormatOption.Items.Add('::disktype=amiga');
-   cbReadFormatOption.Items.Add('::disktype=amigahd');
-   cbReadFormatOption.Items.Add('::disktype=c64');
-   cbReadFormatOption.Items.Add('::disktype=amstrad-cpc');
-   cbReadFormatOption.Items.Add('::disktype=apple-1m44');
-   cbReadFormatOption.Items.Add('::disktype=apple-400k');
-   cbReadFormatOption.Items.Add('::disktype=apple-800k');
-   cbReadFormatOption.Items.Add('::disktype=appleii');
-   cbReadFormatOption.Items.Add('::disktype=appleiipro');
-   cbReadFormatOption.Items.Add('::disktype=atari800-dd');
-   cbReadFormatOption.Items.Add('::disktype=atari800-ed ');
-   cbReadFormatOption.Items.Add('::disktype=atari800-sd');
-   cbReadFormatOption.Items.Add('::disktype=atarist-ds');
-   cbReadFormatOption.Items.Add('::disktype=atarist-ss');
-   cbReadFormatOption.Items.Add('::disktype=hdd-mfm');
-   cbReadFormatOption.Items.Add('::disktype=hdd-rll');
-   cbReadFormatOption.Items.Add('::disktype=ibmpc-1m2');
-   cbReadFormatOption.Items.Add('::disktype=ibmpc-1m44');
-   cbReadFormatOption.Items.Add('::disktype=ibmpc-360k');
-   cbReadFormatOption.Items.Add('::disktype=ibmpc-720k');
-   cbReadFormatOption.Items.Add('::disktype=other-1m2');
-   cbReadFormatOption.Items.Add('::disktype=other-1m44');
-   cbReadFormatOption.Items.Add('::disktype=other-320k');
-   cbReadFormatOption.Items.Add('::disktype=other-720k');
-   cbReadFormatOption.Items.Add('::disktype=roland-d20');
-   cbReadFormatOption.Items.Add('::disktype=tape-gcr1');
-   cbReadFormatOption.Items.Add('::disktype=tape-gcr2');
-   cbReadFormatOption.Items.Add('::disktype=tape-mfm');
-   cbReadFormatOption.Items.Add('::disktype=ti-99/4a');
-   cbReadFormatOption.Items.Add('::disktype=trs80_dsdd');
-   cbReadFormatOption.Items.Add('::disktype=trs80_dssd');
-   cbReadFormatOption.Items.Add('::disktype=trs80_ssdd');
-   cbReadFormatOption.Items.Add('::disktype=trs80_sssd');
+
+   // DiskType
+   for index := 0 to High(SCPFormatOptions.Value) do
+   begin
+     entryLine := '::' + SCPFormatOptions.Name + '=' + SCPFormatOptions.Value[index];
+     cbReadFormatOption.Items.Add(entryLine);
+   end;
    cbReadFormatOption.ItemIndex := 0;
   end;
 
+  // HFE Options
   if cbReadFormat.Text = 'HFE (HxC Floppy Emulator)' then
   begin
    cbReadFormatOption.Items.Clear;
    cbReadFormatOption.ItemIndex := -1;
    cbReadFormatOption.Enabled:= true;
    cbReadFormatOption.Items.Add('');
-   cbReadFormatOption.Items.Add('::bitrate=125');
-   cbReadFormatOption.Items.Add('::bitrate=250');
-   cbReadFormatOption.Items.Add('::bitrate=300');
-   cbReadFormatOption.Items.Add('::bitrate=500');
+   // BitRate
+   for index := 0 to High(HFEFormatOptions.BitRate.Value) do
+   begin
+     entryLine := '::' + HFEFormatOptions.BitRate.Name + '=' + HFEFormatOptions.BitRate.Value[index];
+     cbReadFormatOption.Items.Add(entryLine);
+   end;
    cbReadFormatOption.ItemIndex := 0;
 
    //HFEVersion
@@ -3765,24 +3242,10 @@ begin
    cbReadFormatOptionHFEInt.ItemIndex := -1;
    cbReadFormatOptionHFEInt.Enabled:= true;
    cbReadFormatOptionHFEInt.Items.Add('');
-   cbReadFormatOptionHFEInt.Items.Add('::interface=IBMPC_DD');
-   cbReadFormatOptionHFEInt.Items.Add('::interface=IBMPC_HD');
-   cbReadFormatOptionHFEInt.Items.Add('::interface=ATARIST_DD');
-   cbReadFormatOptionHFEInt.Items.Add('::interface=ATARIST_HD');
-   cbReadFormatOptionHFEInt.Items.Add('::interface=AMIGA_DD');
-   cbReadFormatOptionHFEInt.Items.Add('::interface=AMIGA_HD');
-   cbReadFormatOptionHFEInt.Items.Add('::interface=CPC_DD');
-   cbReadFormatOptionHFEInt.Items.Add('::interface=GENERIC_SHUGART_DD');
-   cbReadFormatOptionHFEInt.Items.Add('::interface=IBMPC_ED');
-   cbReadFormatOptionHFEInt.Items.Add('::interface=MSX2_DD');
-   cbReadFormatOptionHFEInt.Items.Add('::interface=C64_DD');
-   cbReadFormatOptionHFEInt.Items.Add('::interface=EMU_SHUGART');
-   cbReadFormatOptionHFEInt.Items.Add('::interface=S950_DD');
-   cbReadFormatOptionHFEInt.Items.Add('::interface=S950_HD');
-   cbReadFormatOptionHFEInt.Items.Add('::interface=S950_DD_HD');
-   cbReadFormatOptionHFEInt.Items.Add('::interface=IBMPC_DD_HD');
-   cbReadFormatOptionHFEInt.Items.Add('::interface=QUICKDISK');
-   cbReadFormatOptionHFEInt.Items.Add('::interface=UNKNOWN');
+   begin
+     entryLine := '::' + HFEFormatOptions.DiskInterface.Name + '=' + HFEFormatOptions.DiskInterface.Value[index];
+     cbReadFormatOptionHFEInt.Items.Add(entryLine);
+   end;
    cbReadFormatOptionHFEInt.ItemIndex := 0;
 
    //HLE EncodingType
@@ -3790,28 +3253,23 @@ begin
    cbReadFormatOptionHFEEnc.ItemIndex := -1;
    cbReadFormatOptionHFEEnc.Enabled:= true;
    cbReadFormatOptionHFEEnc.Items.Add('');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=ISOIBM_MFM');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=AMIGA_MFM');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=ISOIBM_FM');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=EMU_FM');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=TYCOM_FM');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=MEMBRAIN_MFM');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=APPLEII_GCR1');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=APPLEII_GCR2');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=APPLEII_HDDD_A2_GCR1');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=APPLEII_HDDD_A2_GCR2');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=ARBURGDAT');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=ARBURGSYS');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=AED6200P_MFM');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=NORTHSTAR_HS_MFM');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=HEATHKIT_HS_FM');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=DEC_RX02_M2FM');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=APPLEMAC_GCR');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=QD_MO5');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=C64_GCR');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=VICTOR9K_GCR');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=MICRALN_HS_FM');
-   cbReadFormatOptionHFEEnc.Items.Add('::encoding=UNKNOWN');
+   for index := 0 to High(HFEFormatOptions.DiskInterface.Value) do
+   begin
+     entryLine := '::' + HFEFormatOptions.DiskInterface.Name + '=' + HFEFormatOptions.DiskInterface.Value[index];
+     cbReadFormatOptionHFEEnc.Items.Add(entryLine);
+   end;
+   cbReadFormatOptionHFEInt.ItemIndex := 0;
+
+   //HLE EncodingType
+   cbReadFormatOptionHFEEnc.Items.Clear;
+   cbReadFormatOptionHFEEnc.ItemIndex := -1;
+   cbReadFormatOptionHFEEnc.Enabled:= true;
+   cbReadFormatOptionHFEEnc.Items.Add('');
+   for index := 0 to High(HFEFormatOptions.Encoding.Value) do
+   begin
+     entryLine := '::' + HFEFormatOptions.Encoding.Name + '=' + HFEFormatOptions.Encoding.Value[index];
+     cbReadFormatOptionHFEEnc.Items.Add(entryLine);
+   end;
    cbReadFormatOptionHFEEnc.ItemIndex := 0;
   end;
 
@@ -4758,6 +4216,162 @@ begin
   finally
     Proc.Free;
   end;
+end;
+
+
+// Helper to load a <option> node into a TFormatOption
+procedure LoadOption(OptionNode: TDOMNode; var Opt: TFormatOption);
+var
+  i: Integer;
+  ValueNode: TDOMNode;
+  Count: Integer;
+begin
+  Opt.Name := TDOMElement(OptionNode).GetAttribute('name');
+  Count := OptionNode.ChildNodes.Count;
+  SetLength(Opt.Value, Count);
+  i := 0;
+  while i < Count do
+  begin
+    ValueNode := OptionNode.ChildNodes[i];
+    if ValueNode.NodeName = 'value' then
+    begin
+      Opt.Value[i] := ValueNode.TextContent;
+      Inc(i);
+    end
+    else
+      Inc(i);
+  end;
+  SetLength(Opt.Value, i); // trim unused
+end;
+
+procedure TForm1.LoadXML(const FileName: string);
+var
+  Doc: TXMLDocument;
+  Node, Child: TDOMNode;
+  Spec, Ext, Desc: string;
+  FormatDesc: string;
+  WriteFilter: string;
+  ConvFilter: string;
+  CanRead, CanWrite, CanConvert, CanSave: Boolean;
+  WriteFilterAll, WriteFilterList: string;
+  ConvFilterAll, ConvFilterList: string;
+  i, j: Integer;
+  Formats, FormatNode, OptionNode: TDOMNode;
+begin
+  ReadXMLFile(Doc, FileName);
+  WriteFilter := '(*.*)';
+  ConvFilter := '(*.*)';
+  WriteFilterAll := 'Floppy-Images (*.*)|';
+  WriteFilterList := '';
+  ConvFilterAll := 'Floppy-Images (*.*)|';
+  ConvFilterList := '';
+
+  // Create StringLists Read/Conv Destination fileextension
+  FormatDest_Ext := TStringList.Create;
+  FormatDest_Ext.Add('');
+  FormatSpecs_Read := TStringList.Create;
+  FormatSpecs_Read.Add('');
+  FormatSpecs_Write := TStringList.Create;
+  FormatSpecs_Write.Add('');
+  FormatSpecs_Conv := TStringList.Create;
+  FormatSpecs_Conv.Add('');
+
+  { ---- formatspecs ---- }
+  Node := Doc.DocumentElement.FindNode('formatspecs');
+  if Assigned(Node) then
+  begin
+    Child := Node.FirstChild;
+    while Assigned(Child) do
+    begin
+      if Child is TDOMElement then
+      begin
+        Spec := TDOMElement(Child).GetAttribute('spec');
+        CanRead := TDOMElement(Child).GetAttribute('read')='true';
+        CanWrite := TDOMElement(Child).GetAttribute('write')='true';
+        CanConvert := TDOMElement(Child).GetAttribute('convert')='true';
+
+        { Use XML flag attributes to add to each list }
+        if CanRead then
+        begin
+          FormatSpecs_Read.Add(Spec);
+        end;
+        if CanWrite then
+        begin
+          FormatSpecs_Write.Add(Spec);
+        end;
+        if CanConvert then
+        begin
+          FormatSpecs_Conv.Add(Spec);
+        end;
+      end;
+      Child := Child.NextSibling;
+    end;
+  end;
+
+  { ---- formats ---- }
+  Node := Doc.DocumentElement.FindNode('formats');
+  if Assigned(Node) then
+  begin
+    Child := Node.FirstChild;
+    while Assigned(Child) do
+    begin
+      if Child is TDOMElement then
+      begin
+
+        Ext := TDOMElement(Child).GetAttribute('ext');
+        Desc := TDOMElement(Child).GetAttribute('desc');
+        CanSave := TDOMElement(Child).GetAttribute('save')='true';
+        CanConvert := TDOMElement(Child).GetAttribute('convert')='true';
+        { Add format EXT (Description) }
+        FormatDesc := ext + ' (' + Desc + ')';
+        FormatDest_Ext.Add(FormatDesc);
+
+        { Write file filter *.EXT|descrption }
+        if CanSave then
+        begin
+           WriteFilterAll := WriteFilterAll + '*.' + LowerCase(Ext) + ';';
+           WriteFilterList := WriteFilterList + Desc + ' (' + Ext + ')|*.' + LowerCase(Ext) + '|';
+        end;
+        { Conversion file filter *.EXT|description }
+        if CanConvert then
+        begin
+            ConvFilterAll := ConvFilterAll + '*.' + LowerCase(Ext) + ';';
+            ConvFilterList := ConvFilterList + Desc + ' (' + Ext + ')|*.' + LowerCase(Ext) + '|';
+        end;
+
+        { SuperCardPro options }
+        if Ext = 'SCP' then
+        begin
+          for j := 0 to TDOMElement(Child).ChildNodes.Count - 1 do
+          begin
+            OptionNode := TDOMElement(Child).ChildNodes[j];
+            if OptionNode.NodeName = 'option' then
+              LoadOption(OptionNode, SCPFormatOptions);
+          end;
+        end
+        else if Ext = 'HFE' then
+        begin
+          for j := 0 to TDOMElement(Child).ChildNodes.Count - 1 do
+          begin
+            OptionNode := TDOMElement(Child).ChildNodes[j];
+            if OptionNode.NodeName <> 'option' then Continue;
+
+            case TDOMElement(OptionNode).GetAttribute('name') of
+              'Bitrate':      LoadOption(OptionNode, HFEFormatOptions.BitRate);
+              'Interface':    LoadOption(OptionNode, HFEFormatOptions.DiskInterface);
+              'Encoding':     LoadOption(OptionNode, HFEFormatOptions.Encoding);
+            end;
+          end;
+        end;
+      end;
+      Child := Child.NextSibling;
+    end;
+  end;
+  Doc.Free;
+
+  EdWriteFileName.Filter := WriteFilterAll + '|' + WriteFilterList;
+  edConvFileSource.Filter := ConvFilterAll + '|' + ConvFilterList;
+
 end;
 
 end.

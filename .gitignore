@@ -8,3 +8,7 @@
 source/FluxFloppyManager.x86_64-linux-gnu
 source/FluxFloppyManager
 source/FluxFloppyManager.ini
+*.zip
+*.bat
+*.res
+*.dbg

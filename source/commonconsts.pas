@@ -42,6 +42,9 @@ const
   MIN_HEIGHT = 500;
   MIN_WIDTH = 920;
 
+// XML Format file
+  FLUX_XML_FILE = 'definitions.xml';
+
 // INI Main section
   FLUX_INI_NAME = 'FluxMyFluffyFloppy';
   

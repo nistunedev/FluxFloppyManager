@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <formatspecs>
+      <format spec="acorn.adfs.160" read="true" write="true" convert="true"/>
+      <format spec="acorn.adfs.1600" read="true" write="true" convert="true"/>
+      <format spec="acorn.adfs.320" read="true" write="true" convert="true"/>
+      <format spec="acorn.adfs.640" read="true" write="true" convert="true"/>
+      <format spec="acorn.adfs.800" read="true" write="true" convert="true"/>
+      <format spec="acorn.dfs.ds" read="true" write="true" convert="true"/>
+      <format spec="acorn.dfs.ds80" read="true" write="true" convert="true"/>
+      <format spec="acorn.dfs.ss" read="true" write="true" convert="true"/>
+      <format spec="acorn.dfs.ss80" read="true" write="true" convert="true"/>
+      <format spec="akai.1600" read="true" write="true" convert="true"/>
+      <format spec="akai.800" read="true" write="true" convert="true"/>
+      <format spec="amiga.amigados" read="true" write="true" convert="true"/>
+      <format spec="amiga.amigados_hd" read="true" write="true" convert="true"/>
+      <format spec="apple2.appledos.140" read="true" write="true" convert="true"/>
+      <format spec="apple2.nofs.140" read="true" write="true" convert="true"/>
+      <format spec="apple2.prodos.140" read="true" write="true" convert="true"/>
+      <format spec="atari.130" read="true" write="true" convert="true"/>
+      <format spec="atari.90" read="true" write="true" convert="true"/>
+      <format spec="atarist.360" read="true" write="true" convert="true"/>
+      <format spec="atarist.400" read="true" write="true" convert="true"/>
+      <format spec="atarist.440" read="true" write="true" convert="true"/>
+      <format spec="atarist.720" read="true" write="true" convert="true"/>
+      <format spec="atarist.800" read="true" write="true" convert="true"/>
+      <format spec="atarist.880" read="true" write="true" convert="true"/>
+      <format spec="coco.decb" read="true" write="true" convert="true"/>
+      <format spec="coco.decb.40t" read="true" write="true" convert="true"/>
+      <format spec="coco.os9.40ds" read="true" write="true" convert="true"/>
+      <format spec="coco.os9.40ss" read="true" write="true" convert="true"/>
+      <format spec="coco.os9.80ds" read="true" write="true" convert="true"/>
+      <format spec="coco.os9.80ss" read="true" write="true" convert="true"/>
+      <format spec="commodore.1541" read="true" write="true" convert="true"/>
+      <format spec="commodore.1571" read="true" write="true" convert="true"/>
+      <format spec="commodore.1581" read="true" write="true" convert="true"/>
+      <format spec="commodore.fd2000.dd" read="true" write="true" convert="true"/>
+      <format spec="commodore.fd2000.hd" read="true" write="true" convert="true"/>
+      <format spec="commodore.fd4000.ed" read="true" write="true" convert="true"/>
+      <format spec="datageneral.2f" read="true" write="true" convert="true"/>
+      <format spec="dec.rx01" read="true" write="true" convert="true"/>
+      <format spec="dec.rx02" read="true" write="true" convert="true"/>
+      <format spec="dragon.40ds" read="true" write="true" convert="true"/>
+      <format spec="dragon.40ss" read="true" write="true" convert="true"/>
+      <format spec="dragon.80ds" read="true" write="true" convert="true"/>
+      <format spec="dragon.80ss" read="true" write="true" convert="true"/>
+      <format spec="eagle.dsqd.800" read="true" write="true" convert="true"/>
+      <format spec="eagle.ssqd.400" read="true" write="true" convert="true"/>
+      <format spec="ensoniq.1600" read="true" write="true" convert="true"/>
+      <format spec="ensoniq.800" read="true" write="true" convert="true"/>
+      <format spec="ensoniq.mirage" read="true" write="true" convert="true"/>
+      <format spec="epson.qx10.320" read="true" write="true" convert="true"/>
+      <format spec="epson.qx10.396" read="true" write="true" convert="true"/>
+      <format spec="epson.qx10.399" read="true" write="true" convert="true"/>
+      <format spec="epson.qx10.400" read="true" write="true" convert="true"/>
+      <format spec="epson.qx10.booter" read="true" write="true" convert="true"/>
+      <format spec="epson.qx10.logo" read="true" write="true" convert="true"/>
+      <format spec="gem.1600" read="true" write="true" convert="true"/>
+      <format spec="hp.mmfm.9885" read="true" write="true" convert="true"/>
+      <format spec="hp.mmfm.9895" read="true" write="true" convert="true"/>
+      <format spec="ibm.1200" read="true" write="true" convert="true"/>
+      <format spec="ibm.1440" read="true" write="true" convert="true"/>
+      <format spec="ibm.160" read="true" write="true" convert="true"/>
+      <format spec="ibm.1680" read="true" write="true" convert="true"/>
+      <format spec="ibm.180" read="true" write="true" convert="true"/>
+      <format spec="ibm.2880" read="true" write="true" convert="true"/>
+      <format spec="ibm.320" read="true" write="true" convert="true"/>
+      <format spec="ibm.360" read="true" write="true" convert="true"/>
+      <format spec="ibm.720" read="true" write="true" convert="true"/>
+      <format spec="ibm.800" read="true" write="true" convert="true"/>
+      <format spec="ibm.dmf" read="true" write="true" convert="true"/>
+      <format spec="ibm.scan" read="true" write="true" convert="true"/>
+      <format spec="kaypro.dsdd.40" read="true" write="true" convert="true"/>
+      <format spec="kaypro.dsdd.80" read="true" write="true" convert="true"/>
+      <format spec="kaypro.ssdd.40" read="true" write="true" convert="true"/>
+      <format spec="luxor.1000.abcnet" read="true" write="true" convert="true"/>
+      <format spec="luxor.1000.data" read="true" write="true" convert="true"/>
+      <format spec="luxor.1000.program" read="true" write="true" convert="true"/>
+      <format spec="luxor.160" read="true" write="true" convert="true"/>
+      <format spec="luxor.320" read="true" write="true" convert="true"/>
+      <format spec="luxor.640" read="true" write="true" convert="true"/>
+      <format spec="luxor.80" read="true" write="true" convert="true"/>
+      <format spec="mac.400" read="true" write="true" convert="true"/>
+      <format spec="mac.800" read="true" write="true" convert="true"/>
+      <format spec="micropolis.100tpi.ds" read="true" write="true" convert="true"/>
+      <format spec="micropolis.100tpi.ds.275" read="true" write="true" convert="true"/>
+      <format spec="micropolis.100tpi.ss" read="true" write="true" convert="true"/>
+      <format spec="micropolis.100tpi.ss.275" read="true" write="true" convert="true"/>
+      <format spec="micropolis.48tpi.ds" read="true" write="true" convert="true"/>
+      <format spec="micropolis.48tpi.ds.275" read="true" write="true" convert="true"/>
+      <format spec="micropolis.48tpi.ss" read="true" write="true" convert="true"/>
+      <format spec="micropolis.48tpi.ss.275" read="true" write="true" convert="true"/>
+      <format spec="mm1.os9.80dshd_32" read="true" write="true" convert="true"/>
+      <format spec="mm1.os9.80dshd_33" read="true" write="true" convert="true"/>
+      <format spec="mm1.os9.80dshd_36" read="true" write="true" convert="true"/>
+      <format spec="mm1.os9.80dshd_37" read="true" write="true" convert="true"/>
+      <format spec="msx.1d" read="true" write="true" convert="true"/>
+      <format spec="msx.1dd" read="true" write="true" convert="true"/>
+      <format spec="msx.2d" read="true" write="true" convert="true"/>
+      <format spec="msx.2dd" read="true" write="true" convert="true"/>
+      <format spec="northstar.fm.ds" read="true" write="true" convert="true"/>
+      <format spec="northstar.fm.ss" read="true" write="true" convert="true"/>
+      <format spec="northstar.mfm.ds" read="true" write="true" convert="true"/>
+      <format spec="northstar.mfm.ss" read="true" write="true" convert="true"/>
+      <format spec="occ1.dd" read="true" write="true" convert="true"/>
+      <format spec="occ1.sd" read="true" write="true" convert="true"/>
+      <format spec="olivetti.m20" read="true" write="true" convert="true"/>
+      <format spec="pc98.2d" read="true" write="true" convert="true"/>
+      <format spec="pc98.2dd" read="true" write="true" convert="true"/>
+      <format spec="pc98.2hd" read="true" write="true" convert="true"/>
+      <format spec="pc98.2hs" read="true" write="true" convert="true"/>
+      <format spec="pc98.n88basic.hd" read="true" write="true" convert="true"/>
+      <format spec="raw.125" read="true" write="true" convert="true"/>
+      <format spec="raw.250" read="true" write="true" convert="true"/>
+      <format spec="raw.500" read="true" write="true" convert="true"/>
+      <format spec="sci.prophet" read="true" write="true" convert="true"/>
+      <format spec="sega.sf7000" read="true" write="true" convert="true"/>
+      <format spec="thomson.1s160" read="true" write="true" convert="true"/>
+      <format spec="thomson.1s320" read="true" write="true" convert="true"/>
+      <format spec="thomson.1s80" read="true" write="true" convert="true"/>
+      <format spec="thomson.2s160" read="true" write="true" convert="true"/>
+      <format spec="thomson.2s320" read="true" write="true" convert="true"/>
+      <format spec="tsc.flex.dsdd" read="true" write="true" convert="true"/>
+      <format spec="tsc.flex.ssdd" read="true" write="true" convert="true"/>
+      <format spec="xerox.860.dssd" read="true" write="true" convert="true"/>
+      <format spec="xerox.860.ss" read="true" write="true" convert="true"/>
+      <format spec="zx.3dos.ds80" read="true" write="true" convert="true"/>
+      <format spec="zx.3dos.ss40" read="true" write="true" convert="true"/>
+      <format spec="zx.d80.ds80" read="true" write="true" convert="true"/>
+      <format spec="zx.fdd3000.ds80" read="true" write="true" convert="true"/>
+      <format spec="zx.fdd3000.ss40" read="true" write="true" convert="true"/>
+      <format spec="zx.kempston.ds80" read="true" write="true" convert="true"/>
+      <format spec="zx.kempston.ss40" read="true" write="true" convert="true"/>
+      <format spec="zx.opus.ds80" read="true" write="true" convert="true"/>
+      <format spec="zx.opus.ss40" read="true" write="true" convert="true"/>
+      <format spec="zx.plusd.ds80" read="true" write="true" convert="true"/>
+      <format spec="zx.quorum.ds80" read="true" write="true" convert="true"/>
+      <format spec="zx.rocky.ds80" read="true" write="true" convert="true"/>
+      <format spec="zx.rocky.ss40" read="true" write="true" convert="true"/>
+      <format spec="zx.trdos.ds80" read="true" write="true" convert="true"/>
+      <format spec="zx.turbodrive.ds40" read="true" write="true" convert="true"/>
+      <format spec="zx.turbodrive.ds80" read="true" write="true" convert="true"/>
+      <format spec="zx.watford.ds80" read="true" write="true" convert="true"/>
+      <format spec="zx.watford.ss40" read="true" write="true" convert="true"/>
+    </formatspecs>
+    <formats>
+        <format ext="A2R" desc="Applesauce" save="true" convert="true"/>
+        <format ext="ADF" desc="AmigaDOS" save="true" convert="true"/>
+        <format ext="ADS" desc="Acorn" save="true" convert="true"/>
+        <format ext="ADM" desc="Acorn" save="true" convert="true"/>
+        <format ext="ADL" desc="Acorn" save="true" convert="true"/>
+        <format ext="CTR" desc="CT Raw" save="true" convert="true"/>
+        <format ext="D1M" desc="CMD FD2000 DD" save="true" convert="true"/>
+        <format ext="D2M" desc="CMD FD2000 HD" save="true" convert="true"/>
+        <format ext="D4M" desc="CMD FD4000 ED" save="true" convert="true"/>
+        <format ext="D64" desc="Commodore 1541" save="true" convert="true"/>
+        <format ext="D71" desc="Commodore 1571" save="true" convert="true"/>
+        <format ext="D81" desc="Commodore 1581" save="true" convert="true"/>
+        <format ext="D88" desc="D88" save="true" convert="true"/>
+        <format ext="DCP" desc="DCP" save="true" convert="true"/>
+        <format ext="DIM" desc="DIM" save="true" convert="true"/>
+        <format ext="DMK" desc="TRS80 Tandy Dragon MSX" save="true" convert="true"/>
+        <format ext="DO" desc="Apple II" save="true" convert="true"/>
+        <format ext="DSD" desc="Acorn" save="true" convert="true"/>
+        <format ext="DSK" desc="DSK" save="true" convert="true"/>
+        <format ext="EDSK" desc="EDSK, use: format=ibm.scan" save="true" convert="true"/>
+        <format ext="FD" desc="FD" save="true" convert="true"/>
+        <format ext="FDI" desc="FDI" save="true" convert="true"/>
+        <format ext="HDM" desc="HDM" save="true" convert="true"/>
+        <format ext="HFE" desc="HxC Floppy Emulator" save="true" convert="true">
+          <option name="Bitrate">
+            <value>125</value>
+            <value>250</value>
+            <value>300</value>
+            <value>500</value>
+          </option>
+          <option name="Interface">
+            <value>IBMPC_DD</value>
+            <value>IBMPC_HD</value>
+            <value>ATARIST_DD</value>
+            <value>ATARIST_HD</value>
+            <value>AMIGA_DD</value>
+            <value>AMIGA_HD</value>
+            <value>CPC_DD</value>
+            <value>GENERIC_SHUGART_DD</value>
+            <value>IBMPC_ED</value>
+            <value>MSX2_DD</value>
+            <value>C64_DD</value>
+            <value>EMU_SHUGART</value>
+            <value>S950_DD</value>
+            <value>S950_HD</value>
+            <value>S950_DD_HD</value>
+            <value>IBMPC_DD_HD</value>
+            <value>QUICKDISK</value>
+            <value>UNKNOWN</value>
+          </option>
+          <option name="Encoding">
+            <value>ISOIBM_MFM</value>
+            <value>AMIGA_MFM</value>
+            <value>ISOIBM_FM</value>
+            <value>EMU_FM</value>
+            <value>TYCOM_FM</value>
+            <value>MEMBRAIN_MFM</value>
+            <value>APPLEII_GCR1</value>
+            <value>APPLEII_GCR2</value>
+            <value>APPLEII_HDDD_A2_GCR1</value>
+            <value>APPLEII_HDDD_A2_GCR2</value>
+            <value>ARBURGDAT</value>
+            <value>ARBURGSYS</value>
+            <value>AED6200P_MFM</value>
+            <value>NORTHSTAR_HS_MFM</value>
+            <value>HEATHKIT_HS_FM</value>
+            <value>DEC_RX02_M2FM</value>
+            <value>APPLEMAC_GCR</value>
+            <value>QD_MO5</value>
+            <value>C64_GCR</value>
+            <value>VICTOR9K_GCR</value>
+            <value>MICRALN_HS_FM</value>
+            <value>UNKNOWN</value>
+          </option>
+        </format>
+        <format ext="IMA" desc="Disk Image" save="true" convert="true"/>
+        <format ext="IMG" desc="Disk Image" save="true" convert="true"/>
+        <format ext="IMD" desc="ImageDisk" save="true" convert="true"/>
+        <format ext="IPF" desc="IPF" save="true" convert="true"/>
+        <format ext="MGT" desc="Disciple/+D" save="true" convert="true"/>
+        <format ext="MSA" desc="Atari ST" save="true" convert="true"/>
+        <format ext="NFD" desc="T98-Next" save="false" convert="false"/>
+        <format ext="NSI" desc="NS DOS Northstar" save="true" convert="true"/>
+        <format ext="PO" desc="Apple II" save="true" convert="true"/>
+        <format ext="RAW" desc="KryoFlux" save="true" convert="true"/>
+        <format ext="SF7" desc="SEGA" save="true" convert="true"/>
+        <format ext="SCP" desc="SuperCardPro" save="true" convert="true">
+          <option name="DiskType">
+            <value>amiga</value>
+            <value>amigahd</value>
+            <value>c64</value>
+            <value>amstrad-cpc</value>
+            <value>apple-1m44</value>
+            <value>apple-400k</value>
+            <value>apple-800k</value>
+            <value>appleii</value>
+            <value>appleiipro</value>
+            <value>atari800-dd</value>
+            <value>atari800-ed</value>
+            <value>atari800-sd</value>
+            <value>atarist-ds</value>
+            <value>atarist-ss</value>
+            <value>hdd-mfm</value>
+            <value>hdd-rll</value>
+            <value>ibmpc-1m2</value>
+            <value>ibmpc-1m44</value>
+            <value>ibmpc-360k</value>
+            <value>ibmpc-720k</value>
+            <value>other-1m2</value>
+            <value>other-1m44</value>
+            <value>other-320k</value>
+            <value>other-720k</value>
+            <value>roland-d20</value>
+            <value>tape-gcr1</value>
+            <value>tape-gcr2</value>
+            <value>tape-mfm</value>
+            <value>ti-99/4a</value>
+            <value>trs80_dsdd</value>
+            <value>trs80_dssd</value>
+            <value>trs80_ssdd</value>
+            <value>trs80_sssd</value>
+          </option>
+        </format>        
+        
+        <format ext="SSD" desc="Acorn" save="true" convert="true"/>
+        <format ext="ST" desc="Atari ST" save="true" convert="true"/>
+        <format ext="TD0" desc="Teledisk" save="true" convert="true"/>
+        <format ext="XDF" desc="XDF" save="true" convert="true"/>
+    </formats>
+</root>
