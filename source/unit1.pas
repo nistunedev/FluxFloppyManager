@@ -539,6 +539,8 @@ type
     procedure LoadXML(const FileName: string);
 //    procedure LoadOption(OptionNode: TDOMNode; var Opt: TFormatOption);
     procedure performModalCmdAction(const command: string);
+    function GetReadFormatSelection : String;
+    function GetConvFormatSelection : String;
 
     procedure performCmdAction(const cmd: string;
                                const param: string;
@@ -3202,7 +3204,7 @@ begin
   cbReadFormatOption.Enabled:= false;
 
   // SCP Options
-  if cbReadFormat.Text = 'SCP (SuperCardPro)' then
+  if GetReadFormatSelection = COMBO_SELECTION_SCP then
   begin
    cbReadFormatOption.Items.Clear;
    cbReadFormatOption.ItemIndex := -1;
@@ -3219,7 +3221,7 @@ begin
   end;
 
   // HFE Options
-  if cbReadFormat.Text = 'HFE (HxC Floppy Emulator)' then
+  if GetReadFormatSelection = COMBO_SELECTION_HFE then
   begin
    cbReadFormatOption.Items.Clear;
    cbReadFormatOption.ItemIndex := -1;
@@ -3341,6 +3343,16 @@ begin
   close;
 end;
 
+function TForm1.GetReadFormatSelection(): String;
+begin
+  Result := trim(leftStr(cbReadFormat.Text,3));
+end;
+
+function TForm1.GetConvFormatSelection(): String;
+begin
+  Result := trim(leftStr(cbConvFormat.Text,3));
+end;
+
 procedure TForm1.Create_Filename;
 var
   filenameRead, lBlOf, filenameConvert: string;
@@ -3383,158 +3395,39 @@ begin
      end;
 
      filenameRead := edReadFilename.Text;
-     disc1 := StrToInt(edReadDisk1.Text);
-     disc2 := StrToInt(edReadDisk2.Text);
+     disc1 := StrToInt(edReadDisk1.Text); // disc LHS
+     disc2 := StrToInt(edReadDisk2.Text); // of disc RHS
      digits := StrToInt(edReadDigits.Text);
      lblOf := edReadDiskOf.Text;
 
-  // Disc1
-  if disc1 > 0 then
-  begin
-    // Digits 1
-    if digits = 1 then
-      filenameRead := edReadFilename.Text + edReadDisk1.Text;
-    // Digits 2
-    if digits = 2 then
-    begin
-      if (disc1 < 10) then
-        filenameRead := edReadFilename.Text + '0' + edReadDisk1.Text
-      else
-      if (disc1 > 9) then
-        filenameRead := filenameRead + edReadDisk1.Text;
-    end;
-    // Digits 3
-    if digits = 3 then
-    begin
-      if (disc1 < 10) then
-        filenameRead := edReadFilename.Text + '00' + edReadDisk1.Text
-      else
-      if (disc1 > 9) and (disc1 < 100) then
-        filenameRead := edReadFilename.Text + '0' + edReadDisk1.Text
-      else
-      if disc1 > 99 then
-        filenameRead := edReadFilename.Text + edReadDisk1.Text;
-    end;
-    // Digits 4
-    if digits = 4 then
-    begin
-      if (disc1 < 10) then
-        filenameRead := edReadFilename.Text + '000' + edReadDisk1.Text
-      else
-      if (disc1 > 9) and (disc1 < 100) then
-        filenameRead := edReadFilename.Text + '00' + edReadDisk1.Text
-      else
-      if (disc1 > 99) and (disc1 < 1000) then
-        filenameRead := edReadFilename.Text + '0' + edReadDisk1.Text
-      else
-      if disc1 > 999 then
-        filenameRead := edReadFilename.Text + edReadDisk1.Text;
-    end;
-    // Digits 5
-    if digits = 5 then
-    begin
-      if (disc1 < 10) then
-        filenameRead := edReadFilename.Text + '0000' + edReadDisk1.Text
-      else
-      if (disc1 > 9) and (disc1 < 100) then
-        filenameRead := edReadFilename.Text + '000' + edReadDisk1.Text
-      else
-      if (disc1 > 99) and (disc1 < 1000) then
-        filenameRead := edReadFilename.Text + '00' + edReadDisk1.Text
-      else
-      if (disc1 > 999) and (disc1 < 10000) then
-        filenameRead := edReadFilename.Text + '0' + edReadDisk1.Text
-      else
-      if (disc1 > 9999) then
-        filenameRead := edReadFilename.Text + edReadDisk1.Text;
-    end;
-  end;
 
-  // Disc2
-  if disc2 > 0 then
-  begin
-    // digits 1
-    if digits = 1 then
-      filenameRead := filenameRead + lblOf + edReadDisk2.Text;
-    // digits 2
-    if digits = 2 then
-    begin
-      if (disc2 < 10) then
-        filenameRead := filenameRead + lblOf + '0' + edReadDisk2.Text
-      else
-      if (disc2 > 9) then
-        filenameRead := filenameRead + lblOf + edReadDisk2.Text;
-    end;
+     if disc1 > 0 then
+       filenameRead := edConvFilename.Text + Format('%.*d', [digits, disc1]);
 
-    // digits 3
-    if digits = 3 then
-    begin
-      begin
-        if (disc2 < 10) then
-          filenameRead := filenameRead + lblOf + '00' + edReadDisk2.Text
-        else
-        if (disc2 > 9) and (disc2 < 100) then
-          filenameRead := filenameRead + lblOf + '0' + edReadDisk2.Text
-        else
-        if (disc2 > 99) then
-          filenameRead := filenameRead + lblOf + edReadDisk2.Text;
-      end;
-    end;
-
-    // Digits 4
-    if digits = 4 then
-    begin
-      if (disc2 < 10) then
-        filenameRead := filenameRead + lblOf + '000' + edReadDisk2.Text
-      else
-      if (disc2 > 9) and (disc2 < 100) then
-        filenameRead := filenameRead + lblOf + '00' + edReadDisk2.Text
-      else
-      if (disc2 > 99) and (disc2 < 1000) then
-        filenameRead := filenameRead + lblOf + '0' + edReadDisk2.Text
-      else
-      if (disc2 > 999) then
-        filenameRead := filenameRead + lblOf + edReadDisk2.Text;
-    end;
-
-    // Digits 5
-    if digits = 5 then
-    begin
-      if (disc2 < 10) then
-        filenameRead := filenameRead + lblOf + '0000' + edReadDisk2.Text
-      else
-      if (disc2 > 9) and (disc2 < 100) then
-        filenameRead := filenameRead + lblOf + '000' + edReadDisk2.Text
-      else
-      if (disc2 > 99) and (disc2 < 1000) then
-        filenameRead := filenameRead + lblOf + '00' + edReadDisk2.Text
-      else
-      if (disc2 > 999) and (disc2 < 10000) then
-        filenameRead := filenameRead + lblOf + '0' + edReadDisk2.Text
-      else
-      if (disc2 > 9999) then
-        filenameRead := filenameRead + lblOf + edReadDisk2.Text;
-    end;
-  end;
+     if disc2 > 0 then
+       filenameRead := filenameRead + lblOf + Format('%.*d', [digits, disc2]);
 
   // read file extension - FMFF 4.0
    cbReadFormatOptionHFEVer.Enabled :=false;
    cbReadFormatOptionHFEInt.Enabled :=false;
    cbReadFormatOptionHFEEnc.Enabled :=false;
-   case trim(leftStr(cbReadFormat.Text,3)) of
-    'EDS':
-     cbReadPreview.Text := filenameRead + '.' + lowercase(trim(leftStr(cbReadFormat.Text,4)));
-    'HFE':
+   case GetReadFormatSelection of
+    COMBO_SELECTION_EDS: //EDSK
+      begin
+       cbReadPreview.Text := filenameRead + '.' + lowercase(trim(leftStr(cbReadFormat.Text,4)));
+      end;
+    COMBO_SELECTION_HFE:
       begin
        cbReadFormatOptionHFEVer.Enabled :=true;
        cbReadFormatOptionHFEInt.Enabled :=true;
        cbReadFormatOptionHFEEnc.Enabled :=true;
-       cbReadPreview.Text := filenameRead + '.' + lowercase(leftStr(cbReadFormat.Text,3)) + cbReadFormatoption.Text + cbReadFormatoptionHFEVer.Text + cbReadFormatoptionHFEInt.Text + cbReadFormatoptionHFEEnc.Text;
+       cbReadPreview.Text := filenameRead + '.' + lowercase(GetReadFormatSelection) + cbReadFormatoption.Text + cbReadFormatoptionHFEVer.Text + cbReadFormatoptionHFEInt.Text + cbReadFormatoptionHFEEnc.Text;
       end;
-    'SCP':
-      cbReadPreview.Text := filenameRead + '.' + lowercase(leftStr(cbReadFormat.Text,3)) + cbReadFormatoption.Text;
-    'RAW':
-      cbReadPreview.Text := filenameRead + '00.0.' + lowercase(leftStr(cbReadFormat.Text,3));
+    COMBO_SELECTION_SCP:
+      begin
+       cbReadPreview.Text := filenameRead + '.' + lowercase(GetReadFormatSelection) + cbReadFormatoption.Text;
+       cbReadPreview.Text := filenameRead + '00.0.' + lowercase(GetReadFormatSelection);
+      end
     else
      if cbReadFormat.Text <> '' then cbReadPreview.Text := filenameRead + '.' + lowercase(trim(leftStr(cbReadFormat.Text,3)));
      if cbReadFormat.Text = '' then cbReadPreview.Text := filenameRead;
@@ -3574,157 +3467,42 @@ begin
        end;
 
        filenameConvert := edConvFilename.Text;
-       disc1 := cbConvDisk1.Value;
-       disc2 := cbConvDisk2.Value;
+       disc1 := cbConvDisk1.Value; // Disc LHS
+       disc2 := cbConvDisk2.Value; // of Disc RHS
        digits := cbConvDigits.Value;
        lblOf := edConvDiskOf.Text;
        // Disc1
        if disc1 > 0 then
-       begin
-       // Digits 1
-       if digits = 1 then
-         filenameConvert := edConvFilename.Text + cbConvDisk1.Text;
-       // Digits 2
-       if digits = 2 then
-       begin
-         if (disc1 < 10) then
-           filenameconvert := edConvFilename.Text + '0' + cbConvDisk1.Text
-         else
-         if (disc1 > 9) then
-           filenameconvert := filenameconvert + cbConvDisk1.Text;
-       end;
-       // Digits 3
-       if digits = 3 then
-       begin
-         if (disc1 < 10) then
-           filenameconvert := edConvFilename.Text + '00' + cbConvDisk1.Text
-         else
-         if (disc1 > 9) and (disc1 < 100) then
-           filenameconvert := edConvFilename.Text + '0' + cbConvDisk1.Text
-         else
-         if disc1 > 99 then
-           filenameconvert := edConvFilename.Text + cbConvDisk1.Text;
-       end;
-       // Digits 4
-       if digits = 4 then
-       begin
-         if (disc1 < 10) then
-           filenameconvert := edConvFilename.Text + '000' + cbConvDisk1.Text
-         else
-         if (disc1 > 9) and (disc1 < 100) then
-           filenameconvert := edConvFilename.Text + '00' + cbConvDisk1.Text
-         else
-         if (disc1 > 99) and (disc1 < 1000) then
-           filenameconvert := edConvFilename.Text + '0' + cbConvDisk1.Text
-         else
-         if disc1 > 999 then
-           filenameconvert := edConvFilename.Text + cbConvDisk1.Text;
-       end;
-       // Digits 5
-       if digits = 5 then
-       begin
-         if (disc1 < 10) then
-           filenameconvert := edConvFilename.Text + '0000' + cbConvDisk1.Text
-         else
-         if (disc1 > 9) and (disc1 < 100) then
-           filenameconvert := edConvFilename.Text + '000' + cbConvDisk1.Text
-         else
-         if (disc1 > 99) and (disc1 < 1000) then
-           filenameconvert := edConvFilename.Text + '00' + cbConvDisk1.Text
-         else
-         if (disc1 > 999) and (disc1 < 10000) then
-           filenameconvert := edConvFilename.Text + '0' + cbConvDisk1.Text
-         else
-         if (disc1 > 9999) then
-           filenameconvert := edConvFilename.Text + cbConvDisk1.Text;
-       end;
-     end;
+        filenameConvert := edConvFilename.Text + Format('%.*d', [digits, disc1]);
 
-     // Disc2
-     if disc2 > 0 then
-     begin
-       // digits 1
-       if digits = 1 then
-         filenameconvert := filenameconvert + lblOf + cbConvDisk2.Text;
-       // digits 2
-       if digits = 2 then
-       begin
-         if (disc2 < 10) then
-           filenameconvert := filenameconvert + lblOf + '0' + cbConvDisk2.Text
-         else
-         if (disc2 > 9) then
-           filenameconvert := filenameconvert + lblOf + cbConvDisk2.Text;
-       end;
-
-       // digits 3
-       if digits = 3 then
-       begin
-         begin
-           if (disc2 < 10) then
-             filenameconvert := filenameconvert + lblOf + '00' + cbConvDisk2.Text
-           else
-           if (disc2 > 9) and (disc2 < 100) then
-             filenameconvert := filenameconvert + lblOf + '0' + cbConvDisk2.Text
-           else
-           if (disc2 > 99) then
-             filenameconvert := filenameconvert + lblOf + cbConvDisk2.Text;
-         end;
-       end;
-
-       // Digits 4
-       if digits = 4 then
-       begin
-         if (disc2 < 10) then
-           filenameconvert := filenameconvert + lblOf + '000' + cbConvDisk2.Text
-         else
-         if (disc2 > 9) and (disc2 < 100) then
-           filenameconvert := filenameconvert + lblOf + '00' + cbConvDisk2.Text
-         else
-         if (disc2 > 99) and (disc2 < 1000) then
-           filenameconvert := filenameconvert + lblOf + '0' + cbConvDisk2.Text
-         else
-         if (disc2 > 999) then
-           filenameconvert := filenameconvert + lblOf + cbConvDisk2.Text;
-       end;
-
-       // Digits 5
-       if digits = 5 then
-       begin
-         if (disc2 < 10) then
-           filenameconvert := filenameconvert + lblOf + '0000' + cbConvDisk2.Text
-         else
-         if (disc2 > 9) and (disc2 < 100) then
-           filenameconvert := filenameconvert + lblOf + '000' + cbConvDisk2.Text
-         else
-         if (disc2 > 99) and (disc2 < 1000) then
-           filenameconvert := filenameconvert + lblOf + '00' + cbConvDisk2.Text
-         else
-         if (disc2 > 999) and (disc2 < 10000) then
-           filenameconvert := filenameconvert + lblOf + '0' + cbConvDisk2.Text
-         else
-         if (disc2 > 9999) then
-           filenameconvert := filenameconvert + lblOf + cbConvDisk2.Text;
-       end;
-     end;
+       if disc2 > 0 then
+        filenameConvert := filenameConvert + lblOf + Format('%.*d', [digits, disc2]);
 
     // conv file extension - FMFF 4.0
     cbConvFormatOptionHFEVer.Enabled :=false;
     cbConvFormatOptionHFEInt.Enabled :=false;
     cbConvFormatOptionHFEEnc.Enabled :=false;
-    case leftStr(cbConvFileFormat.Text,3) of
-     'EDS':
-      edConvFilenamePreview.Text := FilenameConvert + '.' + lowercase(trim(leftStr(cbConvFileFormat.Text,4)));
-     'HFE':
+
+    case GetConvFormatSelection of
+     COMBO_SELECTION_EDS: //EDSK
+       begin
+        edConvFilenamePreview.Text := FilenameConvert + '.' + lowercase(trim(leftStr(cbConvFileFormat.Text,4)));
+       end;
+     COMBO_SELECTION_HFE:
        begin
         cbConvFormatOptionHFEVer.Enabled :=true;
         cbConvFormatOptionHFEInt.Enabled :=true;
         cbConvFormatOptionHFEEnc.Enabled :=true;
-        edConvFilenamePreview.Text := FilenameConvert + '.' + Lowercase(leftStr(cbConvFileFormat.Text,3)) + cbConvFormatOption.Text + cbConvFormatOptionHFEVer.Text + cbConvFormatOptionHFEInt.Text + cbConvFormatOptionHFEEnc.Text;
+        edConvFilenamePreview.Text := FilenameConvert + '.' + Lowercase(GetConvFormatSelection) + cbConvFormatOption.Text + cbConvFormatOptionHFEVer.Text + cbConvFormatOptionHFEInt.Text + cbConvFormatOptionHFEEnc.Text;
        end;
-     'SCP':
-       edConvFilenamePreview.Text := FilenameConvert + '.' + Lowercase(leftStr(cbConvFileFormat.Text,3)) + cbConvFormatOption.Text;
-     'RAW':
-       edConvFilenamePreview.Text := FilenameConvert + '00.0.' + lowercase(leftStr(cbConvFileFormat.Text,3));
+     COMBO_SELECTION_SCP:
+       begin
+        edConvFilenamePreview.Text := FilenameConvert + '.' + Lowercase(GetConvFormatSelection) + cbConvFormatOption.Text;
+       end;
+     COMBO_SELECTION_RAW:
+       begin
+        edConvFilenamePreview.Text := FilenameConvert + '00.0.' + lowercase(GetConvFormatSelection);
+       end;
      else
        if cbConvFileFormat.Text <> '' then edConvFilenamePreview.Text := FilenameConvert + '.' + lowercase(trim(leftStr(cbConvFileFormat.Text,3)));
        if cbConvFileFormat.Text = '' then edConvFilenamePreview.Text := FilenameConvert;
