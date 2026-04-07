@@ -33,7 +33,7 @@ const
   GW_INI_FILE = 'FluxFloppyManager.ini';
   GW_APP_NAME = 'Greaseweazle';
   GW_DISKDEF_FOLDER = 'Diskdefs';
-  GW_TEMPLATE_FOLDER = 'Template';
+  GW_TEMPLATE_FOLDER = 'Templates';
   GW_APP_FILE = 'Greaseweazle';
   GW_DOCUMENTS_FOLDER = 'Documents';
 
@@ -121,6 +121,7 @@ const
   INI_TEMPLATE_FORMAT_OPTION_HFE_VER = 'FormatOptionHFEVer';
   INI_TEMPLATE_FORMAT_OPTION_HFE_INT = 'FormatOptionHFEInt';
   INI_TEMPLATE_FORMAT_OPTION_HFE_ENC = 'FormatOptionHFEEnc';
+  INI_TEMPLATE_DIRECTORY = 'Directory';
 
   PATH_TEMPLATES = 'Templates';
 

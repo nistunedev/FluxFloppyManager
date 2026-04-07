@@ -1396,7 +1396,7 @@ begin
       INIRead.WriteString(INI_SETTINGS, INI_FOLDER_DISKDEFS, cbReadTplFormatSrc.Text);
       INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_FORMAT_SPEC, cbReadTplFormat.Text);
       INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_REVS, cbReadTplRevs.Text);
-      INIRead.WriteBool(INI_SETTINGS, INI_TEMPLATE_REVS, cbReadTplRaw.Checked);
+      INIRead.WriteBool(INI_SETTINGS, INI_TEMPLATE_RAW, cbReadTplRaw.Checked);
       INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_FAKE_INDEX, cbReadTplFakeIndex.Text);
       INIRead.WriteBool(INI_SETTINGS, INI_TEMPLATE_HARD_SECTORS, cbReadTplHardSec.Checked);
       INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_ADJUST_SPEED,cbReadTplAdjustSpeed.Text);
@@ -1417,10 +1417,27 @@ begin
       INIRead.WriteBool(INI_SETTINGS, INI_TEMPLATE_LOG_ONEFILE, cbReadTplLogBoth.Checked);
 
       INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_FORMAT, cbReadFormat.Text);
-      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION, cbReadFormatOption.Text);
-      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_VER, cbReadFormatOptionHFEVer.Text);
-      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_INT, cbReadFormatOptionHFEInt.Text);
-      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_ENC, cbReadFormatOptionHFEEnc.Text);
+
+      if cbReadFormatOption.Text <> '' then
+      begin
+            INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION, cbReadFormatOption.Text);
+      end;
+      if cbReadFormatOptionHFEVer.Text <> '' then
+      begin
+           INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_VER, cbReadFormatOptionHFEVer.Text);
+      end;
+      if cbReadFormatOptionHFEInt.Text <> '' then
+      begin
+            INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_INT, cbReadFormatOptionHFEInt.Text);
+      end;
+      if cbReadFormatOptionHFEEnc.Text <> '' then
+      begin
+           INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_ENC, cbReadFormatOptionHFEEnc.Text);
+      end;
+      if edReadDirDest.Text <> '' then
+      begin
+            INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_DIRECTORY, edReadDirDest.Text);
+      end;
 
       INIRead.Free;
 
@@ -1566,7 +1583,7 @@ begin
 //    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_VER, cbWriteTplFormatOptionHFEVer.Text);
 //    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_INT, cbWriteTplFormatOptionHFEInt.Text);
 //    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_ENC, cbWriteTplFormatOptionHFEEnc.Text);
-
+//    INIWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_DIRECTORY, lbReadDestDir.Text);
 
 
     IniWrite.Free;
@@ -1770,6 +1787,7 @@ begin
     cbReadFormatOptionHFEVer.Text  := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_VER, '');
     cbReadFormatOptionHFEInt.Text  := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_INT, '');
     cbReadFormatOptionHFEEnc.Text  := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_ENC, '');
+    edReadDirDest.Text            := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_DIRECTORY, '');
 
     iniRefreshRead.Free;
   finally

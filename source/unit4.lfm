@@ -13,20 +13,20 @@ object frmGW: TfrmGW
   OnShow = FormShow
   object pnSides: TPanel
     Left = 0
-    Height = 678
+    Height = 848
     Top = 0
     Width = 495
     Align = alLeft
     BevelOuter = bvNone
-    ClientHeight = 678
+    ClientHeight = 848
     ClientWidth = 495
     TabOrder = 0
     Visible = False
     object Label1: TLabel
       Left = 18
-      Height = 15
+      Height = 20
       Top = 11
-      Width = 35
+      Width = 44
       Caption = 'Side 0:'
       ParentColor = False
     end
@@ -95,7 +95,7 @@ object frmGW: TfrmGW
       FixedColor = clNone
       Flat = True
       Font.CharSet = ANSI_CHARSET
-      Font.Height = -26
+      Font.Height = -20
       Font.Name = 'Consolas'
       Font.Pitch = fpFixed
       Font.Quality = fqDraft
@@ -121,9 +121,9 @@ object frmGW: TfrmGW
     end
     object Label2: TLabel
       Left = 18
-      Height = 15
+      Height = 20
       Top = 430
-      Width = 35
+      Width = 44
       Caption = 'Side 1:'
       ParentColor = False
     end
@@ -192,7 +192,7 @@ object frmGW: TfrmGW
       FixedColor = clNone
       Flat = True
       Font.CharSet = ANSI_CHARSET
-      Font.Height = -26
+      Font.Height = -20
       Font.Name = 'Consolas'
       Font.Pitch = fpFixed
       Font.Quality = fqDraft
@@ -218,21 +218,21 @@ object frmGW: TfrmGW
     end
   end
   object Panel2: TPanel
-    Left = 396
-    Height = 678
+    Left = 495
+    Height = 848
     Top = 0
-    Width = 664
+    Width = 830
     Align = alClient
     BevelOuter = bvNone
     Caption = 'Panel2'
-    ClientHeight = 678
-    ClientWidth = 664
+    ClientHeight = 848
+    ClientWidth = 830
     TabOrder = 1
     object Memo1: TMemo
       Left = 35
-      Height = 554
+      Height = 724
       Top = 52
-      Width = 611
+      Width = 777
       Anchors = [akTop, akLeft, akRight, akBottom]
       Font.CharSet = ANSI_CHARSET
       Font.Height = -15
@@ -246,16 +246,16 @@ object frmGW: TfrmGW
     end
     object Label3: TLabel
       Left = 18
-      Height = 15
+      Height = 20
       Top = 11
-      Width = 100
+      Width = 124
       Caption = 'Console messages:'
       ParentColor = False
     end
     object Button1: TButton
-      Left = 485
+      Left = 651
       Height = 35
-      Top = 615
+      Top = 785
       Width = 164
       Anchors = [akRight, akBottom]
       Caption = '&Close'

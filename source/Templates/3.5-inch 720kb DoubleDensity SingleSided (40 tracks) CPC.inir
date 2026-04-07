@@ -5,7 +5,7 @@ Description=3.5-inch 720kb "DoubleDensity" "SingleSided" "40 tracks" "135 tpi" C
 
 [Settings]
 Diskdefs=Internal
-FormatSpec=
+FormatSpec=ibm.360
 Revs=5
 Raw=0
 Fake-Index=
@@ -21,3 +21,4 @@ Flippy=
 Log_Param=0
 Log_Output=0
 Log_InOneFile=0
+Format=DSK (DSK)

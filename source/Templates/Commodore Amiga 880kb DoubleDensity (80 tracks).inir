@@ -1,25 +1,24 @@
 [FluxMyFluffyFloppy-Read-Template]
-Version=2.00
+Version=v4.00
 Name=Commodore Amiga 880kb DoubleDensity (80 tracks)
-Description=Commodore Amiga 880kb DoubleDensity DoubleSided (80 tracks)
+Description=Commodore Amiga 880kb DoubleDensity DoubleSided (80 tracks) ADF
 
 [Settings]
 COM=
 DrvSel=
+FormatSpec=amiga.amigados
 Cylinders=
 Steps=
 Heads=
-Revs=
+Revs=3
 Retries=
 Flippy=
+Cylinders=80
 CommandsRead=read --format amiga.amigados
 Greaseweazle=
 FormatSpec=amiga.amigados
-HSwap=
-Raw=
 Fake-index=
 Adjust-speed=
 No-Clobber=
-Log_Param=
-Log_Output=
-Log_InOneFile=
+Diskdefs=Internal
+Format=ADF (AmigaDOS)

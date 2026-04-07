@@ -27,3 +27,4 @@ Diskdefs=Internal
 Seek-Retries=
 PLL=
 DD=
+Format=TD0 (Teledisk)
