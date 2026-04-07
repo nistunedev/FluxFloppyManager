@@ -9,7 +9,7 @@
         <Filename Value="FluxFloppyManager.lpr"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="5"/>
-        <CursorPos X="5" Y="5"/>
+        <CursorPos X="11" Y="8"/>
         <UsageCount Value="33"/>
         <Loaded Value="True"/>
       </Unit>
@@ -21,7 +21,7 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="2054"/>
+        <TopLine Value="2055"/>
         <CursorPos Y="2083"/>
         <UsageCount Value="33"/>
         <Loaded Value="True"/>
@@ -35,7 +35,7 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit2"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="87"/>
+        <TopLine Value="86"/>
         <CursorPos X="58" Y="104"/>
         <UsageCount Value="33"/>
         <Loaded Value="True"/>

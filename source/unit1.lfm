@@ -1,45 +1,46 @@
 object Form1: TForm1
   Left = 950
-  Height = 960
+  Height = 1200
   Top = 84
-  Width = 925
+  Width = 1504
   Caption = 'Flux Floppy Manager'
-  ClientHeight = 933
-  ClientWidth = 925
-  Font.Height = -13
+  ClientHeight = 1200
+  ClientWidth = 1504
+  DesignTimePPI = 120
+  Font.Height = -16
   Menu = MainMenu1
+  Position = poScreenCenter
+  LCLVersion = '4.4.0.0'
   OnClose = FormClose
   OnCreate = FormCreate
   OnResize = FormResize
   OnShow = FormShow
-  Position = poScreenCenter
-  LCLVersion = '2.2.6.0'
   object pnCmd: TPanel
     Left = 0
-    Height = 125
-    Top = 808
-    Width = 925
+    Height = 156
+    Top = 1044
+    Width = 1504
     Align = alBottom
     BevelOuter = bvNone
-    ClientHeight = 125
-    ClientWidth = 925
+    ClientHeight = 156
+    ClientWidth = 1504
     TabOrder = 0
     object gbCmd: TGroupBox
-      Left = 6
-      Height = 120
-      Top = 5
-      Width = 918
+      Left = 8
+      Height = 150
+      Top = 6
+      Width = 1495
       Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Around = 4
+      BorderSpacing.Around = 5
       Caption = 'Commandline:'
-      ClientHeight = 103
-      ClientWidth = 916
+      ClientHeight = 124
+      ClientWidth = 1491
       TabOrder = 0
       object EdGWCmd: TMemo
-        Left = 6
-        Height = 44
-        Top = 6
-        Width = 894
+        Left = 8
+        Height = 55
+        Top = 8
+        Width = 1463
         Anchors = [akTop, akLeft, akRight]
         Lines.Strings = (
           ''
@@ -48,43 +49,43 @@ object Form1: TForm1
         TabOrder = 0
       end
       object btGo: TButton
-        Left = 791
-        Height = 31
+        Left = 1335
+        Height = 39
         Hint = 'Run the commandline'
-        Top = 57
-        Width = 107
+        Top = 71
+        Width = 134
         Anchors = [akTop, akRight]
         Caption = 'Read'
         Font.Style = [fsBold]
-        OnClick = btGoClick
         ParentFont = False
         ParentShowHint = False
         ShowHint = True
         TabOrder = 1
+        OnClick = btGoClick
       end
       object cbReadTplLogParam: TCheckBox
-        Left = 24
-        Height = 23
-        Top = 80
-        Width = 112
+        Left = 30
+        Height = 25
+        Top = 100
+        Width = 123
         Caption = 'Log parameter'
-        OnClick = cbReadTplLogParamClick
         TabOrder = 2
+        OnClick = cbReadTplLogParamClick
       end
       object cbReadTplLogOutput: TCheckBox
-        Left = 266
-        Height = 23
-        Top = 80
-        Width = 205
+        Left = 332
+        Height = 25
+        Top = 100
+        Width = 242
         Caption = 'Log output (No live monitoring)'
-        OnClick = cbReadTplLogOutputClick
         TabOrder = 3
+        OnClick = cbReadTplLogOutputClick
       end
       object cbReadTplLogBoth: TCheckBox
-        Left = 658
-        Height = 23
-        Top = 80
-        Width = 236
+        Left = 822
+        Height = 25
+        Top = 100
+        Width = 275
         Caption = 'Log parameter and output in one file'
         Enabled = False
         TabOrder = 4
@@ -93,43 +94,43 @@ object Form1: TForm1
   end
   object pnGW: TPanel
     Left = 0
-    Height = 106
+    Height = 132
     Top = 0
-    Width = 925
+    Width = 1504
     Align = alTop
     Caption = 'pnGW'
-    ClientHeight = 106
-    ClientWidth = 925
+    ClientHeight = 132
+    ClientWidth = 1504
     TabOrder = 1
     object grpGW: TGroupBox
-      Left = 4
-      Height = 104
+      Left = 5
+      Height = 130
       Top = 0
-      Width = 910
+      Width = 1485
       Anchors = [akTop, akLeft, akRight]
-      BorderSpacing.Left = 3
-      BorderSpacing.Right = 3
+      BorderSpacing.Left = 4
+      BorderSpacing.Right = 4
       Caption = 'Greaseweazle:'
-      ClientHeight = 87
-      ClientWidth = 908
+      ClientHeight = 104
+      ClientWidth = 1481
       TabOrder = 0
       object lblGW: TLabel
-        Left = 15
-        Height = 16
+        Left = 19
+        Height = 21
         Top = 0
-        Width = 52
+        Width = 62
         Caption = 'Location:'
         ParentColor = False
       end
       object EdGWFile: TFileNameEdit
-        Left = 175
-        Height = 33
+        Left = 152
+        Height = 29
         Hint = 'Select Greaseweazle (gw.exe)'
         Top = 0
-        Width = 600
+        Width = 1272
         FilterIndex = 0
         HideDirectories = False
-        ButtonWidth = 40
+        ButtonWidth = 50
         NumGlyphs = 1
         Anchors = [akTop, akLeft, akRight]
         MaxLength = 0
@@ -139,40 +140,40 @@ object Form1: TForm1
         OnChange = EdGWFileChange
       end
       object lblGWDevice: TLabel
-        Left = 15
-        Height = 16
-        Top = 35
-        Width = 74
+        Left = 19
+        Height = 21
+        Top = 44
+        Width = 91
         Caption = 'Device/COM:'
         ParentColor = False
       end
       object cbGWDevCOM: TComboBox
-        Left = 122
-        Height = 33
+        Left = 152
+        Height = 29
         Hint = 'Select Device/COM'
-        Top = 35
-        Width = 166
-        ItemHeight = 0
-        OnChange = cbGWDevCOMChange
+        Top = 44
+        Width = 208
+        ItemHeight = 21
         ParentShowHint = False
         ShowHint = True
         TabOrder = 2
+        OnChange = cbGWDevCOMChange
       end
       object lblGWDrive: TLabel
-        Left = 307
-        Height = 16
-        Top = 36
-        Width = 33
+        Left = 384
+        Height = 21
+        Top = 45
+        Width = 40
         Caption = 'Drive:'
         ParentColor = False
       end
       object cbGWDrive: TComboBox
-        Left = 354
-        Height = 33
+        Left = 442
+        Height = 29
         Hint = 'Select drive'
-        Top = 35
-        Width = 75
-        ItemHeight = 0
+        Top = 44
+        Width = 94
+        ItemHeight = 21
         Items.Strings = (
           ''
           '0'
@@ -182,286 +183,287 @@ object Form1: TForm1
           'A'
           'B'
         )
-        OnChange = cbGWDriveChange
         ParentShowHint = False
         ShowHint = True
         TabOrder = 4
+        OnChange = cbGWDriveChange
       end
       object btGWCMDDir: TButton
-        Left = 942
-        Height = 19
+        Left = 1524
+        Height = 24
         Hint = 'Open location'
-        Top = 56
-        Width = 90
+        Top = 70
+        Width = 112
         Anchors = [akTop, akRight]
         Caption = 'CMD/Dir'
-        OnClick = btGWCMDDirClick
         ParentShowHint = False
         ShowHint = True
         TabOrder = 1
+        OnClick = btGWCMDDirClick
       end
       object btGWReset: TButton
-        Left = 781
-        Height = 25
+        Left = 1084
+        Height = 31
         Hint = 'Reset'
-        Top = 30
-        Width = 83
+        Top = 38
+        Width = 104
         Anchors = [akTop, akRight]
         Caption = 'Reset'
-        OnClick = btGWResetClick
         ParentShowHint = False
         ShowHint = True
         TabOrder = 6
+        OnClick = btGWResetClick
       end
       object btGWInfo: TButton
-        Left = 781
-        Height = 25
+        Left = 1322
+        Height = 31
         Hint = 'Info'
-        Top = 57
-        Width = 83
+        Top = 40
+        Width = 104
         Anchors = [akTop, akRight]
         Caption = 'Info'
-        OnClick = btGWInfoClick
         ParentShowHint = False
         ShowHint = True
         TabOrder = 8
+        OnClick = btGWInfoClick
       end
       object btGWBandwidth: TButton
-        Left = 687
-        Height = 25
+        Left = 1204
+        Height = 31
         Hint = 'Bandwidth'
-        Top = 56
-        Width = 83
+        Top = 40
+        Width = 104
         Anchors = [akTop, akRight]
         Caption = 'Bandwidth'
-        OnClick = btGWBandwidthClick
         ParentShowHint = False
         ShowHint = True
         TabOrder = 7
+        OnClick = btGWBandwidthClick
       end
       object lblGWHW: TLabel
-        Left = 446
-        Height = 16
-        Top = 35
-        Width = 60
+        Left = 558
+        Height = 21
+        Top = 44
+        Width = 71
         Caption = 'Hardware:'
         ParentColor = False
       end
       object cbGWHW: TComboBox
-        Left = 514
-        Height = 28
+        Left = 642
+        Height = 29
         Hint = 'Select hardware'
-        Top = 32
-        Width = 115
+        Top = 40
+        Width = 144
         DropDownCount = 3
-        ItemHeight = 0
+        ItemHeight = 21
         ItemIndex = 0
         Items.Strings = (
           'Greaseweazle'
           'Adafruit RP2040'
         )
-        OnChange = cbGWHWChange
         ParentShowHint = False
         ShowHint = True
         Style = csDropDownList
         TabOrder = 5
         Text = 'Greaseweazle'
+        OnChange = cbGWHWChange
       end
       object btGWRefreshUSB: TButton
-        Left = 687
-        Height = 25
+        Left = 965
+        Height = 31
         Hint = 'Refresh COM ports'
-        Top = 30
-        Width = 83
+        Top = 40
+        Width = 104
         Anchors = [akTop, akRight]
         Caption = 'Refresh'
-        OnClick = btGWRefreshUSBClick
         ParentShowHint = False
         ShowHint = True
         TabOrder = 3
+        OnClick = btGWRefreshUSBClick
       end
     end
   end
   object pnMain: TPanel
     Left = 0
-    Height = 702
-    Top = 106
-    Width = 925
+    Height = 912
+    Top = 132
+    Width = 1504
     Align = alClient
     Caption = 'pnMain'
-    ClientHeight = 702
-    ClientWidth = 925
+    ClientHeight = 912
+    ClientWidth = 1504
     TabOrder = 2
     object pcActions: TPageControl
-      Left = 5
-      Height = 700
+      Left = 6
+      Height = 910
       Top = 1
-      Width = 919
-      ActivePage = tbSettings
+      Width = 1497
+      ActivePage = tbRead
       Align = alClient
-      BorderSpacing.Left = 4
-      TabIndex = 4
+      BorderSpacing.Left = 5
+      TabIndex = 0
       TabOrder = 0
       OnChange = pcActionsChange
       object tbRead: TTabSheet
         AutoSize = True
         Caption = 'Read'
-        ClientHeight = 670
-        ClientWidth = 909
+        ClientHeight = 876
+        ClientWidth = 1489
         object sbRead: TScrollBox
           Left = 0
-          Height = 670
+          Height = 876
           Top = 0
-          Width = 909
-          HorzScrollBar.Page = 909
-          VertScrollBar.Page = 576
+          Width = 1489
+          HorzScrollBar.Page = 1144
+          VertScrollBar.Page = 711
           Align = alClient
           BorderStyle = bsNone
-          ClientHeight = 667
-          ClientWidth = 909
+          ClientHeight = 876
+          ClientWidth = 1489
           TabOrder = 0
           object gbReadTpl: TGroupBox
             Left = 0
-            Height = 87
+            Height = 110
             Top = 0
-            Width = 911
+            Width = 1485
             Align = alTop
             AutoSize = True
-            BorderSpacing.Right = 3
+            BorderSpacing.Right = 4
             Caption = 'Template:'
-            ClientHeight = 70
-            ClientWidth = 909
+            ClientHeight = 84
+            ClientWidth = 1481
             TabOrder = 0
             object pnTplRead: TPanel
-              Left = 5
-              Height = 60
-              Top = 5
-              Width = 899
+              Left = 6
+              Height = 72
+              Top = 6
+              Width = 1469
               Align = alTop
               AutoSize = True
-              BorderSpacing.Around = 5
+              BorderSpacing.Around = 6
               BevelOuter = bvNone
-              ClientHeight = 60
-              ClientWidth = 899
+              ClientHeight = 72
+              ClientWidth = 1469
               TabOrder = 0
               object lblReadTpl: TLabel
                 Left = 0
-                Height = 16
-                Top = 0
-                Width = 39
+                Height = 21
+                Top = 2
+                Width = 45
                 Caption = 'Name:'
                 ParentColor = False
               end
               object cbReadTplName: TComboBox
-                Left = 113
+                Left = 141
                 Height = 29
-                Top = 0
-                Width = 484
+                Top = 2
+                Width = 931
                 Anchors = [akTop, akLeft, akRight]
-                ItemHeight = 0
+                ItemHeight = 21
+                TabOrder = 0
                 OnChange = cbReadTplNameChange
                 OnSelect = cbReadTplNameSelect
-                TabOrder = 0
               end
               object lblReadDescr: TLabel
                 Left = 0
-                Height = 16
-                Top = 33
-                Width = 68
+                Height = 21
+                Top = 43
+                Width = 82
                 Caption = 'Description:'
                 ParentColor = False
               end
               object edReadTplDesc: TEdit
-                Left = 113
-                Height = 27
-                Top = 33
-                Width = 810
+                Left = 141
+                Height = 29
+                Top = 43
+                Width = 1322
                 Anchors = [akTop, akLeft, akRight]
+                BorderSpacing.Right = 20
                 TabOrder = 1
               end
               object btReadTplNew: TButton
-                Left = 610
-                Height = 25
+                Left = 1087
+                Height = 31
                 Hint = 'Clear options / New template'
                 Top = 0
-                Width = 94
+                Width = 118
                 Anchors = [akTop, akRight]
                 Caption = 'New'
-                OnClick = btReadTplNewClick
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 2
+                OnClick = btReadTplNewClick
               end
               object btReadTplSave: TButton
-                Left = 719
-                Height = 25
+                Left = 1215
+                Height = 31
                 Hint = 'Save/Overwrite template'
                 Top = 0
-                Width = 94
+                Width = 118
                 Anchors = [akTop, akRight]
                 Caption = 'Save'
                 Enabled = False
-                OnClick = btReadTplSaveClick
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 3
+                OnClick = btReadTplSaveClick
               end
               object btReadTplDel: TButton
-                Left = 827
-                Height = 25
+                Left = 1343
+                Height = 31
                 Hint = 'Delete template'
                 Top = 0
-                Width = 94
+                Width = 118
                 Anchors = [akTop, akRight]
                 Caption = 'Delete'
                 Enabled = False
-                OnClick = btReadTplDelClick
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 4
+                OnClick = btReadTplDelClick
               end
             end
           end
           object gbReadArg: TGroupBox
             Left = 0
-            Height = 242
-            Top = 87
-            Width = 911
+            Height = 293
+            Top = 110
+            Width = 1485
             Align = alTop
             AutoSize = True
-            BorderSpacing.Right = 3
+            BorderSpacing.Right = 4
             Caption = 'Arguments:'
-            ClientHeight = 225
-            ClientWidth = 909
+            ClientHeight = 267
+            ClientWidth = 1481
             TabOrder = 1
             object pnReadAllArg: TPanel
-              Left = 5
-              Height = 181
-              Top = 39
-              Width = 899
+              Left = 6
+              Height = 220
+              Top = 41
+              Width = 1469
               Align = alTop
               AutoSize = True
-              BorderSpacing.Around = 5
+              BorderSpacing.Around = 6
               BevelOuter = bvNone
-              ClientHeight = 181
-              ClientWidth = 899
+              ClientHeight = 220
+              ClientWidth = 1469
               TabOrder = 0
               object lblReadTplRevs: TLabel
                 Left = 0
-                Height = 16
+                Height = 21
                 Top = 0
-                Width = 30
+                Width = 36
                 Caption = 'Revs:'
                 ParentColor = False
               end
               object cbReadTplRevs: TComboBox
-                Left = 113
+                Left = 141
                 Height = 29
                 Hint = 'Number of revolutions to read per track'
                 Top = 0
-                Width = 80
+                Width = 100
                 DropDownCount = 10
-                ItemHeight = 0
+                ItemHeight = 21
                 ItemIndex = 0
                 Items.Strings = (
                   ''
@@ -475,117 +477,117 @@ object Form1: TForm1
                   '8'
                   '9'
                 )
-                OnChange = cbReadTplRevsChange
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 0
+                OnChange = cbReadTplRevsChange
               end
               object lblReadTplRaw: TLabel
                 Left = 0
-                Height = 16
-                Top = 33
-                Width = 28
+                Height = 21
+                Top = 41
+                Width = 33
                 Caption = 'Raw:'
                 ParentColor = False
               end
               object cbReadTplRaw: TCheckBox
-                Left = 113
-                Height = 21
+                Left = 141
+                Height = 20
                 Hint = 'Output raw stream (--format verifies only)'
-                Top = 33
+                Top = 41
                 Width = 21
-                OnClick = cbReadTplRawClick
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 1
+                OnClick = cbReadTplRawClick
               end
               object lblReadTplFakeIndex: TLabel
                 Left = 0
-                Height = 16
-                Top = 64
-                Width = 66
+                Height = 21
+                Top = 80
+                Width = 77
                 Caption = 'Fake-Index:'
                 ParentColor = False
               end
               object cbReadTplFakeIndex: TComboBox
-                Left = 113
+                Left = 141
                 Height = 29
                 Hint = 'Fake index pulses at SPEED'
-                Top = 64
-                Width = 140
-                ItemHeight = 0
+                Top = 80
+                Width = 175
+                ItemHeight = 21
                 ItemIndex = 0
                 Items.Strings = (
                   ''
                   '300rpm'
                   '8000000scp'
                 )
-                OnChange = cbReadTplFakeIndexChange
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 2
+                OnChange = cbReadTplFakeIndexChange
               end
               object lblReadTplHardSec: TLabel
                 Left = 0
-                Height = 16
-                Top = 96
-                Width = 79
+                Height = 21
+                Top = 120
+                Width = 92
                 Caption = 'Hard-sectors:'
                 ParentColor = False
               end
               object cbReadTplHardSec: TCheckBox
-                Left = 113
-                Height = 21
+                Left = 141
+                Height = 20
                 Hint = 'Read from hard-sectored disk'
-                Top = 96
+                Top = 120
                 Width = 21
-                OnClick = cbReadTplHardSecClick
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 3
+                OnClick = cbReadTplHardSecClick
               end
               object lblReadTplAdjustSpeed: TLabel
-                Left = 305
-                Height = 16
+                Left = 381
+                Height = 21
                 Top = 0
-                Width = 80
+                Width = 96
                 Caption = 'Adjust-Speed:'
                 ParentColor = False
               end
               object cbReadTplAdjustSpeed: TComboBox
-                Left = 397
+                Left = 496
                 Height = 29
                 Hint = 'Scale track data to effective drive SPEED'
                 Top = 0
-                Width = 92
+                Width = 115
                 DropDownCount = 3
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   '300'
                   '360'
                 )
-                OnChange = cbReadTplAdjustSpeedChange
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 4
+                OnChange = cbReadTplAdjustSpeedChange
               end
               object lblReadTplRetries: TLabel
-                Left = 305
-                Height = 16
-                Top = 33
-                Width = 44
+                Left = 381
+                Height = 21
+                Top = 41
+                Width = 51
                 Caption = 'Retries:'
                 ParentColor = False
               end
               object cbReadTplRetries: TComboBox
-                Left = 397
+                Left = 496
                 Height = 29
                 Hint = 'Number of retries per seek-retry'
-                Top = 32
-                Width = 92
+                Top = 40
+                Width = 115
                 DropDownCount = 10
-                ItemHeight = 0
+                ItemHeight = 21
                 ItemIndex = 0
                 Items.Strings = (
                   ''
@@ -600,27 +602,27 @@ object Form1: TForm1
                   '8'
                   '9'
                 )
-                OnChange = cbReadTplRetriesChange
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 5
+                OnChange = cbReadTplRetriesChange
               end
               object lblReadTplSeekRetries: TLabel
-                Left = 305
-                Height = 16
-                Top = 64
-                Width = 77
+                Left = 381
+                Height = 21
+                Top = 80
+                Width = 90
                 Caption = 'Seek-Retries:'
                 ParentColor = False
               end
               object cbReadTplSeekRetries: TComboBox
-                Left = 397
+                Left = 496
                 Height = 29
                 Hint = 'Number of seek retries'
-                Top = 64
-                Width = 92
+                Top = 80
+                Width = 115
                 DropDownCount = 10
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   '0'
@@ -634,76 +636,76 @@ object Form1: TForm1
                   '8'
                   '9'
                 )
-                OnChange = cbReadTplSeekRetriesChange
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 6
+                OnChange = cbReadTplSeekRetriesChange
               end
               object lblReadTplPLL: TLabel
-                Left = 305
-                Height = 16
-                Top = 96
-                Width = 25
+                Left = 381
+                Height = 21
+                Top = 120
+                Width = 28
                 Caption = 'PLL:'
                 ParentColor = False
               end
               object cbReadTplPLL: TComboBox
-                Left = 397
+                Left = 496
                 Height = 29
                 Hint = 'Manual PLL parameter override'
-                Top = 96
-                Width = 247
-                ItemHeight = 0
+                Top = 120
+                Width = 309
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   'period=5:phase=60'
                   'period=5:phase=60:lowpass=2.5us'
                 )
-                OnChange = cbReadTplPLLChange
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 7
+                OnChange = cbReadTplPLLChange
               end
               object lblReadTplDD: TLabel
-                Left = 305
-                Height = 16
-                Top = 127
-                Width = 43
+                Left = 381
+                Height = 21
+                Top = 159
+                Width = 50
                 Caption = 'Densel:'
                 ParentColor = False
               end
               object cbReadTplDD: TComboBox
-                Left = 397
+                Left = 496
                 Height = 29
                 Hint = 'Set interface pin 2 for 5.25" drives'
-                Top = 122
-                Width = 80
+                Top = 152
+                Width = 100
                 DropDownCount = 10
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   'H'
                   'L'
                 )
-                OnChange = cbReadTplDDChange
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 8
+                OnChange = cbReadTplDDChange
               end
               object lblReadTplCyls: TLabel
-                Left = 666
-                Height = 16
+                Left = 832
+                Height = 21
                 Top = 0
-                Width = 56
+                Width = 68
                 Caption = 'Cylinders:'
                 ParentColor = False
               end
               object cbReadTplCyls: TComboBox
-                Left = 781
+                Left = 976
                 Height = 29
                 Top = 0
-                Width = 99
-                ItemHeight = 0
+                Width = 124
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   '0-76'
@@ -718,24 +720,24 @@ object Form1: TForm1
                   '0-41'
                   '0-7,9-12'
                 )
-                OnChange = cbReadTplCylsChange
                 TabOrder = 9
+                OnChange = cbReadTplCylsChange
               end
               object lblReadTplHeads: TLabel
-                Left = 666
-                Height = 16
-                Top = 32
-                Width = 39
+                Left = 832
+                Height = 21
+                Top = 40
+                Width = 46
                 Caption = 'Heads:'
                 ParentColor = False
               end
               object cbReadTplHeads: TComboBox
-                Left = 781
+                Left = 976
                 Height = 29
-                Top = 33
-                Width = 79
+                Top = 41
+                Width = 99
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 21
                 ItemIndex = 0
                 Items.Strings = (
                   ''
@@ -743,24 +745,24 @@ object Form1: TForm1
                   '0'
                   '1'
                 )
-                OnChange = cbReadTplHeadsChange
                 TabOrder = 10
+                OnChange = cbReadTplHeadsChange
               end
               object lblReadTplSteps: TLabel
-                Left = 666
-                Height = 16
-                Top = 64
-                Width = 35
+                Left = 832
+                Height = 21
+                Top = 80
+                Width = 40
                 Caption = 'Steps:'
                 ParentColor = False
               end
               object cbReadTplSteps: TComboBox
-                Left = 781
+                Left = 976
                 Height = 29
-                Top = 64
-                Width = 79
+                Top = 80
+                Width = 99
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 21
                 ItemIndex = 0
                 Items.Strings = (
                   ''
@@ -770,157 +772,157 @@ object Form1: TForm1
                   '4'
                   '1/2'
                 )
-                OnChange = cbReadTplStepsChange
                 TabOrder = 11
+                OnChange = cbReadTplStepsChange
               end
               object lblReadTplHSwap: TLabel
-                Left = 600
-                Height = 16
-                Top = 96
-                Width = 43
+                Left = 750
+                Height = 21
+                Top = 120
+                Width = 52
                 Caption = 'HSwap:'
                 ParentColor = False
               end
               object cbReadTplHSwap: TCheckBox
-                Left = 666
-                Height = 23
-                Top = 93
-                Width = 120
+                Left = 832
+                Height = 25
+                Top = 116
+                Width = 128
                 Caption = 'Side 1 as side 0'
                 Enabled = False
-                OnChange = cbReadTplHSwapChange
                 TabOrder = 12
+                OnChange = cbReadTplHSwapChange
               end
               object lblReadTplFlippy: TLabel
-                Left = 666
-                Height = 16
-                Top = 127
-                Width = 37
+                Left = 832
+                Height = 21
+                Top = 159
+                Width = 45
                 Caption = 'Flippy:'
                 ParentColor = False
               end
               object cbReadTplFlippy: TComboBox
-                Left = 781
+                Left = 976
                 Height = 29
-                Top = 127
-                Width = 118
+                Top = 159
+                Width = 148
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   'h0.off=+8'
                   'h1.off=-8'
                 )
-                OnChange = cbReadTplFlippyChange
                 TabOrder = 13
+                OnChange = cbReadTplFlippyChange
               end
               object lblReadTplFlippyReverse: TLabel
-                Left = 666
-                Height = 16
-                Top = 159
-                Width = 49
+                Left = 832
+                Height = 21
+                Top = 199
+                Width = 58
                 Caption = 'Reverse:'
                 ParentColor = False
               end
               object cbReadTplFlippyReverse: TCheckBox
-                Left = 781
-                Height = 21
+                Left = 976
+                Height = 20
                 Hint = 'Reverse flippy'
-                Top = 160
+                Top = 200
                 Width = 21
                 Enabled = False
-                OnClick = cbReadTplFlippyReverseClick
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 14
+                OnClick = cbReadTplFlippyReverseClick
               end
             end
             object pnReadFormatSpec: TPanel
-              Left = 5
+              Left = 6
               Height = 29
-              Top = 5
-              Width = 899
+              Top = 6
+              Width = 1469
               Align = alTop
               AutoSize = True
-              BorderSpacing.Around = 5
+              BorderSpacing.Around = 6
               BevelOuter = bvNone
               ClientHeight = 29
-              ClientWidth = 899
+              ClientWidth = 1469
               TabOrder = 1
               object lblReadTplFormat: TLabel
                 Left = 0
-                Height = 16
+                Height = 21
                 Top = 0
-                Width = 78
+                Width = 91
                 Caption = 'Format spec.:'
                 ParentColor = False
               end
               object cbReadTplFormatSrc: TComboBox
-                Left = 113
-                Height = 27
+                Left = 141
+                Height = 29
                 Top = 0
-                Width = 275
-                ItemHeight = 0
+                Width = 344
+                ItemHeight = 21
                 ItemIndex = 0
                 Items.Strings = (
                   'Internal'
                 )
-                OnChange = cbReadTplFormatSrcChange
                 Style = csDropDownList
                 TabOrder = 0
                 Text = 'Internal'
+                OnChange = cbReadTplFormatSrcChange
               end
               object cbReadTplFormat: TComboBox
-                Left = 413
+                Left = 516
                 Height = 29
                 Top = 0
-                Width = 313
+                Width = 391
                 DropDownCount = 15
-                ItemHeight = 0
-                OnChange = cbReadTplFormatChange
+                ItemHeight = 21
                 TabOrder = 1
+                OnChange = cbReadTplFormatChange
               end
             end
           end
           object gbReadDest: TGroupBox
             Left = 0
-            Height = 247
-            Top = 329
-            Width = 911
+            Height = 308
+            Top = 403
+            Width = 1485
             Align = alTop
             AutoSize = True
-            BorderSpacing.Right = 3
+            BorderSpacing.Right = 4
             Caption = 'Destination:'
-            ClientHeight = 230
-            ClientWidth = 909
+            ClientHeight = 282
+            ClientWidth = 1481
             TabOrder = 2
             object pnReadDest: TPanel
-              Left = 5
-              Height = 220
-              Top = 5
-              Width = 899
+              Left = 6
+              Height = 270
+              Top = 6
+              Width = 1469
               Align = alTop
               AutoSize = True
-              BorderSpacing.Around = 5
+              BorderSpacing.Around = 6
               BevelOuter = bvNone
-              ClientHeight = 220
-              ClientWidth = 899
+              ClientHeight = 270
+              ClientWidth = 1469
               TabOrder = 0
               object lblReadDestDir: TLabel
                 Left = 0
-                Height = 16
+                Height = 21
                 Top = 0
-                Width = 56
+                Width = 67
                 Caption = 'Directory:'
                 ParentColor = False
               end
               object edReadDirDest: TDirectoryEdit
-                Left = 113
-                Height = 27
+                Left = 141
+                Height = 29
                 Top = 0
-                Width = 708
+                Width = 1174
                 ShowHidden = False
-                ButtonWidth = 29
+                ButtonWidth = 36
                 NumGlyphs = 1
                 Anchors = [akTop, akLeft, akRight]
                 MaxLength = 0
@@ -928,257 +930,257 @@ object Form1: TForm1
                 OnChange = edReadDirDestChange
               end
               object btReadDestExplore: TButton
-                Left = 1142
-                Height = 31
+                Left = 1772
+                Height = 39
                 Hint = 'Explore destination'
-                Top = 5
-                Width = 94
+                Top = 6
+                Width = 118
                 Anchors = [akTop, akRight]
                 Caption = 'Explorer'
-                OnClick = btReadDestExploreClick
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 1
+                OnClick = btReadDestExploreClick
               end
               object lblReadDestFile: TLabel
                 Left = 0
-                Height = 16
-                Top = 33
-                Width = 57
+                Height = 21
+                Top = 41
+                Width = 66
                 Caption = 'Filename:'
                 ParentColor = False
               end
               object EdReadFilename: TEdit
-                Left = 113
-                Height = 27
-                Top = 33
-                Width = 708
+                Left = 141
+                Height = 29
+                Top = 41
+                Width = 1230
                 Anchors = [akTop, akLeft, akRight]
                 MaxLength = 200
-                OnChange = EdReadFilenameChange
                 TabOrder = 2
+                OnChange = EdReadFilenameChange
               end
               object btReadDiskReset: TButton
-                Left = 829
-                Height = 25
+                Left = 1343
+                Height = 31
                 Hint = 'Clear file settings'
                 Top = 0
-                Width = 94
+                Width = 118
                 Anchors = [akTop, akRight]
                 Caption = 'Clear'
                 Enabled = False
-                OnClick = btReadDiskResetClick
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 3
+                OnClick = btReadDiskResetClick
               end
               object lblReadDestDiskNr: TLabel
                 Left = 0
-                Height = 16
-                Top = 64
-                Width = 51
+                Height = 21
+                Top = 80
+                Width = 60
                 Caption = 'Disk-Nr.:'
                 ParentColor = False
               end
               object edReadDisk1: TSpinEdit
-                Left = 113
-                Height = 27
-                Top = 64
-                Width = 83
+                Left = 141
+                Height = 29
+                Top = 80
+                Width = 104
                 Enabled = False
                 MaxValue = 99999
-                OnChange = edReadDisk1Change
                 TabOrder = 4
+                OnChange = edReadDisk1Change
               end
               object edReadDiskOf: TEdit
-                Left = 207
-                Height = 27
-                Top = 64
-                Width = 100
+                Left = 259
+                Height = 29
+                Top = 80
+                Width = 125
                 Alignment = taCenter
                 Enabled = False
-                OnChange = edReadDiskOfChange
                 TabOrder = 5
                 Text = '_of_'
+                OnChange = edReadDiskOfChange
               end
               object edReadDisk2: TSpinEdit
-                Left = 317
-                Height = 27
-                Top = 64
-                Width = 80
+                Left = 396
+                Height = 29
+                Top = 80
+                Width = 100
                 Enabled = False
                 MaxValue = 99999
-                OnChange = edReadDisk2Change
                 TabOrder = 6
+                OnChange = edReadDisk2Change
               end
               object lblReadDestDigits: TLabel
-                Left = 413
-                Height = 16
-                Top = 64
-                Width = 36
+                Left = 516
+                Height = 21
+                Top = 80
+                Width = 43
                 Caption = 'Digits:'
                 ParentColor = False
               end
               object edReadDigits: TSpinEdit
-                Left = 556
-                Height = 27
-                Top = 64
-                Width = 63
+                Left = 695
+                Height = 29
+                Top = 80
+                Width = 79
                 Enabled = False
                 MaxValue = 5
                 MinValue = 1
-                OnChange = edReadDigitsChange
                 TabOrder = 7
                 Value = 1
+                OnChange = edReadDigitsChange
               end
               object cbReadIncremental: TCheckBox
-                Left = 627
-                Height = 23
-                Top = 64
-                Width = 102
+                Left = 784
+                Height = 25
+                Top = 80
+                Width = 103
                 Caption = 'Incremental'
                 Enabled = False
                 TabOrder = 8
               end
               object lblReadDestFormatExt: TLabel
                 Left = 0
-                Height = 16
-                Top = 96
-                Width = 46
+                Height = 21
+                Top = 120
+                Width = 53
                 Caption = 'Format:'
                 ParentColor = False
               end
               object cbReadFormat: TComboBox
-                Left = 113
+                Left = 141
                 Height = 29
-                Top = 96
-                Width = 285
+                Top = 120
+                Width = 356
                 Enabled = False
-                ItemHeight = 0
-                OnChange = cbReadFormatChange
+                ItemHeight = 21
                 TabOrder = 9
+                OnChange = cbReadFormatChange
               end
               object cbReadNoOverwrite: TCheckBox
-                Left = 627
-                Height = 23
-                Top = 96
-                Width = 131
+                Left = 784
+                Height = 25
+                Top = 120
+                Width = 138
                 Caption = 'Do not overwrite'
                 Enabled = False
-                OnClick = cbReadNoOverwriteClick
                 TabOrder = 10
+                OnClick = cbReadNoOverwriteClick
               end
               object lblReadDestFormatExtOpt: TLabel
-                Left = 14
-                Height = 16
-                Top = 127
-                Width = 42
+                Left = 18
+                Height = 21
+                Top = 159
+                Width = 51
                 Caption = 'Option:'
                 ParentColor = False
               end
               object cbReadFormatOption: TComboBox
-                Left = 113
+                Left = 141
                 Height = 29
-                Top = 127
-                Width = 230
+                Top = 159
+                Width = 288
                 Enabled = False
-                ItemHeight = 0
-                OnChange = cbReadFormatOptionChange
+                ItemHeight = 21
                 TabOrder = 11
+                OnChange = cbReadFormatOptionChange
               end
               object lblReadDestFormatExtOpt1: TLabel
-                Left = 413
-                Height = 16
+                Left = 516
+                Height = 21
                 Hint = 'InterfaceMode (HFE)'
-                Top = 127
-                Width = 54
+                Top = 159
+                Width = 63
                 Caption = 'Interface:'
                 ParentColor = False
                 ParentShowHint = False
                 ShowHint = True
               end
               object cbReadFormatOptionHFEInt: TComboBox
-                Left = 556
+                Left = 695
                 Height = 29
                 Hint = 'InterfaceMode (HFE)'
-                Top = 127
-                Width = 240
+                Top = 159
+                Width = 300
                 Enabled = False
-                ItemHeight = 0
-                OnChange = cbReadFormatOptionChange
+                ItemHeight = 21
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 12
+                OnChange = cbReadFormatOptionChange
               end
               object lblReadDestFormatExtOpt3: TLabel
-                Left = 14
-                Height = 16
+                Left = 18
+                Height = 21
                 Hint = 'Version (HFE)'
-                Top = 160
-                Width = 46
+                Top = 200
+                Width = 55
                 Caption = 'Version:'
                 ParentColor = False
                 ParentShowHint = False
                 ShowHint = True
               end
               object cbReadFormatOptionHFEVer: TComboBox
-                Left = 113
+                Left = 141
                 Height = 29
                 Hint = 'Version (HFE)'
-                Top = 160
-                Width = 230
+                Top = 200
+                Width = 288
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   '::version=3'
                 )
-                OnChange = cbReadFormatOptionChange
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 13
+                OnChange = cbReadFormatOptionChange
               end
               object lblReadDestFormatExtOpt2: TLabel
-                Left = 413
-                Height = 16
+                Left = 516
+                Height = 21
                 Hint = 'EncodingType (HFE)'
-                Top = 160
-                Width = 55
+                Top = 200
+                Width = 67
                 Caption = 'Encoding:'
                 ParentColor = False
                 ParentShowHint = False
                 ShowHint = True
               end
               object cbReadFormatOptionHFEEnc: TComboBox
-                Left = 556
+                Left = 695
                 Height = 29
                 Hint = 'EncodingType (HFE)'
-                Top = 160
-                Width = 240
+                Top = 200
+                Width = 300
                 Enabled = False
-                ItemHeight = 0
-                OnChange = cbReadFormatOptionChange
+                ItemHeight = 21
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 14
+                OnChange = cbReadFormatOptionChange
               end
               object lblReadDestPreview: TLabel
                 Left = 0
-                Height = 16
-                Top = 193
-                Width = 49
+                Height = 21
+                Top = 241
+                Width = 58
                 Caption = 'Preview:'
                 ParentColor = False
               end
               object cbReadPreview: TEdit
-                Left = 113
-                Height = 27
-                Top = 193
-                Width = 816
+                Left = 141
+                Height = 29
+                Top = 241
+                Width = 1366
                 Anchors = [akTop, akLeft, akRight]
                 Enabled = False
-                OnChange = cbReadPreviewChange
                 TabOrder = 15
+                OnChange = cbReadPreviewChange
               end
             end
           end
@@ -1187,26 +1189,26 @@ object Form1: TForm1
       object tbWrite: TTabSheet
         AutoSize = True
         Caption = 'Write'
-        ClientHeight = 670
-        ClientWidth = 909
+        ClientHeight = 876
+        ClientWidth = 1489
         object sbWrite: TScrollBox
           Left = 0
-          Height = 670
+          Height = 876
           Top = 0
-          Width = 909
-          HorzScrollBar.Page = 889
-          VertScrollBar.Page = 361
+          Width = 1489
+          HorzScrollBar.Page = 1112
+          VertScrollBar.Page = 440
           Align = alClient
           AutoSize = True
           BorderStyle = bsNone
-          ClientHeight = 670
-          ClientWidth = 909
+          ClientHeight = 876
+          ClientWidth = 1489
           TabOrder = 0
           object Memo1: TMemo
             Left = 0
-            Height = 33
+            Height = 41
             Top = 0
-            Width = 81
+            Width = 101
             Lines.Strings = (
               'Memo1'
             )
@@ -1215,101 +1217,101 @@ object Form1: TForm1
           end
           object gbWriteTpl: TGroupBox
             Left = 0
-            Height = 87
+            Height = 111
             Top = 0
-            Width = 906
+            Width = 1485
             Align = alTop
             AutoSize = True
-            BorderSpacing.Right = 3
+            BorderSpacing.Right = 4
             Caption = 'Template:'
-            ClientHeight = 70
-            ClientWidth = 904
+            ClientHeight = 85
+            ClientWidth = 1481
             TabOrder = 0
             object pnWriteTpl: TPanel
-              Left = 5
-              Height = 60
-              Top = 5
-              Width = 894
+              Left = 6
+              Height = 73
+              Top = 6
+              Width = 1469
               Align = alTop
               AutoSize = True
-              BorderSpacing.Around = 5
+              BorderSpacing.Around = 6
               BevelOuter = bvNone
-              ClientHeight = 60
-              ClientWidth = 894
+              ClientHeight = 73
+              ClientWidth = 1469
               TabOrder = 0
               object lblWriteTemplate: TLabel
                 Left = 0
-                Height = 16
-                Top = 0
-                Width = 39
+                Height = 21
+                Top = 3
+                Width = 45
                 Caption = 'Name:'
                 ParentColor = False
               end
               object cbWriteTplName: TComboBox
-                Left = 113
+                Left = 141
                 Height = 29
-                Top = 0
-                Width = 434
+                Top = 3
+                Width = 923
                 Anchors = [akTop, akLeft, akRight]
-                ItemHeight = 0
+                ItemHeight = 21
+                TabOrder = 0
                 OnChange = cbWriteTplNameChange
                 OnSelect = cbWriteTplNameSelect
-                TabOrder = 0
               end
               object BtWriteTplNew: TButton
-                Left = 573
-                Height = 26
+                Left = 1080
+                Height = 32
                 Hint = 'Clear options / New template'
                 Top = 0
-                Width = 94
+                Width = 118
                 Anchors = [akTop, akRight]
                 Caption = 'New'
-                OnClick = BtWriteTplNewClick
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 1
+                OnClick = BtWriteTplNewClick
               end
               object BtWriteTplSave: TButton
-                Left = 688
-                Height = 26
+                Left = 1211
+                Height = 32
                 Hint = 'Save/Overwrite template'
                 Top = 0
-                Width = 94
+                Width = 118
                 Anchors = [akTop, akRight]
                 Caption = 'Save'
                 Enabled = False
-                OnClick = BtWriteTplSaveClick
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 2
+                OnClick = BtWriteTplSaveClick
               end
               object BtWriteTplDel: TButton
-                Left = 792
-                Height = 26
+                Left = 1344
+                Height = 32
                 Hint = 'Delete template'
                 Top = 0
-                Width = 94
+                Width = 118
                 Anchors = [akTop, akRight]
                 Caption = 'Delete'
                 Enabled = False
-                OnClick = BtWriteTplDelClick
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 3
+                OnClick = BtWriteTplDelClick
               end
               object lblWriteDescription: TLabel
                 Left = 0
-                Height = 16
-                Top = 33
-                Width = 68
+                Height = 21
+                Top = 44
+                Width = 82
                 Caption = 'Description:'
                 ParentColor = False
               end
               object edWriteTplDesc: TEdit
-                Left = 113
-                Height = 27
-                Top = 33
-                Width = 773
+                Left = 141
+                Height = 29
+                Top = 44
+                Width = 1318
                 Anchors = [akTop, akLeft, akRight]
                 TabOrder = 4
               end
@@ -1317,147 +1319,147 @@ object Form1: TForm1
           end
           object gbWriteArg: TGroupBox
             Left = 0
-            Height = 274
-            Top = 87
-            Width = 906
+            Height = 329
+            Top = 111
+            Width = 1485
             Align = alTop
             AutoSize = True
-            BorderSpacing.Right = 3
+            BorderSpacing.Right = 4
             Caption = 'Arguments:'
-            ClientHeight = 257
-            ClientWidth = 904
+            ClientHeight = 303
+            ClientWidth = 1481
             TabOrder = 1
             object pnWriteAllArg: TPanel
-              Left = 5
-              Height = 181
-              Top = 39
-              Width = 894
+              Left = 6
+              Height = 221
+              Top = 41
+              Width = 1469
               Align = alTop
               AutoSize = True
-              BorderSpacing.Around = 5
+              BorderSpacing.Around = 6
               BevelOuter = bvNone
-              ClientHeight = 181
-              ClientWidth = 894
+              ClientHeight = 221
+              ClientWidth = 1469
               TabOrder = 1
               object lblWriteTplPreErase: TLabel
                 Left = 0
-                Height = 16
+                Height = 21
                 Top = 0
-                Width = 61
+                Width = 69
                 Caption = 'Pre-erase:'
                 ParentColor = False
               end
               object cbWriteTplPreErase: TCheckBox
-                Left = 113
-                Height = 21
+                Left = 141
+                Height = 20
                 Hint = 'Erase tracks before writing (default: no)'
                 Top = 0
                 Width = 21
-                OnChange = cbWriteTplPreEraseChange
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 0
+                OnChange = cbWriteTplPreEraseChange
               end
               object lblWriteTplEraseEmpty: TLabel
                 Left = 0
-                Height = 16
-                Top = 33
-                Width = 76
+                Height = 21
+                Top = 41
+                Width = 88
                 Caption = 'Erase empty:'
                 ParentColor = False
               end
               object cbWriteTplEraseEmpty: TCheckBox
-                Left = 113
-                Height = 21
+                Left = 141
+                Height = 20
                 Hint = 'Erase empty tracks (default: skip)'
-                Top = 33
+                Top = 41
                 Width = 21
-                OnChange = cbWriteTplEraseEmptyChange
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 1
+                OnChange = cbWriteTplEraseEmptyChange
               end
               object lblWriteTplFakeIndex: TLabel
                 Left = 0
-                Height = 16
-                Top = 64
-                Width = 66
+                Height = 21
+                Top = 80
+                Width = 77
                 Caption = 'Fake-index:'
                 ParentColor = False
               end
               object cbWriteTplFakeIndex: TComboBox
-                Left = 113
+                Left = 141
                 Height = 29
                 Hint = 'Fake index pulses at SPEED'
-                Top = 64
-                Width = 119
+                Top = 80
+                Width = 149
                 DropDownCount = 4
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   '300rpm'
                   '8000000scp'
                 )
-                OnChange = cbWriteTplFakeIndexChange
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 2
+                OnChange = cbWriteTplFakeIndexChange
               end
               object lblWriteTplHardSec: TLabel
                 Left = 0
-                Height = 16
-                Top = 96
-                Width = 79
+                Height = 21
+                Top = 120
+                Width = 92
                 Caption = 'Hard-sectors:'
                 ParentColor = False
                 ParentShowHint = False
               end
               object cbWriteTplHardSec: TCheckBox
-                Left = 113
-                Height = 21
+                Left = 141
+                Height = 20
                 Hint = 'Write to a hard-sectored disk'
-                Top = 96
+                Top = 120
                 Width = 21
-                OnChange = cbWriteTplHardSecChange
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 3
+                OnChange = cbWriteTplHardSecChange
               end
               object lblWriteTplNoVerify: TLabel
                 Left = 0
-                Height = 16
-                Top = 127
-                Width = 54
+                Height = 21
+                Top = 159
+                Width = 67
                 Caption = 'No verify:'
                 ParentColor = False
               end
               object cbWriteTplNoVerify: TCheckBox
-                Left = 113
-                Height = 21
+                Left = 141
+                Height = 20
                 Hint = 'Disable verify'
-                Top = 127
+                Top = 159
                 Width = 21
-                OnChange = cbWriteTplNoVerifyChange
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 4
+                OnChange = cbWriteTplNoVerifyChange
               end
               object lblWriteTplRetries: TLabel
-                Left = 305
-                Height = 16
+                Left = 381
+                Height = 21
                 Top = 0
-                Width = 44
+                Width = 51
                 Caption = 'Retries:'
                 ParentColor = False
               end
               object cbWriteTplRetries: TComboBox
-                Left = 408
+                Left = 510
                 Height = 29
                 Hint = 'Number of retries on verify failure'
                 Top = 0
-                Width = 81
+                Width = 101
                 DropDownCount = 11
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   '0'
@@ -1471,97 +1473,97 @@ object Form1: TForm1
                   '8'
                   '9'
                 )
-                OnChange = cbWriteTplRetriesChange
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 5
+                OnChange = cbWriteTplRetriesChange
               end
               object lblWriteTplPrecomp: TLabel
-                Left = 305
-                Height = 16
-                Top = 33
-                Width = 55
+                Left = 381
+                Height = 21
+                Top = 41
+                Width = 65
                 Caption = 'Precomp:'
                 ParentColor = False
               end
               object cbWriteTplPrecomp: TComboBox
-                Left = 408
+                Left = 510
                 Height = 29
                 Hint = 'Write precompensation'
-                Top = 33
-                Width = 175
+                Top = 41
+                Width = 219
                 DropDownCount = 4
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   'type=mfm:40=125'
                 )
-                OnChange = cbWriteTplPrecompChange
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 6
+                OnChange = cbWriteTplPrecompChange
               end
               object lblWriteTplDD: TLabel
-                Left = 305
-                Height = 16
-                Top = 64
-                Width = 43
+                Left = 381
+                Height = 21
+                Top = 80
+                Width = 50
                 Caption = 'Densel:'
                 ParentColor = False
               end
               object cbWriteTplDensel: TComboBox
-                Left = 409
+                Left = 511
                 Height = 29
                 Hint = 'Set interface pin 2 for 5.25" drives'
-                Top = 64
-                Width = 80
+                Top = 80
+                Width = 100
                 DropDownCount = 10
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   'H'
                   'L'
                 )
-                OnChange = cbWriteTplDenselChange
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 7
+                OnChange = cbWriteTplDenselChange
               end
               object lblWriteTplTP43Pin2: TLabel
-                Left = 305
-                Height = 16
-                Top = 96
-                Width = 64
+                Left = 381
+                Height = 21
+                Top = 120
+                Width = 77
                 Caption = 'TP43 Pin 2:'
                 ParentColor = False
                 ParentShowHint = False
               end
               object cbWriteTplTplTP43Pin2: TCheckBox
-                Left = 409
-                Height = 21
+                Left = 511
+                Height = 20
                 Hint = 'Option --gen-tg43 generates 8-inch /TG43 signal on pin 2'
-                Top = 98
+                Top = 122
                 Width = 21
-                OnChange = cbWriteTplTplTP43Pin2Change
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 8
+                OnChange = cbWriteTplTplTP43Pin2Change
               end
               object lblWriteTplCyls: TLabel
-                Left = 632
-                Height = 16
+                Left = 790
+                Height = 21
                 Top = 0
-                Width = 56
+                Width = 68
                 Caption = 'Cylinders:'
                 ParentColor = False
               end
               object cbWriteTplCyls: TComboBox
-                Left = 736
+                Left = 920
                 Height = 29
                 Top = 0
-                Width = 99
+                Width = 124
                 DropDownCount = 15
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   '0-76'
@@ -1577,152 +1579,152 @@ object Form1: TForm1
                   '0-42'
                   '0-7,9-12'
                 )
-                OnChange = cbWriteTplCylsChange
                 TabOrder = 9
+                OnChange = cbWriteTplCylsChange
               end
               object lblWriteTplHeads: TLabel
-                Left = 632
-                Height = 16
-                Top = 33
-                Width = 39
+                Left = 790
+                Height = 21
+                Top = 41
+                Width = 46
                 Caption = 'Heads:'
                 ParentColor = False
               end
               object cbWriteTplHeads: TComboBox
-                Left = 736
+                Left = 920
                 Height = 29
-                Top = 33
-                Width = 79
+                Top = 41
+                Width = 99
                 DropDownCount = 11
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   '0-1'
                   '0'
                   '1'
                 )
-                OnChange = cbWriteTplHeadsChange
                 TabOrder = 10
+                OnChange = cbWriteTplHeadsChange
               end
               object lblWriteTplSteps: TLabel
-                Left = 632
-                Height = 16
-                Top = 64
-                Width = 35
+                Left = 790
+                Height = 21
+                Top = 80
+                Width = 40
                 Caption = 'Steps:'
                 ParentColor = False
               end
               object cbWriteTplSteps: TComboBox
-                Left = 736
+                Left = 920
                 Height = 29
-                Top = 64
-                Width = 79
+                Top = 80
+                Width = 99
                 DropDownCount = 11
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   '1'
                   '1/2'
                   '2'
                 )
-                OnChange = cbWriteTplStepsChange
                 TabOrder = 11
+                OnChange = cbWriteTplStepsChange
               end
               object lblWriteTplHSwap: TLabel
-                Left = 632
-                Height = 16
-                Top = 96
-                Width = 43
+                Left = 790
+                Height = 21
+                Top = 120
+                Width = 52
                 Caption = 'HSwap:'
                 ParentColor = False
               end
               object cbWriteTplHSwap: TCheckBox
-                Left = 736
-                Height = 23
-                Top = 96
-                Width = 120
+                Left = 920
+                Height = 25
+                Top = 120
+                Width = 128
                 Caption = 'Side 1 as side 0'
                 Enabled = False
-                OnChange = cbWriteTplHSwapChange
                 TabOrder = 12
+                OnChange = cbWriteTplHSwapChange
               end
               object lblWriteTplFlippy: TLabel
-                Left = 633
-                Height = 16
-                Top = 127
-                Width = 37
+                Left = 791
+                Height = 21
+                Top = 159
+                Width = 45
                 Caption = 'Flippy:'
                 ParentColor = False
               end
               object cbWriteTplFlippy: TComboBox
-                Left = 737
+                Left = 921
                 Height = 29
-                Top = 127
-                Width = 137
+                Top = 159
+                Width = 171
                 DropDownCount = 11
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   'h0.off=+8'
                   'h1.off=-8'
                 )
-                OnChange = cbWriteTplFlippyChange
                 TabOrder = 13
+                OnChange = cbWriteTplFlippyChange
               end
               object lblWriteTplFlippyReverse: TLabel
-                Left = 632
-                Height = 16
-                Top = 160
-                Width = 49
+                Left = 790
+                Height = 21
+                Top = 200
+                Width = 58
                 Caption = 'Reverse:'
                 ParentColor = False
               end
               object cbWriteTplFlippyReverse: TCheckBox
-                Left = 736
-                Height = 21
+                Left = 920
+                Height = 20
                 Hint = 'Reverse flippy'
-                Top = 160
+                Top = 200
                 Width = 21
                 Enabled = False
-                OnClick = cbWriteTplFlippyReverseClick
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 14
+                OnClick = cbWriteTplFlippyReverseClick
               end
             end
             object pnWriteSourceFile: TPanel
-              Left = 5
-              Height = 27
-              Top = 225
-              Width = 894
+              Left = 6
+              Height = 29
+              Top = 268
+              Width = 1469
               Align = alTop
               AutoSize = True
-              BorderSpacing.Around = 5
+              BorderSpacing.Around = 6
               BevelOuter = bvNone
-              ClientHeight = 27
-              ClientWidth = 894
+              ClientHeight = 29
+              ClientWidth = 1469
               TabOrder = 0
               object lblWriteFile: TLabel
                 Left = 0
-                Height = 16
+                Height = 21
                 Top = 0
-                Width = 64
+                Width = 76
                 Caption = 'Source file:'
                 ParentColor = False
               end
               object edWriteFileName: TFileNameEdit
-                Left = 113
-                Height = 27
+                Left = 141
+                Height = 29
                 Hint = 'Select source file'
                 Top = 0
-                Width = 773
+                Width = 1330
                 OnAcceptFileName = edWriteFileNameAcceptFileName
                 FilterIndex = 0
                 HideDirectories = False
-                ButtonWidth = 40
+                ButtonWidth = 50
                 NumGlyphs = 1
                 Anchors = [akTop, akLeft, akRight]
                 MaxLength = 0
@@ -1733,50 +1735,50 @@ object Form1: TForm1
               end
             end
             object pnWriteFormSpec: TPanel
-              Left = 5
+              Left = 6
               Height = 29
-              Top = 5
-              Width = 894
+              Top = 6
+              Width = 1469
               Align = alTop
               AutoSize = True
-              BorderSpacing.Around = 5
+              BorderSpacing.Around = 6
               BevelOuter = bvNone
               ClientHeight = 29
-              ClientWidth = 894
+              ClientWidth = 1469
               TabOrder = 2
               object lblWriteTplFormat: TLabel
                 Left = 0
-                Height = 16
+                Height = 21
                 Top = 0
-                Width = 78
+                Width = 91
                 Caption = 'Format spec.:'
                 ParentColor = False
               end
               object cbWriteTplFormatSrc: TComboBox
-                Left = 113
-                Height = 27
+                Left = 141
+                Height = 29
                 Top = 0
-                Width = 275
+                Width = 344
                 DropDownCount = 15
-                ItemHeight = 0
+                ItemHeight = 21
                 ItemIndex = 0
                 Items.Strings = (
                   'Internal'
                 )
-                OnChange = cbWriteTplFormatSrcChange
                 Style = csDropDownList
                 TabOrder = 0
                 Text = 'Internal'
+                OnChange = cbWriteTplFormatSrcChange
               end
               object cbWriteTplFormat: TComboBox
-                Left = 413
+                Left = 516
                 Height = 29
                 Top = 0
-                Width = 313
+                Width = 391
                 DropDownCount = 15
-                ItemHeight = 0
-                OnChange = cbWriteTplFormatChange
+                ItemHeight = 21
                 TabOrder = 1
+                OnChange = cbWriteTplFormatChange
               end
             end
           end
@@ -1785,61 +1787,61 @@ object Form1: TForm1
       object tbConv: TTabSheet
         AutoSize = True
         Caption = 'Convert'
-        ClientHeight = 670
-        ClientWidth = 909
+        ClientHeight = 876
+        ClientWidth = 1489
         object sbConv: TScrollBox
           Left = 0
-          Height = 670
+          Height = 876
           Top = 0
-          Width = 909
-          HorzScrollBar.Page = 909
-          VertScrollBar.Page = 604
+          Width = 1489
+          HorzScrollBar.Page = 1184
+          VertScrollBar.Page = 745
           Align = alClient
           BorderStyle = bsNone
-          ClientHeight = 667
-          ClientWidth = 909
+          ClientHeight = 876
+          ClientWidth = 1489
           TabOrder = 0
           object gbConvSrc: TGroupBox
             Left = 0
-            Height = 83
+            Height = 104
             Top = 0
-            Width = 976
+            Width = 1485
             Align = alTop
             AutoSize = True
-            BorderSpacing.Right = 3
+            BorderSpacing.Right = 4
             Caption = 'Source file:'
-            ClientHeight = 66
-            ClientWidth = 974
+            ClientHeight = 78
+            ClientWidth = 1481
             TabOrder = 0
             object pnConvSource: TPanel
-              Left = 5
-              Height = 56
-              Top = 5
-              Width = 964
+              Left = 6
+              Height = 66
+              Top = 6
+              Width = 1469
               Align = alTop
               AutoSize = True
-              BorderSpacing.Around = 5
+              BorderSpacing.Around = 6
               BevelOuter = bvNone
-              ClientHeight = 56
-              ClientWidth = 964
+              ClientHeight = 66
+              ClientWidth = 1469
               TabOrder = 0
               object lblConvertSourcefile: TLabel
                 Left = 0
-                Height = 16
+                Height = 21
                 Top = 0
-                Width = 64
+                Width = 76
                 Caption = 'Source file:'
                 ParentColor = False
               end
               object edConvFileSource: TFileNameEdit
-                Left = 113
-                Height = 27
+                Left = 141
+                Height = 29
                 Top = 0
-                Width = 841
+                Width = 1316
                 OnAcceptFileName = edConvFileSourceAcceptFileName
                 FilterIndex = 0
                 HideDirectories = False
-                ButtonWidth = 40
+                ButtonWidth = 50
                 NumGlyphs = 1
                 Anchors = [akTop, akLeft, akRight]
                 MaxLength = 0
@@ -1847,142 +1849,142 @@ object Form1: TForm1
                 OnChange = edConvFileSourceChange
               end
               object cbSrcAsDesDir: TCheckBox
-                Left = 113
-                Height = 23
-                Top = 33
-                Width = 251
+                Left = 141
+                Height = 25
+                Top = 41
+                Width = 263
                 Caption = 'Use source directory as destination'
-                OnChange = cbSrcAsDesDirChange
                 TabOrder = 1
+                OnChange = cbSrcAsDesDirChange
               end
               object cbSrcAsDesFile: TCheckBox
-                Left = 460
-                Height = 23
-                Top = 33
-                Width = 250
+                Left = 575
+                Height = 25
+                Top = 41
+                Width = 261
                 Caption = 'Use source filename as destination'
-                OnChange = cbSrcAsDesFileChange
                 TabOrder = 2
+                OnChange = cbSrcAsDesFileChange
               end
             end
           end
           object gbConvArg: TGroupBox
             Left = 0
-            Height = 274
-            Top = 83
-            Width = 976
+            Height = 333
+            Top = 104
+            Width = 1485
             Align = alTop
             AutoSize = True
-            BorderSpacing.Right = 3
+            BorderSpacing.Right = 4
             Caption = 'Arguments:'
-            ClientHeight = 257
-            ClientWidth = 974
+            ClientHeight = 307
+            ClientWidth = 1481
             TabOrder = 1
             object pnConvAllArg: TPanel
-              Left = 5
-              Height = 213
-              Top = 39
-              Width = 964
+              Left = 6
+              Height = 260
+              Top = 41
+              Width = 1469
               Align = alTop
               AutoSize = True
-              BorderSpacing.Around = 5
+              BorderSpacing.Around = 6
               BevelOuter = bvNone
-              ClientHeight = 213
-              ClientWidth = 964
+              ClientHeight = 260
+              ClientWidth = 1469
               TabOrder = 0
               object lblConvertAdjustSpeed: TLabel
                 Left = 0
-                Height = 16
+                Height = 21
                 Top = 0
-                Width = 79
+                Width = 94
                 Caption = 'Adjust-speed:'
                 ParentColor = False
               end
               object cbConvAdjustSpeed: TComboBox
-                Left = 113
+                Left = 141
                 Height = 29
                 Top = 0
-                Width = 81
+                Width = 101
                 DropDownCount = 4
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   '300'
                   '360'
                 )
-                OnChange = cbConvAdjustSpeedChange
                 TabOrder = 0
+                OnChange = cbConvAdjustSpeedChange
               end
               object lblConvertPLL: TLabel
                 Left = 0
-                Height = 16
-                Top = 33
-                Width = 25
+                Height = 21
+                Top = 41
+                Width = 28
                 Caption = 'PLL:'
                 ParentColor = False
               end
               object cbConvPLL: TComboBox
-                Left = 113
+                Left = 141
                 Height = 29
-                Top = 33
-                Width = 175
+                Top = 41
+                Width = 219
                 DropDownCount = 11
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   'period=5:phase=60'
                 )
-                OnChange = cbConvPLLChange
                 TabOrder = 1
+                OnChange = cbConvPLLChange
               end
               object lblConvIndexMarks: TLabel
                 Left = 0
-                Height = 16
-                Top = 64
-                Width = 72
+                Height = 21
+                Top = 80
+                Width = 87
                 Caption = 'Index marks:'
                 ParentColor = False
               end
               object cbConvIndexMarks: TComboBox
-                Left = 113
+                Left = 141
                 Height = 29
                 Hint = 'Convert index positions to hard sectors'
-                Top = 64
-                Width = 175
-                ItemHeight = 0
+                Top = 80
+                Width = 219
+                ItemHeight = 21
                 ItemIndex = 0
                 Items.Strings = (
                   ''
                   '--hard-sectors'
                 )
-                OnChange = cbConvIndexMarksChange
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 2
+                OnChange = cbConvIndexMarksChange
               end
               object lblConvertTrackset: TLabel
-                Left = 359
-                Height = 16
+                Left = 449
+                Height = 21
                 Top = 0
-                Width = 110
+                Width = 126
                 Caption = 'Trackset (--tracks):'
                 ParentColor = False
               end
               object lblConvTracksetCyls: TLabel
-                Left = 358
-                Height = 16
-                Top = 32
-                Width = 56
+                Left = 448
+                Height = 21
+                Top = 40
+                Width = 68
                 Caption = 'Cylinders:'
                 ParentColor = False
               end
               object cbConvTracksetCyls: TComboBox
-                Left = 448
+                Left = 560
                 Height = 29
-                Top = 32
-                Width = 113
+                Top = 40
+                Width = 141
                 DropDownCount = 15
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   '0-76'
@@ -1998,124 +2000,124 @@ object Form1: TForm1
                   '0-42'
                   '0-7,9-12'
                 )
-                OnChange = cbConvTracksetCylsChange
                 TabOrder = 3
+                OnChange = cbConvTracksetCylsChange
               end
               object lblConvTracksetHeads: TLabel
-                Left = 358
-                Height = 16
-                Top = 64
-                Width = 39
+                Left = 448
+                Height = 21
+                Top = 80
+                Width = 46
                 Caption = 'Heads:'
                 ParentColor = False
               end
               object cbConvTracksetHeads: TComboBox
-                Left = 448
+                Left = 560
                 Height = 29
-                Top = 64
-                Width = 88
+                Top = 80
+                Width = 110
                 DropDownCount = 11
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   '0-1'
                   '0'
                   '1'
                 )
-                OnChange = cbConvTracksetHeadsChange
                 TabOrder = 4
+                OnChange = cbConvTracksetHeadsChange
               end
               object lblConvTracksetSteps: TLabel
-                Left = 358
-                Height = 16
-                Top = 96
-                Width = 35
+                Left = 448
+                Height = 21
+                Top = 120
+                Width = 40
                 Caption = 'Steps:'
                 ParentColor = False
               end
               object cbConvTracksetSteps: TComboBox
-                Left = 448
+                Left = 560
                 Height = 29
-                Top = 96
-                Width = 88
+                Top = 120
+                Width = 110
                 DropDownCount = 11
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   '1'
                   '1/2'
                   '2'
                 )
-                OnChange = cbConvTracksetStepsChange
                 TabOrder = 5
+                OnChange = cbConvTracksetStepsChange
               end
               object lblConvTracksetHSwap: TLabel
-                Left = 358
-                Height = 16
-                Top = 128
-                Width = 43
+                Left = 448
+                Height = 21
+                Top = 160
+                Width = 52
                 Caption = 'HSwap:'
                 ParentColor = False
               end
               object cbConvTracksetHSwap: TCheckBox
-                Left = 448
-                Height = 23
-                Top = 127
-                Width = 120
+                Left = 560
+                Height = 25
+                Top = 159
+                Width = 128
                 Caption = 'Side 1 as side 0'
                 Enabled = False
-                OnClick = cbConvTracksetHSwapClick
                 TabOrder = 6
+                OnClick = cbConvTracksetHSwapClick
               end
               object lblConvTracksetFlippy: TLabel
-                Left = 359
-                Height = 16
-                Top = 160
-                Width = 37
+                Left = 449
+                Height = 21
+                Top = 200
+                Width = 45
                 Caption = 'Flippy:'
                 ParentColor = False
               end
               object cbConvTracksetFlippy: TComboBox
-                Left = 448
+                Left = 560
                 Height = 29
-                Top = 160
-                Width = 137
+                Top = 200
+                Width = 171
                 DropDownCount = 11
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   'h0.off=+8'
                   'h1.off=-8'
                 )
-                OnChange = cbConvTracksetFlippyChange
                 TabOrder = 7
+                OnChange = cbConvTracksetFlippyChange
               end
               object lblConvertOutTrackset: TLabel
-                Left = 659
-                Height = 16
+                Left = 824
+                Height = 21
                 Top = 0
-                Width = 135
+                Width = 155
                 Caption = 'Trackset (--out-tracks):'
                 ParentColor = False
               end
               object lblConvOutTracksetCyls: TLabel
-                Left = 659
-                Height = 16
-                Top = 33
-                Width = 56
+                Left = 824
+                Height = 21
+                Top = 41
+                Width = 68
                 Caption = 'Cylinders:'
                 ParentColor = False
               end
               object cbConvOutTracksetCyls: TComboBox
-                Left = 755
+                Left = 944
                 Height = 29
-                Top = 33
-                Width = 113
+                Top = 41
+                Width = 141
                 DropDownCount = 15
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   '0-76'
@@ -2131,209 +2133,209 @@ object Form1: TForm1
                   '0-42'
                   '0-7,9-12'
                 )
-                OnChange = cbConvOutTracksetCylsChange
                 TabOrder = 8
+                OnChange = cbConvOutTracksetCylsChange
               end
               object lblConvOutTracksetHeads: TLabel
-                Left = 659
-                Height = 16
-                Top = 64
-                Width = 39
+                Left = 824
+                Height = 21
+                Top = 80
+                Width = 46
                 Caption = 'Heads:'
                 ParentColor = False
               end
               object cbConvOutTracksetHeads: TComboBox
-                Left = 755
+                Left = 944
                 Height = 29
-                Top = 64
-                Width = 88
+                Top = 80
+                Width = 110
                 DropDownCount = 11
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   '0-1'
                   '0'
                   '1'
                 )
-                OnChange = cbConvOutTracksetHeadsChange
                 TabOrder = 9
+                OnChange = cbConvOutTracksetHeadsChange
               end
               object lblConvOutTracksetSteps: TLabel
-                Left = 659
-                Height = 16
-                Top = 96
-                Width = 35
+                Left = 824
+                Height = 21
+                Top = 120
+                Width = 40
                 Caption = 'Steps:'
                 ParentColor = False
               end
               object cbConvOutTracksetSteps: TComboBox
-                Left = 755
+                Left = 944
                 Height = 29
-                Top = 96
-                Width = 88
+                Top = 120
+                Width = 110
                 DropDownCount = 11
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   '1'
                   '1/2'
                   '2'
                 )
-                OnChange = cbConvOutTracksetStepsChange
                 TabOrder = 10
+                OnChange = cbConvOutTracksetStepsChange
               end
               object lblConvOutTracksetHSwap: TLabel
-                Left = 659
-                Height = 16
-                Top = 127
-                Width = 43
+                Left = 824
+                Height = 21
+                Top = 159
+                Width = 52
                 Caption = 'HSwap:'
                 ParentColor = False
               end
               object cbConvOutTracksetHSwap: TCheckBox
-                Left = 755
-                Height = 23
-                Top = 128
-                Width = 120
+                Left = 944
+                Height = 25
+                Top = 160
+                Width = 128
                 Caption = 'Side 1 as side 0'
                 Enabled = False
-                OnClick = cbConvOutTracksetHSwapClick
                 TabOrder = 11
+                OnClick = cbConvOutTracksetHSwapClick
               end
               object lblConvOutTracksetFlippy: TLabel
-                Left = 659
-                Height = 16
-                Top = 160
-                Width = 37
+                Left = 824
+                Height = 21
+                Top = 200
+                Width = 45
                 Caption = 'Flippy:'
                 ParentColor = False
               end
               object cbConvOutTracksetFlippy: TComboBox
-                Left = 755
+                Left = 944
                 Height = 29
-                Top = 160
-                Width = 137
+                Top = 200
+                Width = 171
                 DropDownCount = 11
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   'h0.off=+8'
                   'h1.off=-8'
                 )
-                OnChange = cbConvOutTracksetFlippyChange
                 TabOrder = 12
+                OnChange = cbConvOutTracksetFlippyChange
               end
               object lblConvTplFlippyReverse: TLabel
-                Left = 659
-                Height = 16
-                Top = 191
-                Width = 49
+                Left = 824
+                Height = 21
+                Top = 239
+                Width = 58
                 Caption = 'Reverse:'
                 ParentColor = False
               end
               object cbConvTplFlippyReverse: TCheckBox
-                Left = 755
-                Height = 21
+                Left = 944
+                Height = 20
                 Hint = 'Reverse flippy'
-                Top = 192
+                Top = 240
                 Width = 21
                 Enabled = False
-                OnClick = cbConvTplFlippyReverseClick
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 13
+                OnClick = cbConvTplFlippyReverseClick
               end
             end
             object pnConvFormatSpec: TPanel
-              Left = 5
+              Left = 6
               Height = 29
-              Top = 5
-              Width = 964
+              Top = 6
+              Width = 1469
               Align = alTop
               AutoSize = True
-              BorderSpacing.Around = 5
+              BorderSpacing.Around = 6
               BevelOuter = bvNone
               ClientHeight = 29
-              ClientWidth = 964
+              ClientWidth = 1469
               TabOrder = 1
               object lblConvertFormat: TLabel
                 Left = 0
-                Height = 16
+                Height = 21
                 Top = 0
-                Width = 78
+                Width = 91
                 Caption = 'Format spec.:'
                 ParentColor = False
               end
               object cbConvDiskdefs: TComboBox
-                Left = 113
-                Height = 27
+                Left = 141
+                Height = 29
                 Top = 0
-                Width = 275
-                ItemHeight = 0
+                Width = 344
+                ItemHeight = 21
                 ItemIndex = 0
                 Items.Strings = (
                   'Internal'
                 )
-                OnChange = cbConvDiskdefsChange
                 Style = csDropDownList
                 TabOrder = 0
                 Text = 'Internal'
+                OnChange = cbConvDiskdefsChange
               end
               object cbConvFormat: TComboBox
-                Left = 413
+                Left = 516
                 Height = 29
                 Top = 0
-                Width = 313
+                Width = 391
                 DropDownCount = 15
-                ItemHeight = 0
-                OnChange = cbConvFormatChange
+                ItemHeight = 21
                 TabOrder = 1
+                OnChange = cbConvFormatChange
               end
             end
           end
           object gbConvDest: TGroupBox
             Left = 0
-            Height = 247
-            Top = 357
-            Width = 976
+            Height = 308
+            Top = 437
+            Width = 1485
             Align = alTop
             AutoSize = True
-            BorderSpacing.Right = 3
+            BorderSpacing.Right = 4
             Caption = 'Destination:'
-            ClientHeight = 230
-            ClientWidth = 974
+            ClientHeight = 282
+            ClientWidth = 1481
             TabOrder = 2
             object Panel1: TPanel
-              Left = 5
-              Height = 220
-              Top = 5
-              Width = 964
+              Left = 6
+              Height = 270
+              Top = 6
+              Width = 1469
               Align = alTop
               AutoSize = True
-              BorderSpacing.Around = 5
+              BorderSpacing.Around = 6
               BevelOuter = bvNone
-              ClientHeight = 220
-              ClientWidth = 964
+              ClientHeight = 270
+              ClientWidth = 1469
               TabOrder = 0
               object lblConvertDestfile: TLabel
                 Left = 0
-                Height = 16
+                Height = 21
                 Top = 0
-                Width = 56
+                Width = 67
                 Caption = 'Directory:'
                 ParentColor = False
               end
               object edConvDirDest: TDirectoryEdit
-                Left = 113
-                Height = 27
+                Left = 141
+                Height = 29
                 Hint = 'Select destination directory'
                 Top = 0
-                Width = 728
+                Width = 1174
                 ShowHidden = False
-                ButtonWidth = 29
+                ButtonWidth = 36
                 NumGlyphs = 1
                 Anchors = [akTop, akLeft, akRight]
                 MaxLength = 0
@@ -2341,259 +2343,259 @@ object Form1: TForm1
                 OnChange = edConvDirDestChange
               end
               object btConvExplorer: TButton
-                Left = 860
-                Height = 23
+                Left = 1339
+                Height = 29
                 Hint = 'Go to selected directory'
                 Top = 0
-                Width = 94
+                Width = 118
                 Anchors = [akTop, akRight]
                 Caption = 'Explorer'
-                OnClick = btConvExplorerClick
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 1
+                OnClick = btConvExplorerClick
               end
               object Label1: TLabel
                 Left = 0
-                Height = 16
-                Top = 33
-                Width = 57
+                Height = 21
+                Top = 41
+                Width = 66
                 Caption = 'Filename:'
                 ParentColor = False
               end
               object edConvFilename: TEdit
-                Left = 113
-                Height = 27
-                Top = 33
-                Width = 728
+                Left = 141
+                Height = 29
+                Top = 41
+                Width = 1174
                 Anchors = [akTop, akLeft, akRight]
                 MaxLength = 200
-                OnChange = edConvFilenameChange
                 TabOrder = 2
+                OnChange = edConvFilenameChange
               end
               object btConvClear: TButton
-                Left = 860
-                Height = 24
+                Left = 1339
+                Height = 30
                 Hint = 'Clear file settings'
-                Top = 33
-                Width = 94
+                Top = 41
+                Width = 118
                 Anchors = [akTop, akRight]
                 Caption = 'Clear'
                 Enabled = False
-                OnClick = btConvClearClick
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 3
+                OnClick = btConvClearClick
               end
               object Label3: TLabel
                 Left = 0
-                Height = 16
-                Top = 64
-                Width = 51
+                Height = 21
+                Top = 80
+                Width = 60
                 Caption = 'Disk-Nr.:'
                 ParentColor = False
               end
               object cbConvDisk1: TSpinEdit
-                Left = 113
-                Height = 27
-                Top = 64
-                Width = 81
+                Left = 141
+                Height = 29
+                Top = 80
+                Width = 101
                 Enabled = False
                 MaxValue = 99999
-                OnChange = cbConvDisk1Change
                 TabOrder = 4
+                OnChange = cbConvDisk1Change
               end
               object edConvDiskOf: TEdit
-                Left = 203
-                Height = 27
-                Top = 64
-                Width = 93
+                Left = 254
+                Height = 29
+                Top = 80
+                Width = 116
                 Alignment = taCenter
                 Enabled = False
                 MaxLength = 255
-                OnChange = edConvDiskOfChange
                 TabOrder = 5
                 Text = '_of_'
+                OnChange = edConvDiskOfChange
               end
               object cbConvDisk2: TSpinEdit
-                Left = 305
-                Height = 27
-                Top = 64
-                Width = 81
+                Left = 381
+                Height = 29
+                Top = 80
+                Width = 101
                 Enabled = False
                 MaxValue = 99999
-                OnChange = cbConvDisk2Change
                 TabOrder = 6
+                OnChange = cbConvDisk2Change
               end
               object Label5: TLabel
-                Left = 420
-                Height = 16
-                Top = 64
-                Width = 36
+                Left = 525
+                Height = 21
+                Top = 80
+                Width = 43
                 Caption = 'Digits:'
                 ParentColor = False
               end
               object cbConvDigits: TSpinEdit
-                Left = 507
-                Height = 27
-                Top = 64
-                Width = 81
+                Left = 634
+                Height = 29
+                Top = 80
+                Width = 101
                 Enabled = False
                 MaxValue = 5
                 MinValue = 1
-                OnChange = cbConvDigitsChange
                 TabOrder = 7
                 Value = 1
+                OnChange = cbConvDigitsChange
               end
               object cbConvIncrement: TCheckBox
-                Left = 755
-                Height = 23
-                Top = 64
-                Width = 102
+                Left = 944
+                Height = 25
+                Top = 80
+                Width = 103
                 Caption = 'Incremental'
                 Enabled = False
-                OnClick = cbConvIncrementClick
                 TabOrder = 8
+                OnClick = cbConvIncrementClick
               end
               object Label2: TLabel
                 Left = 0
-                Height = 16
-                Top = 96
-                Width = 46
+                Height = 21
+                Top = 120
+                Width = 53
                 Caption = 'Format:'
                 ParentColor = False
               end
               object cbConvFileFormat: TComboBox
-                Left = 113
+                Left = 141
                 Height = 29
-                Top = 96
-                Width = 271
+                Top = 120
+                Width = 339
                 Enabled = False
-                ItemHeight = 0
-                OnChange = cbConvFileFormatChange
+                ItemHeight = 21
                 TabOrder = 9
+                OnChange = cbConvFileFormatChange
               end
               object cbConvNoOverwrite: TCheckBox
-                Left = 755
-                Height = 23
-                Top = 93
-                Width = 209
+                Left = 944
+                Height = 25
+                Top = 116
+                Width = 220
                 Caption = 'Do not overwrite existing file'
-                OnClick = cbConvNoOverwriteClick
                 TabOrder = 10
+                OnClick = cbConvNoOverwriteClick
               end
               object Label6: TLabel
-                Left = 10
-                Height = 16
-                Top = 127
-                Width = 42
+                Left = 12
+                Height = 21
+                Top = 159
+                Width = 51
                 Caption = 'Option:'
                 ParentColor = False
               end
               object cbConvFormatOption: TComboBox
-                Left = 113
+                Left = 141
                 Height = 29
-                Top = 127
-                Width = 183
+                Top = 159
+                Width = 229
                 Enabled = False
-                ItemHeight = 0
-                OnChange = cbConvFormatOptionChange
+                ItemHeight = 21
                 TabOrder = 11
+                OnChange = cbConvFormatOptionChange
               end
               object lblConvDestFormatExtInt: TLabel
-                Left = 419
-                Height = 16
+                Left = 524
+                Height = 21
                 Hint = 'InterfaceMode (HFE)'
-                Top = 127
-                Width = 54
+                Top = 159
+                Width = 63
                 Caption = 'Interface:'
                 ParentColor = False
                 ParentShowHint = False
                 ShowHint = True
               end
               object cbConvFormatOptionHFEInt: TComboBox
-                Left = 507
+                Left = 634
                 Height = 29
                 Hint = 'InterfaceMode (HFE)'
-                Top = 127
-                Width = 240
+                Top = 159
+                Width = 300
                 Enabled = False
-                ItemHeight = 0
-                OnChange = cbReadFormatOptionChange
+                ItemHeight = 21
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 12
+                OnChange = cbReadFormatOptionChange
               end
               object lblConvDestFormatExtVer: TLabel
-                Left = 10
-                Height = 16
+                Left = 12
+                Height = 21
                 Hint = 'Version (HFE)'
-                Top = 160
-                Width = 46
+                Top = 200
+                Width = 55
                 Caption = 'Version:'
                 ParentColor = False
                 ParentShowHint = False
                 ShowHint = True
               end
               object cbConvFormatOptionHFEVer: TComboBox
-                Left = 113
+                Left = 141
                 Height = 29
                 Hint = 'Version (HFE)'
-                Top = 160
-                Width = 230
+                Top = 200
+                Width = 288
                 Enabled = False
-                ItemHeight = 0
+                ItemHeight = 21
                 Items.Strings = (
                   ''
                   '::version=3'
                 )
-                OnChange = cbReadFormatOptionChange
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 13
+                OnChange = cbReadFormatOptionChange
               end
               object lblConvDestFormatExtEnc: TLabel
-                Left = 420
-                Height = 16
+                Left = 525
+                Height = 21
                 Hint = 'EncodingType (HFE)'
-                Top = 160
-                Width = 55
+                Top = 200
+                Width = 67
                 Caption = 'Encoding:'
                 ParentColor = False
                 ParentShowHint = False
                 ShowHint = True
               end
               object cbConvFormatOptionHFEEnc: TComboBox
-                Left = 507
+                Left = 634
                 Height = 29
                 Hint = 'EncodingType (HFE)'
-                Top = 160
-                Width = 240
+                Top = 200
+                Width = 300
                 Enabled = False
-                ItemHeight = 0
-                OnChange = cbReadFormatOptionChange
+                ItemHeight = 21
                 ParentShowHint = False
                 ShowHint = True
                 TabOrder = 14
+                OnChange = cbReadFormatOptionChange
               end
               object Label4: TLabel
                 Left = 0
-                Height = 16
-                Top = 193
-                Width = 49
+                Height = 21
+                Top = 241
+                Width = 58
                 Caption = 'Preview:'
                 ParentColor = False
               end
               object edConvFilenamePreview: TEdit
-                Left = 113
-                Height = 27
-                Top = 193
-                Width = 843
+                Left = 141
+                Height = 29
+                Top = 241
+                Width = 1318
                 Anchors = [akTop, akLeft, akRight]
                 Enabled = False
                 MaxLength = 255
-                OnChange = cbReadPreviewChange
                 TabOrder = 15
+                OnChange = cbReadPreviewChange
               end
             end
           end
@@ -2601,106 +2603,106 @@ object Form1: TForm1
       end
       object tbTools: TTabSheet
         Caption = 'Tools'
-        ClientHeight = 670
-        ClientWidth = 909
+        ClientHeight = 876
+        ClientWidth = 1489
         object grbToolsOptions: TGroupBox
           Left = 0
-          Height = 90
-          Top = 460
-          Width = 898
+          Height = 112
+          Top = 575
+          Width = 1475
           Anchors = [akTop, akLeft, akRight]
           Caption = 'Options:'
-          ClientHeight = 70
-          ClientWidth = 896
+          ClientHeight = 86
+          ClientWidth = 1471
           TabOrder = 0
           object cbSetGlobalActionsBacktrace: TCheckBox
-            Left = 20
-            Height = 23
+            Left = 25
+            Height = 25
             Top = 0
-            Width = 450
+            Width = 471
             Caption = 'Backtrace the execution to get more detailed error message (--bt)'
-            OnChange = cbSetGlobalActionsBacktraceChange
             TabOrder = 0
+            OnChange = cbSetGlobalActionsBacktraceChange
           end
           object cbSetGlobalActionsTime: TCheckBox
-            Left = 20
-            Height = 23
-            Top = 30
-            Width = 302
+            Left = 25
+            Height = 25
+            Top = 38
+            Width = 315
             Caption = 'Show elapsed time after execution (--time)'
-            OnChange = cbSetGlobalActionsTimeChange
             TabOrder = 1
+            OnChange = cbSetGlobalActionsTimeChange
           end
         end
         object grpToolsErase: TGroupBox
           Left = 0
-          Height = 200
+          Height = 250
           Top = 0
-          Width = 898
+          Width = 1475
           Anchors = [akTop, akLeft, akRight]
           Caption = 'Erase:'
-          ClientHeight = 198
-          ClientWidth = 896
+          ClientHeight = 224
+          ClientWidth = 1471
           TabOrder = 1
           object lblToolsEraseCyl: TLabel
-            Left = 174
-            Height = 16
+            Left = 218
+            Height = 21
             Top = 0
-            Width = 56
+            Width = 68
             Caption = 'Cylinders:'
             ParentColor = False
           end
           object lblToolsEraseHeads: TLabel
-            Left = 174
-            Height = 16
-            Top = 33
-            Width = 39
+            Left = 218
+            Height = 21
+            Top = 41
+            Width = 46
             Caption = 'Heads:'
             Enabled = False
             ParentColor = False
           end
           object lblToolsEraseFakeIndex: TLabel
-            Left = 484
-            Height = 16
-            Top = 33
-            Width = 66
+            Left = 605
+            Height = 21
+            Top = 41
+            Width = 77
             Caption = 'Fake-Index:'
             ParentColor = False
           end
           object lblToolsEraseSteps: TLabel
-            Left = 174
-            Height = 16
-            Top = 65
-            Width = 35
+            Left = 218
+            Height = 21
+            Top = 81
+            Width = 40
             Caption = 'Steps:'
             Enabled = False
             ParentColor = False
           end
           object lblToolsEraseHSwap: TLabel
-            Left = 174
-            Height = 16
-            Top = 100
-            Width = 43
+            Left = 218
+            Height = 21
+            Top = 125
+            Width = 52
             Caption = 'HSwap:'
             Enabled = False
             ParentColor = False
           end
           object lblToolsEraseFlippy: TLabel
-            Left = 174
-            Height = 16
-            Top = 130
-            Width = 37
+            Left = 218
+            Height = 21
+            Top = 162
+            Width = 45
             Caption = 'Flippy:'
             Enabled = False
             ParentColor = False
           end
           object cbToolsEraseCyl: TComboBox
-            Left = 315
-            Height = 36
+            Left = 394
+            Height = 28
             Hint = 'which tracks to erase'
             Top = 0
-            Width = 120
-            ItemHeight = 0
+            Width = 150
+            ItemHeight = 20
             ItemIndex = 0
             Items.Strings = (
               ''
@@ -2711,18 +2713,18 @@ object Form1: TForm1
               '0-40'
               '0-39'
             )
-            OnChange = cbToolsEraseCylChange
             ParentFont = False
             TabOrder = 1
+            OnChange = cbToolsEraseCylChange
           end
           object cbToolsEraseHeads: TComboBox
-            Left = 315
-            Height = 36
-            Top = 33
-            Width = 120
+            Left = 394
+            Height = 28
+            Top = 41
+            Width = 150
             DropDownCount = 6
             Enabled = False
-            ItemHeight = 0
+            ItemHeight = 20
             ItemIndex = 0
             Items.Strings = (
               ''
@@ -2730,107 +2732,107 @@ object Form1: TForm1
               '0'
               '1'
             )
-            OnChange = cbToolsEraseHeadsChange
             ParentFont = False
             TabOrder = 2
+            OnChange = cbToolsEraseHeadsChange
           end
           object cbToolsEraseFakeIndex: TComboBox
-            Left = 640
-            Height = 36
+            Left = 800
+            Height = 28
             Hint = 'Can be floating-point and any of ms,us,ns,scp,rpm'
-            Top = 33
-            Width = 120
+            Top = 41
+            Width = 150
             DropDownCount = 6
-            ItemHeight = 0
+            ItemHeight = 20
             Items.Strings = (
               ''
               '300rpm'
               '8000000scp'
             )
-            OnChange = cbToolsEraseFakeIndexChange
             ParentFont = False
             ParentShowHint = False
             ShowHint = True
             TabOrder = 7
+            OnChange = cbToolsEraseFakeIndexChange
           end
           object lblToolsEraseHFreq: TCheckBox
-            Left = 484
-            Height = 23
-            Top = 65
-            Width = 303
+            Left = 605
+            Height = 25
+            Top = 81
+            Width = 318
             Caption = 'Write a high-frequency flux signal (--hfreq)'
-            OnClick = lblToolsEraseHFreqClick
             TabOrder = 8
+            OnClick = lblToolsEraseHFreqClick
           end
           object rbToolsErase: TCheckBox
-            Left = 20
-            Height = 23
+            Left = 25
+            Height = 25
             Top = 0
-            Width = 64
+            Width = 58
             Caption = 'Erase'
             Checked = True
-            OnClick = rbToolsEraseClick
             State = cbChecked
             TabOrder = 0
+            OnClick = rbToolsEraseClick
           end
           object cbToolsEraseSteps: TComboBox
-            Left = 315
-            Height = 33
-            Top = 65
-            Width = 88
+            Left = 394
+            Height = 29
+            Top = 81
+            Width = 110
             DropDownCount = 11
             Enabled = False
-            ItemHeight = 0
+            ItemHeight = 21
             Items.Strings = (
               ''
               '1'
               '1/2'
               '2'
             )
-            OnChange = cbToolsEraseStepsChange
             TabOrder = 3
+            OnChange = cbToolsEraseStepsChange
           end
           object cbToolsEraseHSwap: TCheckBox
-            Left = 315
-            Height = 23
-            Top = 100
-            Width = 123
+            Left = 394
+            Height = 25
+            Top = 125
+            Width = 128
             Caption = 'Side 1 as side 0'
             Enabled = False
-            OnClick = cbToolsEraseHSwapClick
             TabOrder = 4
+            OnClick = cbToolsEraseHSwapClick
           end
           object cbToolsEraseFlippy: TComboBox
-            Left = 315
-            Height = 33
-            Top = 130
-            Width = 137
+            Left = 394
+            Height = 29
+            Top = 162
+            Width = 171
             DropDownCount = 11
             Enabled = False
-            ItemHeight = 0
+            ItemHeight = 21
             Items.Strings = (
               ''
               'h0.off=+8'
               'h1.off=-8'
             )
-            OnChange = cbToolsEraseFlippyChange
             TabOrder = 5
+            OnChange = cbToolsEraseFlippyChange
           end
           object lblToolsEraseRevs: TLabel
-            Left = 484
-            Height = 16
+            Left = 605
+            Height = 21
             Top = 0
-            Width = 30
+            Width = 36
             Caption = 'Revs:'
             ParentColor = False
           end
           object cbToolsEraseRevs: TComboBox
-            Left = 640
-            Height = 36
+            Left = 800
+            Height = 28
             Top = 0
-            Width = 120
+            Width = 150
             DropDownCount = 6
-            ItemHeight = 0
+            ItemHeight = 20
             Items.Strings = (
               ''
               '1'
@@ -2843,147 +2845,147 @@ object Form1: TForm1
               '8'
               '9'
             )
-            OnChange = cbToolsEraseRevsChange
             ParentFont = False
             ParentShowHint = False
             ShowHint = True
             TabOrder = 6
+            OnChange = cbToolsEraseRevsChange
           end
         end
         object grpToolsSeek: TGroupBox
           Left = 0
-          Height = 90
-          Top = 200
-          Width = 898
+          Height = 112
+          Top = 250
+          Width = 1475
           Anchors = [akTop, akLeft, akRight]
           Caption = 'Seek:'
-          ClientHeight = 88
-          ClientWidth = 896
+          ClientHeight = 86
+          ClientWidth = 1471
           TabOrder = 2
           object lblToolsSeek: TLabel
-            Left = 174
-            Height = 16
+            Left = 218
+            Height = 21
             Top = 0
-            Width = 56
+            Width = 68
             Caption = 'Cylinders:'
             Enabled = False
             ParentColor = False
           end
           object rbToolsSeek: TCheckBox
-            Left = 20
-            Height = 23
+            Left = 25
+            Height = 25
             Top = 0
-            Width = 57
+            Width = 54
             Caption = 'Seek'
-            OnClick = rbToolsSeekClick
             TabOrder = 0
+            OnClick = rbToolsSeekClick
           end
           object cbToolsSeekTrack: TSpinEdit
-            Left = 315
-            Height = 36
+            Left = 394
+            Height = 28
             Hint = 'cylinder to seek'
             Top = 0
-            Width = 120
+            Width = 150
             Enabled = False
             MaxValue = 85
             MinValue = -8
-            OnChange = cbToolsSeekTrackChange
-            OnEnter = cbToolsSeekTrackEnter
             ParentFont = False
             TabOrder = 1
+            OnChange = cbToolsSeekTrackChange
+            OnEnter = cbToolsSeekTrackEnter
           end
           object cbToolsSeekTrackForce: TCheckBox
-            Left = 484
-            Height = 23
+            Left = 605
+            Height = 25
             Hint = 'allow extreme cylinders with no prompt'
             Top = 0
-            Width = 340
+            Width = 359
             Caption = 'Allow extreme cylinders with no prompt (--force)'
             Enabled = False
-            OnClick = cbToolsSeekTrackForceClick
             TabOrder = 2
+            OnClick = cbToolsSeekTrackForceClick
           end
           object cbToolsSeekMotorOn: TCheckBox
-            Left = 484
-            Height = 23
+            Left = 605
+            Height = 25
             Hint = 'Seek with drive motor activated'
-            Top = 30
-            Width = 315
+            Top = 38
+            Width = 333
             Caption = 'Seek with drive motor activated (--motor-on)'
             Enabled = False
-            OnClick = cbToolsSeekMotorOnClick
             TabOrder = 3
+            OnClick = cbToolsSeekMotorOnClick
           end
         end
         object grpToolsClean: TGroupBox
           Left = 0
-          Height = 110
-          Top = 290
-          Width = 898
+          Height = 138
+          Top = 362
+          Width = 1475
           Anchors = [akTop, akLeft, akRight]
           Caption = 'Clean:'
-          ClientHeight = 108
-          ClientWidth = 896
+          ClientHeight = 112
+          ClientWidth = 1471
           TabOrder = 3
           object lblToolsCleanCyl: TLabel
-            Left = 174
-            Height = 16
-            Top = 4
-            Width = 56
+            Left = 218
+            Height = 21
+            Top = 5
+            Width = 68
             Caption = 'Cylinders:'
             Enabled = False
             ParentColor = False
           end
           object lblToolsCleanLinger: TLabel
-            Left = 484
-            Height = 16
+            Left = 605
+            Height = 21
             Top = 0
-            Width = 127
+            Width = 152
             Caption = 'Linger time/step (ms):'
             Enabled = False
             ParentColor = False
           end
           object lblToolsCleanPasses: TLabel
-            Left = 174
-            Height = 16
-            Top = 40
-            Width = 43
+            Left = 218
+            Height = 21
+            Top = 50
+            Width = 48
             Caption = 'Passes:'
             Enabled = False
             ParentColor = False
           end
           object rbToolsClean: TCheckBox
-            Left = 20
-            Height = 23
+            Left = 25
+            Height = 25
             Top = 0
-            Width = 63
+            Width = 60
             Caption = 'Clean'
-            OnClick = rbToolsCleanClick
             TabOrder = 0
+            OnClick = rbToolsCleanClick
           end
           object cbToolsCleanCyl: TSpinEdit
-            Left = 315
-            Height = 36
+            Left = 394
+            Height = 28
             Hint = 'number of drive cylinders'
             Top = 0
-            Width = 120
+            Width = 150
             Enabled = False
             MaxValue = 85
             MinValue = -8
-            OnChange = cbToolsCleanCylChange
             ParentFont = False
             TabOrder = 1
             Value = 80
+            OnChange = cbToolsCleanCylChange
           end
           object cbToolsCleanPasses: TComboBox
-            Left = 315
-            Height = 36
+            Left = 394
+            Height = 28
             Hint = 'number of passes across the cleaning disk'
-            Top = 36
-            Width = 120
+            Top = 45
+            Width = 150
             DropDownCount = 5
             Enabled = False
-            ItemHeight = 0
+            ItemHeight = 20
             ItemIndex = 2
             Items.Strings = (
               '1'
@@ -2996,459 +2998,459 @@ object Form1: TForm1
               '8'
               '9'
             )
-            OnChange = cbToolsCleanPassesChange
-            OnEnter = cbToolsCleanPassesEnter
             ParentFont = False
             TabOrder = 2
             Text = '3'
+            OnChange = cbToolsCleanPassesChange
+            OnEnter = cbToolsCleanPassesEnter
           end
           object cbToolsCleanLinger: TComboBox
-            Left = 640
-            Height = 36
+            Left = 800
+            Height = 28
             Hint = 'linger time per step, milliseconds'
             Top = 0
-            Width = 120
+            Width = 150
             DropDownCount = 3
             Enabled = False
-            ItemHeight = 0
+            ItemHeight = 20
             ItemIndex = 0
             Items.Strings = (
               '100'
             )
-            OnChange = cbToolsCleanLingerChange
             ParentFont = False
             TabOrder = 3
             Text = '100'
+            OnChange = cbToolsCleanLingerChange
           end
         end
         object grpToolsRPM: TGroupBox
           Left = 0
-          Height = 60
-          Top = 400
-          Width = 898
+          Height = 75
+          Top = 500
+          Width = 1475
           Anchors = [akTop, akLeft, akRight]
           Caption = 'RPM:'
-          ClientHeight = 58
-          ClientWidth = 896
+          ClientHeight = 49
+          ClientWidth = 1471
           TabOrder = 4
           object lblToolsRPMNumbIter: TLabel
-            Left = 174
-            Height = 16
+            Left = 218
+            Height = 21
             Top = 0
-            Width = 58
+            Width = 68
             Caption = 'Iterations:'
             Enabled = False
             ParentColor = False
           end
           object rbToolsRPM: TCheckBox
-            Left = 20
-            Height = 23
+            Left = 25
+            Height = 25
             Top = 0
-            Width = 57
+            Width = 54
             Caption = 'RPM'
-            OnClick = rbToolsRPMClick
             TabOrder = 0
+            OnClick = rbToolsRPMClick
           end
           object cbToolsRPMNumbIter: TSpinEdit
-            Left = 315
-            Height = 36
+            Left = 394
+            Height = 28
             Hint = 'cylinder to seek'
             Top = 0
-            Width = 120
+            Width = 150
             Enabled = False
             MaxValue = 99
-            OnChange = cbToolsRPMNumbIterChange
-            OnEnter = cbToolsRPMNumbIterEnter
             ParentFont = False
             TabOrder = 1
             Value = 1
+            OnChange = cbToolsRPMNumbIterChange
+            OnEnter = cbToolsRPMNumbIterEnter
           end
         end
       end
       object tbSettings: TTabSheet
         Caption = 'Settings'
-        ClientHeight = 670
-        ClientWidth = 909
+        ClientHeight = 876
+        ClientWidth = 1489
         object grpSetDelays: TGroupBox
           Left = 0
-          Height = 170
+          Height = 212
           Top = 0
-          Width = 898
+          Width = 1475
           Anchors = [akTop, akLeft, akRight]
           Caption = 'Delays:'
-          ClientHeight = 153
-          ClientWidth = 896
+          ClientHeight = 186
+          ClientWidth = 1471
           TabOrder = 0
           object lblSetDelaySelect: TLabel
-            Left = 175
-            Height = 16
+            Left = 219
+            Height = 21
             Top = 0
-            Width = 82
+            Width = 96
             Caption = 'Select (usecs):'
             ParentColor = False
           end
           object lblSetDelayStep: TLabel
-            Left = 175
-            Height = 16
-            Top = 35
-            Width = 72
+            Left = 219
+            Height = 21
+            Top = 44
+            Width = 85
             Caption = 'Step (usecs):'
             ParentColor = False
           end
           object lblSetDelayAutoOff: TLabel
-            Left = 175
-            Height = 16
-            Top = 70
-            Width = 91
+            Left = 219
+            Height = 21
+            Top = 88
+            Width = 108
             Caption = 'Watchdog (ms):'
             ParentColor = False
           end
           object lblSetDelaySettle: TLabel
-            Left = 463
-            Height = 16
+            Left = 579
+            Height = 21
             Top = 0
-            Width = 97
+            Width = 112
             Caption = 'Settle time (ms):'
             ParentColor = False
           end
           object lblSetDelayMotor: TLabel
-            Left = 463
-            Height = 16
-            Top = 35
-            Width = 67
+            Left = 579
+            Height = 21
+            Top = 44
+            Width = 81
             Caption = 'Motor (ms):'
             ParentColor = False
           end
           object rbSetDelays: TCheckBox
-            Left = 20
-            Height = 23
+            Left = 25
+            Height = 25
             Top = 0
-            Width = 85
+            Width = 91
             Caption = 'Set delays'
             Checked = True
-            OnClick = rbSetDelaysClick
             State = cbChecked
             TabOrder = 0
+            OnClick = rbSetDelaysClick
           end
           object cbSetDelaySelect: TSpinEdit
-            Left = 305
-            Height = 33
+            Left = 381
+            Height = 29
             Hint = 'Delay after drive select (usecs)'
             Top = 0
-            Width = 120
+            Width = 150
             MaxValue = 999999
             MinValue = 1
-            OnChange = cbSetDelaySelectChange
             TabOrder = 1
             Value = 10
+            OnChange = cbSetDelaySelectChange
           end
           object cbSetDelayStep: TSpinEdit
-            Left = 305
-            Height = 33
+            Left = 381
+            Height = 29
             Hint = 'Delay between head steps (usecs)'
-            Top = 35
-            Width = 120
+            Top = 44
+            Width = 150
             MaxValue = 99999
             MinValue = 1
-            OnChange = cbSetDelayStepChange
             TabOrder = 2
             Value = 5000
+            OnChange = cbSetDelayStepChange
           end
           object cbSetDelayAutoOff: TSpinEdit
-            Left = 305
-            Height = 33
+            Left = 381
+            Height = 29
             Hint = 'Quiescent time until drives reset (msecs)'
-            Top = 70
-            Width = 120
+            Top = 88
+            Width = 150
             MaxValue = 999999
             MinValue = 1
-            OnChange = cbSetDelayAutoOffChange
             TabOrder = 3
             Value = 10000
+            OnChange = cbSetDelayAutoOffChange
           end
           object cbSetDelaySettle: TSpinEdit
-            Left = 603
-            Height = 33
+            Left = 754
+            Height = 29
             Hint = 'Settle delay after seek (msecs)'
             Top = 0
-            Width = 120
+            Width = 150
             MaxValue = 999
             MinValue = 1
-            OnChange = cbSetDelaySettleChange
             TabOrder = 5
             Value = 15
+            OnChange = cbSetDelaySettleChange
           end
           object cbSetDelayMotor: TSpinEdit
-            Left = 603
-            Height = 33
+            Left = 754
+            Height = 29
             Hint = 'Delay after motor on (msecs)'
-            Top = 35
-            Width = 120
+            Top = 44
+            Width = 150
             MaxValue = 9999
             MinValue = 1
-            OnChange = cbSetDelayMotorChange
             TabOrder = 6
             Value = 750
+            OnChange = cbSetDelayMotorChange
           end
           object btSetDelaysInfo: TButton
-            Left = 731
-            Height = 25
+            Left = 1264
+            Height = 31
             Top = 0
-            Width = 94
+            Width = 118
             Anchors = [akTop, akRight]
             Caption = 'Info'
-            OnClick = btSetDelaysInfoClick
             TabOrder = 9
+            OnClick = btSetDelaysInfoClick
           end
           object btSetDelaysDefault: TButton
-            Left = 731
-            Height = 25
-            Top = 35
-            Width = 94
+            Left = 1264
+            Height = 31
+            Top = 44
+            Width = 118
             Anchors = [akTop, akRight]
             Caption = 'Default'
-            OnClick = btSetDelaysDefaultClick
             TabOrder = 10
+            OnClick = btSetDelaysDefaultClick
           end
           object lblSetDelayIndexMask: TLabel
-            Left = 175
-            Height = 16
-            Top = 105
-            Width = 98
+            Left = 219
+            Height = 21
+            Top = 131
+            Width = 118
             Caption = 'Index-Mask (ms):'
             ParentColor = False
           end
           object cbSetDelayIndexMask: TSpinEdit
-            Left = 305
-            Height = 33
+            Left = 381
+            Height = 29
             Hint = 'Index post-trigger mask time'''''''
-            Top = 105
-            Width = 120
+            Top = 131
+            Width = 150
             MaxValue = 999999
             MinValue = 1
-            OnChange = cbSetDelayIndexMaskChange
             TabOrder = 4
             Value = 200
+            OnChange = cbSetDelayIndexMaskChange
           end
           object lblSetDelayPreWrite: TLabel
-            Left = 466
-            Height = 16
-            Top = 73
-            Width = 91
+            Left = 582
+            Height = 21
+            Top = 91
+            Width = 105
             Caption = 'Pre-Write (ms):'
             ParentColor = False
           end
           object lblSetDelayPostWrite: TLabel
-            Left = 463
-            Height = 16
-            Top = 105
-            Width = 97
+            Left = 579
+            Height = 21
+            Top = 131
+            Width = 111
             Caption = 'Post-Write (ms):'
             ParentColor = False
           end
           object cbSetDelayPreWrite: TSpinEdit
-            Left = 603
-            Height = 33
+            Left = 754
+            Height = 29
             Hint = 'Min. time from track change to write start'
-            Top = 70
-            Width = 120
+            Top = 88
+            Width = 150
             MaxValue = 9999
             MinValue = 1
-            OnChange = cbSetDelayPreWriteChange
             TabOrder = 7
             Value = 100
+            OnChange = cbSetDelayPreWriteChange
           end
           object cbSetDelayPostWrite: TSpinEdit
-            Left = 603
-            Height = 33
+            Left = 754
+            Height = 29
             Hint = 'Min. time from write end to track change'
-            Top = 105
-            Width = 120
+            Top = 131
+            Width = 150
             MaxValue = 9999
             MinValue = 1
-            OnChange = cbSetDelayPostWriteChange
             TabOrder = 8
             Value = 1000
+            OnChange = cbSetDelayPostWriteChange
           end
         end
         object grpPIN: TGroupBox
           Left = 0
-          Height = 140
-          Top = 170
-          Width = 898
+          Height = 175
+          Top = 212
+          Width = 1475
           Anchors = [akTop, akLeft, akRight]
           Caption = 'PIN:'
-          ClientHeight = 123
-          ClientWidth = 896
+          ClientHeight = 149
+          ClientWidth = 1471
           TabOrder = 1
           object lblSetPINNumber: TLabel
-            Left = 175
-            Height = 16
-            Top = 4
-            Width = 72
+            Left = 219
+            Height = 21
+            Top = 5
+            Width = 87
             Caption = 'PIN number:'
             Enabled = False
             ParentColor = False
           end
           object rbSetGetPIN: TCheckBox
-            Left = 20
-            Height = 23
+            Left = 25
+            Height = 25
             Top = 0
-            Width = 94
+            Width = 102
             Caption = 'Get/Set PIN'
-            OnClick = rbSetGetPINClick
             TabOrder = 0
+            OnClick = rbSetGetPINClick
           end
           object cbSetPINNumber: TSpinEdit
-            Left = 305
-            Height = 33
+            Left = 381
+            Height = 29
             Hint = 'pin number'
             Top = 0
-            Width = 120
+            Width = 150
             Enabled = False
             MaxValue = 32
             MinValue = 1
-            OnChange = cbSetPINNumberChange
             TabOrder = 1
             Value = 2
+            OnChange = cbSetPINNumberChange
           end
           object Panel3: TPanel
-            Left = 293
-            Height = 65
-            Top = 30
-            Width = 349
+            Left = 366
+            Height = 81
+            Top = 38
+            Width = 436
             BevelOuter = bvNone
-            ClientHeight = 65
-            ClientWidth = 349
+            ClientHeight = 81
+            ClientWidth = 436
             TabOrder = 2
             object rbGetPIN: TRadioButton
-              Left = 13
-              Height = 23
-              Top = 10
-              Width = 102
+              Left = 16
+              Height = 25
+              Top = 12
+              Width = 110
               Caption = 'Get PIN level'
               Checked = True
               Enabled = False
-              OnClick = rbGetPINClick
               TabOrder = 0
               TabStop = True
+              OnClick = rbGetPINClick
             end
             object rbSetPIN: TRadioButton
-              Left = 13
-              Height = 23
-              Top = 37
-              Width = 118
+              Left = 16
+              Height = 25
+              Top = 46
+              Width = 129
               Caption = 'Set PIN level to:'
               Enabled = False
-              OnClick = rbSetPINClick
               TabOrder = 1
+              OnClick = rbSetPINClick
             end
             object cbSetPINLevel: TComboBox
-              Left = 170
-              Height = 33
+              Left = 212
+              Height = 29
               Hint = 'pin level (H,L)'
-              Top = 35
-              Width = 120
+              Top = 44
+              Width = 150
               DropDownCount = 4
               Enabled = False
-              ItemHeight = 0
+              ItemHeight = 21
               Items.Strings = (
                 ''
                 'High (5v)'
                 'Low (0v)'
               )
-              OnChange = cbSetPINLevelChange
               TabOrder = 2
+              OnChange = cbSetPINLevelChange
             end
           end
         end
         object grpFW: TGroupBox
           Left = 0
-          Height = 211
-          Top = 310
-          Width = 898
+          Height = 264
+          Top = 388
+          Width = 1475
           Anchors = [akTop, akLeft, akRight]
           Caption = 'Firmware:'
-          ClientHeight = 194
-          ClientWidth = 896
+          ClientHeight = 238
+          ClientWidth = 1471
           TabOrder = 2
           object lblSetFirmwareHint: TLabel
-            Left = 175
-            Height = 16
-            Top = 4
-            Width = 477
+            Left = 219
+            Height = 21
+            Top = 5
+            Width = 566
             Caption = 'Please read first the Greaseweazle-wiki! Jumper settings 4-pin header: GND-DCLK'
             Enabled = False
             ParentColor = False
           end
           object rbSetFirmware: TCheckBox
-            Left = 20
-            Height = 23
+            Left = 25
+            Height = 25
             Top = 0
-            Width = 125
+            Width = 139
             Caption = 'Firmware update'
-            OnClick = rbSetFirmwareClick
             TabOrder = 0
+            OnClick = rbSetFirmwareClick
           end
           object pnToolsFWSelect: TPanel
-            Left = 157
-            Height = 104
-            Top = 37
-            Width = 495
+            Left = 196
+            Height = 130
+            Top = 46
+            Width = 970
             Anchors = [akTop, akLeft, akRight]
             BevelOuter = bvNone
-            ClientHeight = 104
-            ClientWidth = 495
+            ClientHeight = 130
+            ClientWidth = 970
             TabOrder = 1
             object opSetFWOnline: TRadioButton
-              Left = 16
-              Height = 23
+              Left = 20
+              Height = 25
               Top = 0
-              Width = 118
+              Width = 131
               Caption = 'Online (Default)'
               Checked = True
               Enabled = False
-              OnClick = opSetFWOnlineClick
               TabOrder = 0
               TabStop = True
+              OnClick = opSetFWOnlineClick
             end
             object opSetFWFile: TRadioButton
-              Left = 16
-              Height = 23
-              Top = 34
-              Width = 50
+              Left = 20
+              Height = 25
+              Top = 42
+              Width = 48
               Caption = 'File:'
               Enabled = False
-              OnClick = opSetFWFileClick
               TabOrder = 1
+              OnClick = opSetFWFileClick
             end
             object opSetFWTag: TRadioButton
-              Left = 16
-              Height = 23
-              Top = 70
-              Width = 50
+              Left = 20
+              Height = 25
+              Top = 88
+              Width = 49
               Caption = 'Tag:'
               Enabled = False
-              OnClick = opSetFWTagClick
               TabOrder = 3
+              OnClick = opSetFWTagClick
             end
             object edToolsFWTag: TEdit
-              Left = 150
-              Height = 33
-              Top = 70
-              Width = 286
+              Left = 188
+              Height = 29
+              Top = 88
+              Width = 358
               Enabled = False
-              OnChange = edToolsFWTagChange
               TabOrder = 4
+              OnChange = edToolsFWTagChange
             end
             object edToolsFW: TFileNameEdit
-              Left = 150
-              Height = 33
-              Top = 34
-              Width = 344
+              Left = 188
+              Height = 29
+              Top = 42
+              Width = 781
               FilterIndex = 0
               HideDirectories = False
-              ButtonWidth = 40
+              ButtonWidth = 50
               NumGlyphs = 1
               Anchors = [akTop, akLeft, akRight]
               MaxLength = 0
@@ -3457,23 +3459,23 @@ object Form1: TForm1
             end
           end
           object cbSetFirmwareBootloader: TCheckBox
-            Left = 175
-            Height = 23
+            Left = 219
+            Height = 25
             Hint = 'update the bootloader (use with caution!)'
-            Top = 150
-            Width = 219
+            Top = 188
+            Width = 253
             Caption = 'Bootloader (Usually NOT needed)'
             Enabled = False
-            OnClick = cbSetFirmwareBootloaderClick
             TabOrder = 2
+            OnClick = cbSetFirmwareBootloaderClick
           end
         end
       end
     end
   end
   object MainMenu1: TMainMenu
-    Left = 896
-    Top = 58
+    Left = 856
+    Top = 64
     object mnuFile: TMenuItem
       Caption = '&File'
       object mnuClose: TMenuItem
