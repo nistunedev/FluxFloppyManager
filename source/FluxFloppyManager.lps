@@ -19,7 +19,7 @@
         <ComponentName Value="FrmMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="MainForm">
+        <UnitName Value="MainForm"/>
         <CursorPos X="6" Y="23"/>
         <UsageCount Value="49"/>
         <Loaded Value="True"/>
@@ -30,7 +30,7 @@
         <ComponentName Value="FrmAbout"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="AboutDialog">
+        <UnitName Value="AboutDialog"/>
         <EditorIndex Value="1"/>
         <TopLine Value="63"/>
         <CursorPos X="3" Y="79"/>
@@ -44,7 +44,7 @@
         <ComponentName Value="FrmOptions"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="OptionsDialog">
+        <UnitName Value="OptionsDialog"/>
         <EditorIndex Value="2"/>
         <TopLine Value="47"/>
         <CursorPos X="3" Y="63"/>
@@ -58,7 +58,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <UnitName Value="OperationsDialog">
+        <UnitName Value="OperationsDialog"/>
         <EditorIndex Value="4"/>
         <TopLine Value="192"/>
         <CursorPos Y="207"/>
