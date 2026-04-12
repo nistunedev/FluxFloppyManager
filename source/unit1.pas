@@ -539,6 +539,9 @@ type
     procedure LoadXML(const FileName: string);
 //    procedure LoadOption(OptionNode: TDOMNode; var Opt: TFormatOption);
     procedure performModalCmdAction(const command: string);
+    function GetReadFormatSelection : String;
+    function GetConvFormatSelection : String;
+    procedure UpdateReadFormatSelection;
 
     procedure performCmdAction(const cmd: string;
                                const param: string;
@@ -628,6 +631,63 @@ begin
     Dec(p);
   end;
 end;
+
+
+function ReadIniString(ThisFile: TIniFile; const Section, Key: string): string;
+begin
+  Result := ThisFile.ReadString(Section, Key, '');
+end;
+
+function ReadIniString(ThisFile: TIniFile; const Section, Key, Default: string): string;
+begin
+  Result := ThisFile.ReadString(Section, Key, Default);
+end;
+
+function ReadIniBool(ThisFile: TIniFile; const Section, Key: String): Boolean;
+begin
+  Result := ThisFile.ReadBool(Section, Key, false);
+end;
+
+function ReadIniBool(ThisFile: TIniFile; const Section, Key: String; Default: Boolean): Boolean;
+begin
+  Result := ThisFile.ReadBool(Section, Key, Default);
+end;
+
+function ReadIniInteger(ThisFile: TIniFile; const Section, Key: String): Integer;
+begin
+  Result := ThisFile.ReadInteger(Section, Key, 0);
+end;
+
+procedure WriteIniString(ThisFile: TIniFile; const Section, Key, Value: string);
+begin
+  ThisFile.WriteString(Section, Key, Value);
+end;
+
+procedure WriteIniStringIfNotEmpty(ThisFile: TIniFile; const Section, Key, Value: string);
+begin
+  if Value <> '' then
+    WriteIniString(ThisFile,Section, Key, Value);
+end;
+
+procedure WriteIniInteger(ThisFile: TIniFile; const Section, Key: String; Value: Integer);
+begin
+   ThisFile.WriteInteger(Section, Key, Value);
+end;
+
+
+procedure WriteIniBool(ThisFile: TIniFile; const Section, Key: String; Value: Boolean);
+begin
+   ThisFile.WriteBool(Section, Key, Value);
+end;
+
+
+procedure WriteIniBoolIfNotEmpty(ThisFile: TIniFile; const Section, Key: String; Enabled, Value: Boolean);
+begin
+  if Enabled and Value then
+    WriteIniBool(ThisFile, Section, Key, Value);
+end;
+
+
 
 function Trackset(aCommand: string; aCyl: string; aHeads: string; aSteps: string; aHSwap: boolean; aFlippy: string):string;
 var
@@ -721,12 +781,13 @@ procedure TForm1.FormShow(Sender: TObject);
 var
   gw :string;
   xmlFile: String;
+  selTemplate: String;
 begin
   sAppName := APP_NAME;
   sAppVersion := APP_VERSION;
   sAppDate := APP_DATE;
-  sAppVersion_ReadTmpl := 'v4.00';
-  sAppVersion_WriteTmpl := 'v4.00';
+  sAppVersion_ReadTmpl := TEMPLATE_VERSION;
+  sAppVersion_WriteTmpl := TEMPLATE_VERSION;
   AboutGW := 'Requires "Greaseweazle v1.22+" (and optional "' + GW_DISKDEF_FOLDER + '_.cfg")';
   Form1.Caption := sAppName + sAppVersion;
 
@@ -753,25 +814,25 @@ begin
   if FileExists(sAppPath + GW_INI_FILE) = False then
     try
      INI := TINIFile.Create(sAppPath + GW_INI_FILE);
-     INI.WriteString(FLUX_INI_NAME, INI_VERSION, sAppVersion);
-     INI.WriteInteger(FLUX_INI_NAME, INI_VERSION_INI, INI_VERSION_DEFAULT);
-     INI.WriteInteger(FLUX_INI_NAME, INI_HEIGHT, INITIAL_HEIGHT);
-     INI.WriteInteger(FLUX_INI_NAME, INI_WIDTH, INITIAL_WIDTH);
-     INI.WriteBool(FLUX_INI_NAME, INI_SHOWARG, true);
-     INI.WriteString(FLUX_INI_NAME, INI_GW, '');
-     INI.WriteBool(FLUX_INI_NAME, INI_SAVE_DEVICE_FLAG, true);
-     INI.WriteString(FLUX_INI_NAME, INI_SAVE_DEVICE, '');
-     INI.WriteBool(FLUX_INI_NAME, INI_SAVE_DRIVE_FLAG, true);
-     INI.WriteString(FLUX_INI_NAME, INI_SAVE_DRIVE, '');
-     INI.WriteBool(FLUX_INI_NAME, INI_CODE_PAGE_CMD, true);
-     INI.WriteString(FLUX_INI_NAME, INI_FOLDER_DISKDEFS, sAppPath + GW_DISKDEF_FOLDER + PATH_SPECIFIER);
-     INI.WriteString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, sAppPath + GW_TEMPLATE_FOLDER + PATH_SPECIFIER);
-     INI.WriteString(FLUX_INI_NAME, INI_FOLDER_READ_DEST, AppendPathDelim(GetUserDir + GW_DOCUMENTS_FOLDER));
-     INI.WriteString(FLUX_INI_NAME, INI_FOLDER_WRITE_SRC, AppendPathDelim(GetUserDir + GW_DOCUMENTS_FOLDER));
-     INI.WriteString(FLUX_INI_NAME, INI_FOLDER_CONVERT_SRC, sAppPath);
-     INI.WriteString(FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST, sAppPath);
-     INI.WriteBool(FLUX_INI_NAME, INI_TIME, cbSetGlobalActionsTime.Checked);
-     INI.WriteBool(FLUX_INI_NAME, INI_BACKTRACE, cbSetGlobalActionsBacktrace.Checked);
+     WriteIniString(INI,FLUX_INI_NAME, INI_VERSION, sAppVersion);
+     WriteIniInteger(INI, FLUX_INI_NAME, INI_VERSION_INI, INI_VERSION_DEFAULT);
+     WriteIniInteger(INI, FLUX_INI_NAME, INI_HEIGHT, INITIAL_HEIGHT);
+     WriteIniInteger(INI, FLUX_INI_NAME, INI_WIDTH, INITIAL_WIDTH);
+     WriteIniBool(INI, FLUX_INI_NAME, INI_SHOWARG, true);
+     WriteIniString(INI, FLUX_INI_NAME, INI_GW, '');
+     WriteIniBool(INI, FLUX_INI_NAME, INI_SAVE_DEVICE_FLAG, true);
+     WriteIniString(INI, FLUX_INI_NAME, INI_SAVE_DEVICE, '');
+     WriteIniBool(INI, FLUX_INI_NAME, INI_SAVE_DRIVE_FLAG, true);
+     WriteIniString(INI, FLUX_INI_NAME, INI_SAVE_DRIVE, '');
+     WriteIniBool(INI, FLUX_INI_NAME, INI_CODE_PAGE_CMD, true);
+     WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_DISKDEFS, sAppPath + GW_DISKDEF_FOLDER + PATH_SPECIFIER);
+     WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_TEMPLATES, sAppPath + GW_TEMPLATE_FOLDER + PATH_SPECIFIER);
+     WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_READ_DEST, AppendPathDelim(GetUserDir + GW_DOCUMENTS_FOLDER));
+     WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_WRITE_SRC, AppendPathDelim(GetUserDir + GW_DOCUMENTS_FOLDER));
+     WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_CONVERT_SRC, sAppPath);
+     WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST, sAppPath);
+     WriteIniBool(INI, FLUX_INI_NAME, INI_TIME, cbSetGlobalActionsTime.Checked);
+     WriteIniBool(INI, FLUX_INI_NAME, INI_BACKTRACE, cbSetGlobalActionsBacktrace.Checked);
     finally
      ; // end if
     end;
@@ -780,19 +841,19 @@ begin
   INI := TINIFile.Create(sAppPath + GW_INI_FILE);
   If INI.ReadInteger(FLUX_INI_NAME, INI_VERSION_INI, 00) < INI_VERSION_DEFAULT then
    begin
-    INI.WriteInteger(FLUX_INI_NAME, INI_VERSION_INI, INI_VERSION_DEFAULT);
-    INI.WriteBool(FLUX_INI_NAME, INI_CODE_PAGE_CMD, true);
+    WriteIniInteger(INI, FLUX_INI_NAME, INI_VERSION_INI, INI_VERSION_DEFAULT);
+    WriteIniBool(INI, FLUX_INI_NAME, INI_CODE_PAGE_CMD, true);
    end;
-  If INI.ReadString(FLUX_INI_NAME, INI_FOLDER_DISKDEFS,'') = '' then
+  If ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_DISKDEFS,'') = '' then
     begin
-     INI.WriteString(FLUX_INI_NAME, INI_FOLDER_DISKDEFS, sAppPath + GW_DISKDEF_FOLDER + PATH_SPECIFIER);
+     WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_DISKDEFS, sAppPath + GW_DISKDEF_FOLDER + PATH_SPECIFIER);
     end;
-  EdGWFile.Text := INI.ReadString(FLUX_INI_NAME, GW_APP_NAME,'');
-  mnuArguments.Checked := INI.ReadBool(FLUX_INI_NAME, INI_SHOWARG, true);
-  edReadDirDest.Directory := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_READ_DEST,'');
-  edWriteFilename.InitialDir := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_WRITE_SRC,'');
-  edConvFileSource.InitialDir := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_CONVERT_SRC,'');
-  edConvDirDest.Directory := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST,'');
+  EdGWFile.Text := ReadIniString(INI, FLUX_INI_NAME, GW_APP_NAME,'');
+  mnuArguments.Checked := ReadIniBool(INI, FLUX_INI_NAME, INI_SHOWARG, true);
+  edReadDirDest.Directory := ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_READ_DEST,'');
+  edWriteFilename.InitialDir := ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_WRITE_SRC,'');
+  edConvFileSource.InitialDir := ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_CONVERT_SRC,'');
+  edConvDirDest.Directory := ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST,'');
 
   // Form size height/width
   Form1.Height := INI.ReadInteger(FLUX_INI_NAME, INI_HEIGHT, INITIAL_HEIGHT);
@@ -803,7 +864,7 @@ begin
   Form1.Left:=((Screen.Width-Width)div 2);
 
   // Where is gw.exe ?
-  gw := INI.ReadString(FLUX_INI_NAME, GW_APP_NAME, '');
+  gw := ReadIniString(INI, FLUX_INI_NAME, GW_APP_NAME, '');
   If gw <> '' then
     begin
      if FileExists(gw) = true then
@@ -815,7 +876,7 @@ begin
        edGWfile.Text := Selectfile('Select Greaseweazle (' + GW_APP + ')',sAppPath, GW_EXECUTABLE);
        if edGWfile.Text <> '' then
         begin
-         INI.WriteString(FLUX_INI_NAME, GW_APP_NAME, edGWfile.Text);
+         WriteIniString(INI,FLUX_INI_NAME, GW_APP_NAME, edGWfile.Text);
         end;
       end;
     end;
@@ -824,14 +885,14 @@ begin
      if FileExists(sAppPath + GW_APP) = true then
       begin
        edGWfile.Text := sAppPath + GW_APP;
-       INI.WriteString(FLUX_INI_NAME, GW_APP_NAME, sAppPath + GW_EXECUTABLE);
+       WriteIniString(INI,FLUX_INI_NAME, GW_APP_NAME, sAppPath + GW_EXECUTABLE);
       end;
      if FileExists(sAppPath + GW_EXECUTABLE) = False then
       begin
        edGWfile.Text := Selectfile('Select Greaseweazle (' + GW_APP + ')',sAppPath, GW_EXECUTABLE);
        if edGWfile.Text <> '' then
         begin
-         INI.WriteString(FLUX_INI_NAME, GW_APP_NAME, edGWfile.Text);
+         WriteIniString(INI,FLUX_INI_NAME, GW_APP_NAME, edGWfile.Text);
         end;
       end;
     end;
@@ -844,15 +905,15 @@ begin
     Get_DeviceCOMLinux;
   {$ENDIF}
 
-  If INI.ReadBool(FLUX_INI_NAME, INI_SAVE_DEVICE_FLAG, false) = true then
+  If ReadIniBool(INI, FLUX_INI_NAME, INI_SAVE_DEVICE_FLAG, false) = true then
    begin
-    cbGWDevCOM.Text := INI.ReadString(FLUX_INI_NAME, INI_SAVE_DEVICE, '');
+    cbGWDevCOM.Text := ReadIniString(INI, FLUX_INI_NAME, INI_SAVE_DEVICE, '');
    end;
-  If INI.ReadBool(FLUX_INI_NAME, INI_SAVE_DRIVE_FLAG, false) = true then
+  If ReadIniBool(INI, FLUX_INI_NAME, INI_SAVE_DRIVE_FLAG, false) = true then
    begin
-    cbGWDrive.Text := INI.ReadString(FLUX_INI_NAME, INI_SAVE_DRIVE, '');
+    cbGWDrive.Text := ReadIniString(INI, FLUX_INI_NAME, INI_SAVE_DRIVE, '');
    end;
-  cbGWHW.Text := INI.ReadString(FLUX_INI_NAME, INI_ACTIONS_GW_HW, INI_GW);
+  cbGWHW.Text := ReadIniString(INI, FLUX_INI_NAME, INI_ACTIONS_GW_HW, INI_GW);
 
   // Where are diskdefs_.cfg located?
   Refresh_Diskdefs_DropDown;
@@ -867,8 +928,25 @@ begin
   cbConvFileFormat.Items.Text := FormatDest_Ext.Text;    // bspw. .msa
   Refresh_Templates_Read_DropDown;
   Refresh_Templates_Write_DropDown;
-  btReadTplNew.Click;
-  btWriteTplNew.Click;
+
+  SelTemplate := ReadIniString(INI, FLUX_INI_NAME, INI_LAST_READ_TEMPLATE);
+  if SelTemplate <> '' then
+    begin
+      cbReadTplName.Text := SelTemplate;
+      Refresh_Templates_Read;
+    end
+  else
+    btReadTplNew.Click;
+
+  SelTemplate := ReadIniString(INI, FLUX_INI_NAME, INI_LAST_WRITE_TEMPLATE);
+  if SelTemplate <> '' then
+    begin
+      cbWriteTplName.Text := SelTemplate;
+      Refresh_Templates_Write;
+    end
+  else
+    btWriteTplNew.Click;
+
   CMD_Generate;
 end;
 
@@ -1057,8 +1135,10 @@ begin
        Add(lblReadTplFormat.Caption + ' Source: ' + cbReadTplFormatSrc.Text);
        Add(lblReadTplFormat.Caption + ' Selected: ' + cbReadTplFormat.Text);
        Add(lblReadTplRevs.Caption + ' ' + cbReadTplRevs.Text);
-       if cbReadTplRaw.Checked = True then Add(lblReadTplRaw.Caption + ' Yes');
-       if cbReadTplRaw.Checked = False then Add(lblReadTplRaw.Caption + ' No');
+       if cbReadTplRaw.Checked = True then
+         Add(lblReadTplRaw.Caption + ' Yes');
+       if cbReadTplRaw.Checked = False then
+         Add(lblReadTplRaw.Caption + ' No');
        Add(lblReadTplFakeIndex.Caption + ' ' + cbReadTplFakeIndex.Text);
        Add(cbReadTplAdjustSpeed.Caption + ' ' + cbReadTplAdjustSpeed.Text);
        Add(lblReadTplRetries.Caption + ' ' + cbReadTplRetries.Text);
@@ -1066,8 +1146,10 @@ begin
        Add(lblReadTplCyls.Caption + ' ' + cbReadTplCyls.Text);
        Add(lblReadTplHeads.Caption + ' ' + cbReadTplHeads.Text);
        Add(lblReadTplSteps.Caption + ' ' + cbReadTplSteps.Text);
-       if cbReadTplHSwap.Checked = True then Add(lblReadTplHSwap.Caption + ' Yes');
-       if cbReadTplHSwap.Checked = False then Add(lblReadTplHSwap.Caption + ' No');
+       if cbReadTplHSwap.Checked = True
+         then Add(lblReadTplHSwap.Caption + ' Yes');
+       if cbReadTplHSwap.Checked = False then
+         Add(lblReadTplHSwap.Caption + ' No');
        Add(lblReadTplFlippy.Caption + ' ' + cbReadTplFlippy.Text);
        Add(lblReadTplPLL.Caption + ' ' + cbReadTplPLL.Text);
        Add(' ');
@@ -1307,7 +1389,7 @@ var
   tmp : string;
   answer : Integer;
 begin
-  tmp := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
+  tmp := ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
   if DirectoryExists(tmp) = false then
    begin
     answer := MessageDlg('In options defined templates folder does not exist!' + chr(10) + 'Cannot delete the selected template!',mtWarning, [mbOK], 0);
@@ -1361,6 +1443,8 @@ begin
  CMD_Generate;
 end;
 
+
+
 procedure TForm1.btReadTplSaveClick(Sender: TObject);
 var
  tmp : string;
@@ -1373,11 +1457,7 @@ begin
    if answer = mrOk then exit;
  end;
 
-
-
-
-
- tmp := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
+ tmp := ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
  if tmp = '' then CreateDir(sAppPath + PATH_TEMPLATES + PATH_SPECIFIER);
  if DirectoryExists(tmp) = false then
   begin
@@ -1390,33 +1470,45 @@ begin
     INIRead := TINIFile.Create(DirCheck(tmp) + cbReadTplName.Text + GW_INI_READ_EXT);
     try
       INIRead.DeleteKey(INI_SETTINGS,INI_TEMPLATE_LEGACY_RPM); // older than 2.00
-      INIRead.WriteString(READ_TEMPLATE, INI_VERSION, sAppVersion_ReadTmpl);
-      INIRead.WriteString(READ_TEMPLATE, INI_TEMPLATE_NAME, cbReadTplName.Text);
-      //INIRead.WriteString(READ_TEMPLATE, 'Creator', '');
-      INIRead.WriteString(READ_TEMPLATE, INI_TEMPLATE_DESC, edReadTplDesc.Text);
-      INIRead.WriteString(INI_SETTINGS, INI_FOLDER_DISKDEFS, cbReadTplFormatSrc.Text);
-      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_FORMAT_SPEC, cbReadTplFormat.Text);
-      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_REVS, cbReadTplRevs.Text);
-      INIRead.WriteBool(INI_SETTINGS, INI_TEMPLATE_REVS, cbReadTplRaw.Checked);
-      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_FAKE_INDEX, cbReadTplFakeIndex.Text);
-      INIRead.WriteBool(INI_SETTINGS, INI_TEMPLATE_HARD_SECTORS, cbReadTplHardSec.Checked);
-      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_ADJUST_SPEED,cbReadTplAdjustSpeed.Text);
-      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_RETRIES, cbReadTplRetries.Text);
-      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_SEEK_RETRIES, cbReadTplSeekRetries.Text);
-      INIRead.WriteString(INI_SETTINGS,INI_TEMPLATE_PLL, cbReadTplPLL.Text);
-      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_DD, cbReadTplDD.Text);
+      WriteIniStringIfNotEmpty(INIRead, READ_TEMPLATE, INI_VERSION, sAppVersion_ReadTmpl);
+      WriteIniStringIfNotEmpty(INIRead, READ_TEMPLATE, INI_TEMPLATE_NAME, cbReadTplName.Text);
+      WriteIniStringIfNotEmpty(INIRead, READ_TEMPLATE, INI_TEMPLATE_DESC, edReadTplDesc.Text);
 
-      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_CYLINDERS, cbReadTplCyls.Text);
-      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_HEADS, cbReadTplHeads.Text);
-      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_STEPS, cbReadTplSteps.Text);
-      INIRead.WriteBool(INI_SETTINGS, INI_TEMPLATE_HSWAP, cbReadTplHSwap.Checked);
-      INIRead.WriteString(INI_SETTINGS, INI_TEMPLATE_FLIPPY, cbReadTplFlippy.Text);
-      INIRead.WriteBool(INI_SETTINGS, INI_TEMPLATE_FLIPPY_REV, cbReadTplFlippyReverse.Checked);
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_FOLDER_DISKDEFS, cbReadTplFormatSrc.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_FORMAT_SPEC, cbReadTplFormat.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_REVS, cbReadTplRevs.Text);
 
-      INIRead.WriteBool(INI_SETTINGS, INI_TEMPLATE_LOG_PARAM, cbReadTplLogParam.Checked);
-      INIRead.WriteBool(INI_SETTINGS, INI_TEMPLATE_LOG_OUTPUT, cbReadTplLogOutput.Checked);
-      INIRead.WriteBool(INI_SETTINGS, INI_TEMPLATE_LOG_ONEFILE, cbReadTplLogBoth.Checked);
+      WriteIniBoolIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_RAW, cbReadTplRaw.Enabled, cbReadTplRaw.Checked);
 
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_FAKE_INDEX, cbReadTplFakeIndex.Text);
+      WriteIniBoolIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_HARD_SECTORS, cbReadTplHardSec.Enabled, cbReadTplHardSec.Checked);
+
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_ADJUST_SPEED, cbReadTplAdjustSpeed.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_RETRIES, cbReadTplRetries.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_SEEK_RETRIES, cbReadTplSeekRetries.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_PLL, cbReadTplPLL.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_DD, cbReadTplDD.Text);
+
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_CYLINDERS, cbReadTplCyls.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_HEADS, cbReadTplHeads.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_STEPS, cbReadTplSteps.Text);
+
+      WriteIniBoolIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_HSWAP, cbReadTplHSwap.Enabled, cbReadTplHSwap.Checked);
+
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_FLIPPY, cbReadTplFlippy.Text);
+      WriteIniBoolIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_FLIPPY_REV, cbReadTplFlippyReverse.Enabled, cbReadTplFlippyReverse.Checked);
+
+      WriteIniBoolIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_LOG_PARAM, cbReadTplLogParam.Enabled, cbReadTplLogParam.Checked);
+      WriteIniBoolIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_LOG_OUTPUT, cbReadTplLogOutput.Enabled, cbReadTplLogOutput.Checked);
+      WriteIniBoolIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_LOG_ONEFILE, cbReadTplLogBoth.Enabled, cbReadTplLogBoth.Checked);
+
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_FORMAT, cbReadFormat.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION, cbReadFormatOption.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_VER, cbReadFormatOptionHFEVer.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_INT, cbReadFormatOptionHFEInt.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_ENC, cbReadFormatOptionHFEEnc.Text);
+
+      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_DIRECTORY, edReadDirDest.Text);
       INIRead.Free;
 
       tmp := cbReadTplName.Text;
@@ -1460,7 +1552,7 @@ var
  tmp : string;
  answer : Integer;
 begin
-  tmp := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
+  tmp := ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
   if DirectoryExists(tmp) = false then
    begin
     answer := MessageDlg('In options defined templates folder does not exist!' + chr(10) + 'Cannot delete the selected template!',mtWarning, [mbOK], 0);
@@ -1508,6 +1600,8 @@ begin
  CMD_Generate;
 end;
 
+
+
 procedure TForm1.BtWriteTplSaveClick(Sender: TObject);
 var
  tmp: string;
@@ -1520,7 +1614,7 @@ begin
    if answer = mrOk then exit;
   end;
 
- tmp := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
+ tmp := ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
  if tmp = '' then CreateDir(sAppPath + PATH_TEMPLATES + PATH_SPECIFIER);
  if DirectoryExists(tmp) = false then
   begin
@@ -1535,27 +1629,29 @@ begin
     IniWrite.DeleteKey(INI_SETTINGS,INI_TEMPLATE_LEGACY_RPM); // older than 2.00
     IniWrite.DeleteKey(INI_SETTINGS,INI_TEMPLATE_LEGACY_ERASE_EMPTY); // older than 2.00
     IniWrite.DeleteKey(INI_SETTINGS,INI_TEMPLATE_LEGACY_NO_VERIFY); // older than 2.00
-    IniWrite.WriteString(WRITE_TEMPLATE, INI_VERSION, '3.00');
-    IniWrite.WriteString(WRITE_TEMPLATE, INI_TEMPLATE_NAME, cbWriteTplName.Text);
-    //IniWrite.WriteString(WRITE_TEMPLATE, 'Creator', '');
-    IniWrite.WriteString(WRITE_TEMPLATE, INI_TEMPLATE_DESC, edWriteTplDesc.Text);
-    IniWrite.WriteString(INI_SETTINGS, INI_FOLDER_DISKDEFS, cbWriteTplFormatSrc.Text);
-    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_FORMAT_SPEC, cbWriteTplFormat.Text);
-    IniWrite.WriteBool(INI_SETTINGS, INI_TEMPLATE_ERASE_EMPTY, cbWriteTplEraseEmpty.Checked);
-    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_FAKE_INDEX, cbWriteTplFakeIndex.Text);
-    IniWrite.WriteBool(INI_SETTINGS, INI_TEMPLATE_HARD_SECTORS, cbWriteTplHardSec.Checked);
-    IniWrite.WriteBool(INI_SETTINGS, INI_TEMPLATE_NO_VERIFY, cbWriteTplNoVerify.Checked);
-    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_RETRIES, cbWriteTplRetries.Text);
-    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_PRE_COMP, cbWriteTplPrecomp.Text);
-    IniWrite.WriteBool(INI_SETTINGS, INI_TEMPLATE_PRE_ERASE, cbWriteTplPreErase.Checked);
-    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_DD, cbWriteTplDensel.Text);
-    IniWrite.WriteBool(INI_SETTINGS, INI_TEMPLATE_TP43_PIN2, cbWriteTplTplTP43Pin2.Checked);
-    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_CYLINDERS, cbWriteTplCyls.Text);
-    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_HEADS, cbWriteTplHeads.Text);
-    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_STEPS, cbWriteTplSteps.Text);
-    IniWrite.WriteBool(INI_SETTINGS, INI_TEMPLATE_HSWAP, cbWriteTplHSwap.Checked);
-    IniWrite.WriteString(INI_SETTINGS, INI_TEMPLATE_FLIPPY, cbWriteTplFlippy.Text);
-    IniWrite.WriteBool(INI_SETTINGS, INI_TEMPLATE_FLIPPY_REV, cbWriteTplFlippyReverse.Checked);
+    WriteIniStringIfNotEmpty(IniWrite, WRITE_TEMPLATE, INI_VERSION, sAppVersion_WriteTmpl);
+    WriteIniStringIfNotEmpty(IniWrite, WRITE_TEMPLATE, INI_TEMPLATE_NAME, cbWriteTplName.Text);
+    //WriteIniStringIfNotEmpty(IniWrite, WRITE_TEMPLATE, 'Creator', '');
+    WriteIniStringIfNotEmpty(IniWrite, WRITE_TEMPLATE, INI_TEMPLATE_DESC, edWriteTplDesc.Text);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_FOLDER_DISKDEFS, cbWriteTplFormatSrc.Text);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_FORMAT_SPEC, cbWriteTplFormat.Text);
+    WriteIniBoolIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_ERASE_EMPTY, cbWriteTplEraseEmpty.Enabled, cbWriteTplEraseEmpty.Checked);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_FAKE_INDEX, cbWriteTplFakeIndex.Text);
+    WriteIniBoolIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_HARD_SECTORS, cbWriteTplHardSec.Enabled, cbWriteTplHardSec.Checked);
+    WriteIniBoolIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_NO_VERIFY, cbWriteTplNoVerify.Enabled, cbWriteTplNoVerify.Checked);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_RETRIES, cbWriteTplRetries.Text);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_PRE_COMP, cbWriteTplPrecomp.Text);
+    WriteIniBoolIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_PRE_ERASE, cbWriteTplPreErase.Enabled, cbWriteTplPreErase.Checked);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_DD, cbWriteTplDensel.Text);
+    WriteIniBoolIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_TP43_PIN2, cbWriteTplTplTP43Pin2.Enabled, cbWriteTplTplTP43Pin2.Checked);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_CYLINDERS, cbWriteTplCyls.Text);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_HEADS, cbWriteTplHeads.Text);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_STEPS, cbWriteTplSteps.Text);
+    WriteIniBoolIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_HSWAP, cbWriteTplHSwap.Enabled, cbWriteTplHSwap.Checked);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_FLIPPY, cbWriteTplFlippy.Text);
+    WriteIniBoolIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_FLIPPY_REV, cbWriteTplFlippyReverse.Enabled, cbWriteTplFlippyReverse.Checked);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_FORMAT, cbWriteTplFormat.Text);
+
 
     IniWrite.Free;
 
@@ -1622,42 +1718,44 @@ end;
 
 procedure TForm1.Refresh_Templates_Write;
 var
-  iniRefreshWrite, INITmplFolder: TiniFile;
+  iniFile, iniRefreshWrite: TiniFile;
   TmplFolder: String;
 begin
   //Read-Template
-  INITmplFolder := TINIFile.Create(sAppPath + GW_INI_FILE);
-  TmplFolder := INITmplFolder.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
+  iniFile := TiniFile.Create(sAppPath + GW_INI_FILE);
+  TmplFolder := iniFile.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
   If TmplFolder = '' then exit;
-  INITmplFolder.Free;
-
   iniRefreshWrite := TINIFile.Create(DirCheck(TmplFolder) + cbWriteTplName.Text + GW_INI_WRITE_EXT);
   try
     //ver := iniRefreshRead.ReadString(WRITE_TEMPLATE,INI_VERSION,'');
     //name := iniRefreshRead.ReadString(WRITE_TEMPLATE, INI_TEMPLATE_NAME, '');
     //creator := iniRefreshRead.ReadString(WRITE_TEMPLATE, 'Creator', '');
-    cbWriteTplFormatSrc.Text := iniRefreshWrite.ReadString(INI_SETTINGS, INI_FOLDER_DISKDEFS, 'Internal');
+
+    cbWriteTplFormatSrc.Text := ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_FOLDER_DISKDEFS, 'Internal');
     Refresh_WriteFormSpec;
-    cbWriteTplFormat.Text := iniRefreshWrite.ReadString(INI_SETTINGS, INI_TEMPLATE_FORMAT_SPEC, '');
-    edWriteTplDesc.Text   := iniRefreshWrite.ReadString(WRITE_TEMPLATE, INI_TEMPLATE_DESC, '');
-    cbWriteTplEraseEmpty.checked := iniRefreshWrite.ReadBool(INI_SETTINGS, INI_TEMPLATE_ERASE_EMPTY, false);
-    cbWriteTplFakeIndex.Text:= iniRefreshWrite.ReadString(INI_SETTINGS, INI_TEMPLATE_FAKE_INDEX, '');
-    cbWriteTplHardSec.checked := iniRefreshWrite.ReadBool(INI_SETTINGS, INI_TEMPLATE_HARD_SECTORS, false);
-    cbWriteTplNoVerify.checked := iniRefreshWrite.ReadBool(INI_SETTINGS, INI_TEMPLATE_NO_VERIFY, false);
-    cbWriteTplRetries.Text:= iniRefreshWrite.ReadString(INI_SETTINGS, INI_TEMPLATE_RETRIES, '');
-    cbWriteTplPrecomp.Text:= iniRefreshWrite.ReadString(INI_SETTINGS, INI_TEMPLATE_PRE_COMP, '');
-    cbWriteTplPreErase.Checked:= iniRefreshWrite.ReadBool(INI_SETTINGS, INI_TEMPLATE_PRE_ERASE, false);
-    cbWriteTplDensel.Text:= iniRefreshWrite.ReadString(INI_SETTINGS, INI_TEMPLATE_DD, '');
-    cbWriteTplTplTP43Pin2.Checked := IniRefreshWrite.ReadBool(INI_SETTINGS, INI_TEMPLATE_TP43_PIN2, false);
+    cbWriteTplFormat.Text := ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_FORMAT_SPEC);
+    edWriteTplDesc.Text   := ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_DESC);
+    cbWriteTplEraseEmpty.checked := ReadIniBool(iniRefreshWrite,INI_SETTINGS, INI_TEMPLATE_ERASE_EMPTY);
+    cbWriteTplFakeIndex.Text:= ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_FAKE_INDEX);
+    cbWriteTplHardSec.checked := ReadIniBool(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_HARD_SECTORS);
+    cbWriteTplNoVerify.checked := ReadIniBool(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_NO_VERIFY);
+    cbWriteTplRetries.Text:= ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_RETRIES);
+    cbWriteTplPrecomp.Text:= ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_PRE_COMP);
+    cbWriteTplPreErase.Checked:= ReadIniBool(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_PRE_ERASE);
+    cbWriteTplDensel.Text:= ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_DD);
+    cbWriteTplTplTP43Pin2.Checked := ReadIniBool(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_TP43_PIN2);
 
-    cbWriteTplCyls.Text:= iniRefreshWrite.ReadString(INI_SETTINGS, INI_TEMPLATE_CYLINDERS, '');
-    cbWriteTplHeads.Text:= iniRefreshWrite.ReadString(INI_SETTINGS, INI_TEMPLATE_HEADS, '');
-    cbWriteTplSteps.Text:= iniRefreshWrite.ReadString(INI_SETTINGS, INI_TEMPLATE_STEPS, '');
-    cbWriteTplHSwap.Checked:= iniRefreshWrite.ReadBool(INI_SETTINGS, INI_TEMPLATE_HSWAP, false);
-    cbWriteTplFlippy.Text:= iniRefreshWrite.ReadString(INI_SETTINGS, INI_TEMPLATE_FLIPPY, '');
-    cbWriteTplFlippyReverse.checked := iniRefreshWrite.ReadBool(INI_SETTINGS, INI_TEMPLATE_FLIPPY_REV, false);
+    cbWriteTplCyls.Text:= ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_CYLINDERS);
+    cbWriteTplHeads.Text:= ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_HEADS);
+    cbWriteTplSteps.Text:= ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_STEPS);
+    cbWriteTplHSwap.Checked:= ReadIniBool(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_HSWAP);
+    cbWriteTplFlippy.Text:= ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_FLIPPY);
+    cbWriteTplFlippyReverse.checked := ReadIniBool(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_FLIPPY_REV);
 
+    if cbWriteTplName.Text <> '' then
+      WriteIniString(iniFile, FLUX_INI_NAME, INI_LAST_WRITE_TEMPLATE, cbWriteTplName.Text);
     iniRefreshWrite.Free;
+    iniFile.Free;
   finally
     CMD_Generate;
   end;
@@ -1703,16 +1801,15 @@ end;
 
 procedure TForm1.Refresh_Templates_Read;
 var
-  iniRefreshRead, INITmplFolder: TiniFile;
-  TmplFolder: String;
+  iniRefreshRead, iniFile: TiniFile;
+  tmplFolder: String;
 begin
   //Read-Template
-  INITmplFolder := TINIFile.Create(sAppPath + GW_INI_FILE);
-  TmplFolder := INITmplFolder.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
-  If TmplFolder = '' then exit;
-  INITmplFolder.Free;
+  iniFile := TiniFile.Create(sAppPath + GW_INI_FILE);
+  tmplFolder := iniFile.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
+  If tmplFolder = '' then exit;
 
-  iniRefreshRead := TINIFile.Create(DirCheck(TmplFolder) + cbReadTplName.Text + GW_INI_READ_EXT);
+  iniRefreshRead := TINIFile.Create(DirCheck(tmplFolder) + cbReadTplName.Text + GW_INI_READ_EXT);
   try
     edReadTplDesc.Text := iniRefreshRead.ReadString(READ_TEMPLATE, INI_TEMPLATE_DESC, '');
 
@@ -1740,7 +1837,21 @@ begin
     cbReadTplLogOutput.Checked     := iniRefreshRead.ReadBool(INI_SETTINGS, INI_TEMPLATE_LOG_OUTPUT, false);
     cbReadTplLogBoth.Checked       := iniRefreshRead.ReadBool(INI_SETTINGS, INI_TEMPLATE_LOG_ONEFILE, false);
 
+    cbReadFormat.Text              := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FORMAT, '');
+
+    // Update the combo boxes after format is determined
+    UpdateReadFormatSelection;
+    cbReadFormatOption.Text        := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION, '');
+    cbReadFormatOptionHFEVer.Text  := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_VER, '');
+    cbReadFormatOptionHFEInt.Text  := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_INT, '');
+    cbReadFormatOptionHFEEnc.Text  := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_ENC, '');
+    edReadDirDest.Text            := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_DIRECTORY, '');
+
+    if cbReadTplName.Text <> '' then
+      WriteIniString(iniFile, FLUX_INI_NAME, INI_LAST_READ_TEMPLATE, cbReadTplName.Text);
     iniRefreshRead.Free;
+    iniFile.Free;
+
   finally
     CMD_Generate;
   end;
@@ -1876,7 +1987,7 @@ end;
 procedure TForm1.cbSrcAsDesDirChange(Sender: TObject);
 begin
  if cbSrcAsDesDir.Checked then edConvDirDest.Directory:= DirCheck(ExtractfileDir(edConvFileSource.Text));
- if cbSrcAsDesDir.Checked = false then edConvDirDest.Directory :=INI.ReadString(FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST,'');
+ if cbSrcAsDesDir.Checked = false then edConvDirDest.Directory :=ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST,'');
 end;
 
 procedure TForm1.cbSrcAsDesFileChange(Sender: TObject);
@@ -2275,7 +2386,7 @@ var
 begin
   FormatSpecs_ReadDiskDefs := TStringList.Create;
   FormatSpecs_ReadDiskDefs.Clear;
-  dd := DirCheck(INI.ReadString(FLUX_INI_NAME, GW_DISKDEF_FOLDER, '')) + cbReadTplFormatSrc.Text + GW_CONFIG_EXT;
+  dd := DirCheck(ReadIniString(INI, FLUX_INI_NAME, GW_DISKDEF_FOLDER, '')) + cbReadTplFormatSrc.Text + GW_CONFIG_EXT;
   if fileexists(dd) then
    begin
     FormatSpecs_ReadDiskDefs.Add('');
@@ -2307,7 +2418,7 @@ var
 begin
   FormatSpecs_WriteDiskDefs := TStringList.Create;
   FormatSpecs_WriteDiskDefs.Clear;
-  dd := DirCheck(INI.ReadString(FLUX_INI_NAME, GW_DISKDEF_FOLDER, '')) + cbWriteTplFormatSrc.Text + GW_CONFIG_EXT;
+  dd := DirCheck(ReadIniString(INI, FLUX_INI_NAME, GW_DISKDEF_FOLDER, '')) + cbWriteTplFormatSrc.Text + GW_CONFIG_EXT;
   if fileexists(dd) then
    begin
     FormatSpecs_WriteDiskDefs.Add('');
@@ -2339,7 +2450,7 @@ var
 begin
  FormatSpecs_ConvDiskDefs := TStringList.Create;
  FormatSpecs_ConvDiskDefs.Clear;
- dd := DirCheck(INI.ReadString(FLUX_INI_NAME, GW_DISKDEF_FOLDER, '')) + cbConvDiskdefs.Text + GW_CONFIG_EXT;
+ dd := DirCheck(ReadIniString(INI, FLUX_INI_NAME, GW_DISKDEF_FOLDER, '')) + cbConvDiskdefs.Text + GW_CONFIG_EXT;
  if fileexists(dd) then
   begin
    FormatSpecs_ConvDiskDefs.Add('');
@@ -3127,7 +3238,7 @@ procedure TForm1.edConvFileSourceAcceptFileName(Sender: TObject;
   var Value: String);
 begin
   if cbSrcAsDesDir.Checked then edConvDirDest.Directory:= DirCheck(ExtractfileDir(edConvFileSource.Text));
-  if cbSrcAsDesDir.Checked = false then edConvDirDest.Directory :=INI.ReadString(FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST,'');
+  if cbSrcAsDesDir.Checked = false then edConvDirDest.Directory :=ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST,'');
   if cbSrcAsDesFile.Checked then edConvFilename.text:= ExtractFileNameOnly(edConvFileSource.Text);
   if cbSrcAsDesFile.Checked = false then edConvFilename.text:= '';
   if edConvFileSource.Text <> '' then
@@ -3141,7 +3252,7 @@ end;
 procedure TForm1.edConvFileSourceChange(Sender: TObject);
 begin
  if cbSrcAsDesDir.Checked then edConvDirDest.Directory:= DirCheck(ExtractfileDir(edConvFileSource.Text));
- if cbSrcAsDesDir.Checked = false then edConvDirDest.Directory :=INI.ReadString(FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST,'');
+ if cbSrcAsDesDir.Checked = false then edConvDirDest.Directory :=ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST,'');
  if cbSrcAsDesFile.Checked then edConvFilename.text:= ExtractFileNameOnly(edConvFileSource.Text);
  if cbSrcAsDesFile.Checked = false then edConvFilename.text:= '';
  if edConvFileSource.Text <> '' then
@@ -3192,7 +3303,8 @@ begin
   Create_Filename;
 end;
 
-procedure TForm1.cbReadFormatChange(Sender: TObject);
+// This need to be called when template selected or initial update
+procedure TForm1.UpdateReadFormatSelection;
 var
   entryLine : string;
   index: Integer;
@@ -3201,8 +3313,14 @@ begin
   cbReadFormatOption.ItemIndex := -1;
   cbReadFormatOption.Enabled:= false;
 
+  // Disable all options by default
+  cbReadFormatOption.Enabled := false;
+  cbReadFormatOptionHFEInt.Enabled := false;
+  cbReadFormatOptionHFEVer.Enabled := false;
+  cbReadFormatOptionHFEEnc.Enabled := false;
+
   // SCP Options
-  if cbReadFormat.Text = 'SCP (SuperCardPro)' then
+  if GetReadFormatSelection = COMBO_SELECTION_SCP then
   begin
    cbReadFormatOption.Items.Clear;
    cbReadFormatOption.ItemIndex := -1;
@@ -3219,7 +3337,7 @@ begin
   end;
 
   // HFE Options
-  if cbReadFormat.Text = 'HFE (HxC Floppy Emulator)' then
+  if GetReadFormatSelection = COMBO_SELECTION_HFE then
   begin
    cbReadFormatOption.Items.Clear;
    cbReadFormatOption.ItemIndex := -1;
@@ -3242,21 +3360,10 @@ begin
    cbReadFormatOptionHFEInt.ItemIndex := -1;
    cbReadFormatOptionHFEInt.Enabled:= true;
    cbReadFormatOptionHFEInt.Items.Add('');
-   begin
-     entryLine := '::' + HFEFormatOptions.DiskInterface.Name + '=' + HFEFormatOptions.DiskInterface.Value[index];
-     cbReadFormatOptionHFEInt.Items.Add(entryLine);
-   end;
-   cbReadFormatOptionHFEInt.ItemIndex := 0;
-
-   //HLE EncodingType
-   cbReadFormatOptionHFEEnc.Items.Clear;
-   cbReadFormatOptionHFEEnc.ItemIndex := -1;
-   cbReadFormatOptionHFEEnc.Enabled:= true;
-   cbReadFormatOptionHFEEnc.Items.Add('');
    for index := 0 to High(HFEFormatOptions.DiskInterface.Value) do
    begin
      entryLine := '::' + HFEFormatOptions.DiskInterface.Name + '=' + HFEFormatOptions.DiskInterface.Value[index];
-     cbReadFormatOptionHFEEnc.Items.Add(entryLine);
+     cbReadFormatOptionHFEInt.Items.Add(entryLine);
    end;
    cbReadFormatOptionHFEInt.ItemIndex := 0;
 
@@ -3272,6 +3379,11 @@ begin
    end;
    cbReadFormatOptionHFEEnc.ItemIndex := 0;
   end;
+end;
+
+procedure TForm1.cbReadFormatChange(Sender: TObject);
+begin
+  UpdateReadFormatSelection;
 
   Create_Filename;
 end;
@@ -3300,28 +3412,28 @@ end;
 procedure TForm1.FormClose(Sender: TObject; var CloseAction: TCloseAction);
 begin
  INI := TINIFile.Create(sAppPath + GW_INI_FILE);
- INI.WriteInteger(FLUX_INI_NAME, INI_HEIGHT, Form1.Height);
- INI.WriteInteger(FLUX_INI_NAME, INI_WIDTH, Form1.Width);
- INI.WriteBool(FLUX_INI_NAME, INI_SHOWARG, mnuArguments.Checked);
- INI.WriteString(FLUX_INI_NAME, INI_GW, EdGWFile.Text);
- If INI.ReadBool(FLUX_INI_NAME, INI_SAVE_DEVICE_FLAG, false) = true then
+ WriteIniInteger(INI, FLUX_INI_NAME, INI_HEIGHT, Form1.Height);
+ WriteIniInteger(INI, FLUX_INI_NAME, INI_WIDTH, Form1.Width);
+ WriteIniBool(INI, FLUX_INI_NAME, INI_SHOWARG, mnuArguments.Checked);
+ WriteIniString(INI,FLUX_INI_NAME, INI_GW, EdGWFile.Text);
+ If ReadIniBool(INI, FLUX_INI_NAME, INI_SAVE_DEVICE_FLAG, false) = true then
   begin
-   INI.WriteString(FLUX_INI_NAME, INI_SAVE_DEVICE, cbGWDevCOM.Text);
+   WriteIniString(INI,FLUX_INI_NAME, INI_SAVE_DEVICE, cbGWDevCOM.Text);
   end
- else INI.WriteString(FLUX_INI_NAME, INI_SAVE_DEVICE, '');
- If INI.ReadBool(FLUX_INI_NAME, INI_SAVE_DRIVE_FLAG, false) = true then
+ else WriteIniString(INI,FLUX_INI_NAME, INI_SAVE_DEVICE, '');
+ If ReadIniBool(INI, FLUX_INI_NAME, INI_SAVE_DRIVE_FLAG, false) = true then
   begin
-   INI.WriteString(FLUX_INI_NAME, INI_SAVE_DRIVE, cbGWDrive.Text);
+   WriteIniString(INI,FLUX_INI_NAME, INI_SAVE_DRIVE, cbGWDrive.Text);
   end
- else INI.WriteString(FLUX_INI_NAME, INI_SAVE_DRIVE, '');
- INI.WriteString(FLUX_INI_NAME, INI_ACTIONS_GW_HW, cbGWHW.Text);
- INI.WriteString(FLUX_INI_NAME, INI_FOLDER_READ_DEST, edReadDirDest.Directory);
- INI.WriteString(FLUX_INI_NAME, INI_FOLDER_WRITE_SRC,ExtractFilePath(edWriteFilename.Text));
- INI.WriteString(FLUX_INI_NAME, INI_FOLDER_CONVERT_SRC,ExtractFilePath(edConvFileSource.Text));
- INI.WriteString(FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST,edConvDirDest.Directory);
- INI.WriteBool(FLUX_INI_NAME, INI_ACTIONS_TIME, cbSetGlobalActionsTime.Checked);
- INI.WriteBool(FLUX_INI_NAME, INI_ACTIONS_SHELL, false);
- INI.WriteBool(FLUX_INI_NAME, INI_ACTIONS_BACKTRACE, cbSetGlobalActionsBacktrace.Checked);
+ else WriteIniString(INI,FLUX_INI_NAME, INI_SAVE_DRIVE, '');
+ WriteIniString(INI,FLUX_INI_NAME, INI_ACTIONS_GW_HW, cbGWHW.Text);
+ WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_READ_DEST, edReadDirDest.Directory);
+ WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_WRITE_SRC,ExtractFilePath(edWriteFilename.Text));
+ WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_CONVERT_SRC,ExtractFilePath(edConvFileSource.Text));
+ WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST,edConvDirDest.Directory);
+ WriteIniBool(INI, FLUX_INI_NAME, INI_ACTIONS_TIME, cbSetGlobalActionsTime.Checked);
+ WriteIniBool(INI, FLUX_INI_NAME, INI_ACTIONS_SHELL, false);
+ WriteIniBool(INI, FLUX_INI_NAME, INI_ACTIONS_BACKTRACE, cbSetGlobalActionsBacktrace.Checked);
  INI.Free;
 end;
 
@@ -3339,6 +3451,16 @@ end;
 procedure TForm1.mnuCloseClick(Sender: TObject);
 begin
   close;
+end;
+
+function TForm1.GetReadFormatSelection(): String;
+begin
+  Result := trim(leftStr(cbReadFormat.Text,3));
+end;
+
+function TForm1.GetConvFormatSelection(): String;
+begin
+  Result := trim(leftStr(cbConvFileFormat.Text,3));
 end;
 
 procedure TForm1.Create_Filename;
@@ -3383,158 +3505,41 @@ begin
      end;
 
      filenameRead := edReadFilename.Text;
-     disc1 := StrToInt(edReadDisk1.Text);
-     disc2 := StrToInt(edReadDisk2.Text);
+     disc1 := StrToInt(edReadDisk1.Text); // disc LHS
+     disc2 := StrToInt(edReadDisk2.Text); // of disc RHS
      digits := StrToInt(edReadDigits.Text);
      lblOf := edReadDiskOf.Text;
 
-  // Disc1
-  if disc1 > 0 then
-  begin
-    // Digits 1
-    if digits = 1 then
-      filenameRead := edReadFilename.Text + edReadDisk1.Text;
-    // Digits 2
-    if digits = 2 then
-    begin
-      if (disc1 < 10) then
-        filenameRead := edReadFilename.Text + '0' + edReadDisk1.Text
-      else
-      if (disc1 > 9) then
-        filenameRead := filenameRead + edReadDisk1.Text;
-    end;
-    // Digits 3
-    if digits = 3 then
-    begin
-      if (disc1 < 10) then
-        filenameRead := edReadFilename.Text + '00' + edReadDisk1.Text
-      else
-      if (disc1 > 9) and (disc1 < 100) then
-        filenameRead := edReadFilename.Text + '0' + edReadDisk1.Text
-      else
-      if disc1 > 99 then
-        filenameRead := edReadFilename.Text + edReadDisk1.Text;
-    end;
-    // Digits 4
-    if digits = 4 then
-    begin
-      if (disc1 < 10) then
-        filenameRead := edReadFilename.Text + '000' + edReadDisk1.Text
-      else
-      if (disc1 > 9) and (disc1 < 100) then
-        filenameRead := edReadFilename.Text + '00' + edReadDisk1.Text
-      else
-      if (disc1 > 99) and (disc1 < 1000) then
-        filenameRead := edReadFilename.Text + '0' + edReadDisk1.Text
-      else
-      if disc1 > 999 then
-        filenameRead := edReadFilename.Text + edReadDisk1.Text;
-    end;
-    // Digits 5
-    if digits = 5 then
-    begin
-      if (disc1 < 10) then
-        filenameRead := edReadFilename.Text + '0000' + edReadDisk1.Text
-      else
-      if (disc1 > 9) and (disc1 < 100) then
-        filenameRead := edReadFilename.Text + '000' + edReadDisk1.Text
-      else
-      if (disc1 > 99) and (disc1 < 1000) then
-        filenameRead := edReadFilename.Text + '00' + edReadDisk1.Text
-      else
-      if (disc1 > 999) and (disc1 < 10000) then
-        filenameRead := edReadFilename.Text + '0' + edReadDisk1.Text
-      else
-      if (disc1 > 9999) then
-        filenameRead := edReadFilename.Text + edReadDisk1.Text;
-    end;
-  end;
 
-  // Disc2
-  if disc2 > 0 then
-  begin
-    // digits 1
-    if digits = 1 then
-      filenameRead := filenameRead + lblOf + edReadDisk2.Text;
-    // digits 2
-    if digits = 2 then
-    begin
-      if (disc2 < 10) then
-        filenameRead := filenameRead + lblOf + '0' + edReadDisk2.Text
-      else
-      if (disc2 > 9) then
-        filenameRead := filenameRead + lblOf + edReadDisk2.Text;
-    end;
+     if disc1 > 0 then
+       filenameRead := edConvFilename.Text + Format('%.*d', [digits, disc1]);
 
-    // digits 3
-    if digits = 3 then
-    begin
-      begin
-        if (disc2 < 10) then
-          filenameRead := filenameRead + lblOf + '00' + edReadDisk2.Text
-        else
-        if (disc2 > 9) and (disc2 < 100) then
-          filenameRead := filenameRead + lblOf + '0' + edReadDisk2.Text
-        else
-        if (disc2 > 99) then
-          filenameRead := filenameRead + lblOf + edReadDisk2.Text;
-      end;
-    end;
-
-    // Digits 4
-    if digits = 4 then
-    begin
-      if (disc2 < 10) then
-        filenameRead := filenameRead + lblOf + '000' + edReadDisk2.Text
-      else
-      if (disc2 > 9) and (disc2 < 100) then
-        filenameRead := filenameRead + lblOf + '00' + edReadDisk2.Text
-      else
-      if (disc2 > 99) and (disc2 < 1000) then
-        filenameRead := filenameRead + lblOf + '0' + edReadDisk2.Text
-      else
-      if (disc2 > 999) then
-        filenameRead := filenameRead + lblOf + edReadDisk2.Text;
-    end;
-
-    // Digits 5
-    if digits = 5 then
-    begin
-      if (disc2 < 10) then
-        filenameRead := filenameRead + lblOf + '0000' + edReadDisk2.Text
-      else
-      if (disc2 > 9) and (disc2 < 100) then
-        filenameRead := filenameRead + lblOf + '000' + edReadDisk2.Text
-      else
-      if (disc2 > 99) and (disc2 < 1000) then
-        filenameRead := filenameRead + lblOf + '00' + edReadDisk2.Text
-      else
-      if (disc2 > 999) and (disc2 < 10000) then
-        filenameRead := filenameRead + lblOf + '0' + edReadDisk2.Text
-      else
-      if (disc2 > 9999) then
-        filenameRead := filenameRead + lblOf + edReadDisk2.Text;
-    end;
-  end;
+     if disc2 > 0 then
+       filenameRead := filenameRead + lblOf + Format('%.*d', [digits, disc2]);
 
   // read file extension - FMFF 4.0
    cbReadFormatOptionHFEVer.Enabled :=false;
    cbReadFormatOptionHFEInt.Enabled :=false;
    cbReadFormatOptionHFEEnc.Enabled :=false;
-   case trim(leftStr(cbReadFormat.Text,3)) of
-    'EDS':
-     cbReadPreview.Text := filenameRead + '.' + lowercase(trim(leftStr(cbReadFormat.Text,4)));
-    'HFE':
+   case GetReadFormatSelection of
+    COMBO_SELECTION_EDS: //EDSK
       begin
+       cbReadPreview.Text := filenameRead + '.' + lowercase(trim(leftStr(cbReadFormat.Text,4)));
+      end;
+    COMBO_SELECTION_HFE:
+      begin
+       cbReadFormatOption.Enabled := true;
        cbReadFormatOptionHFEVer.Enabled :=true;
        cbReadFormatOptionHFEInt.Enabled :=true;
        cbReadFormatOptionHFEEnc.Enabled :=true;
-       cbReadPreview.Text := filenameRead + '.' + lowercase(leftStr(cbReadFormat.Text,3)) + cbReadFormatoption.Text + cbReadFormatoptionHFEVer.Text + cbReadFormatoptionHFEInt.Text + cbReadFormatoptionHFEEnc.Text;
+       cbReadPreview.Text := filenameRead + '.' + lowercase(GetReadFormatSelection) + cbReadFormatoption.Text + cbReadFormatoptionHFEVer.Text + cbReadFormatoptionHFEInt.Text + cbReadFormatoptionHFEEnc.Text;
       end;
-    'SCP':
-      cbReadPreview.Text := filenameRead + '.' + lowercase(leftStr(cbReadFormat.Text,3)) + cbReadFormatoption.Text;
-    'RAW':
-      cbReadPreview.Text := filenameRead + '00.0.' + lowercase(leftStr(cbReadFormat.Text,3));
+    COMBO_SELECTION_SCP:
+      begin
+        cbReadFormatOption.Enabled := true;
+        cbReadPreview.Text := filenameRead + '.' + lowercase(GetReadFormatSelection) + cbReadFormatoption.Text;
+        cbReadPreview.Text := filenameRead + '00.0.' + lowercase(GetReadFormatSelection);
+      end
     else
      if cbReadFormat.Text <> '' then cbReadPreview.Text := filenameRead + '.' + lowercase(trim(leftStr(cbReadFormat.Text,3)));
      if cbReadFormat.Text = '' then cbReadPreview.Text := filenameRead;
@@ -3574,157 +3579,45 @@ begin
        end;
 
        filenameConvert := edConvFilename.Text;
-       disc1 := cbConvDisk1.Value;
-       disc2 := cbConvDisk2.Value;
+       disc1 := cbConvDisk1.Value; // Disc LHS
+       disc2 := cbConvDisk2.Value; // of Disc RHS
        digits := cbConvDigits.Value;
        lblOf := edConvDiskOf.Text;
        // Disc1
        if disc1 > 0 then
-       begin
-       // Digits 1
-       if digits = 1 then
-         filenameConvert := edConvFilename.Text + cbConvDisk1.Text;
-       // Digits 2
-       if digits = 2 then
-       begin
-         if (disc1 < 10) then
-           filenameconvert := edConvFilename.Text + '0' + cbConvDisk1.Text
-         else
-         if (disc1 > 9) then
-           filenameconvert := filenameconvert + cbConvDisk1.Text;
-       end;
-       // Digits 3
-       if digits = 3 then
-       begin
-         if (disc1 < 10) then
-           filenameconvert := edConvFilename.Text + '00' + cbConvDisk1.Text
-         else
-         if (disc1 > 9) and (disc1 < 100) then
-           filenameconvert := edConvFilename.Text + '0' + cbConvDisk1.Text
-         else
-         if disc1 > 99 then
-           filenameconvert := edConvFilename.Text + cbConvDisk1.Text;
-       end;
-       // Digits 4
-       if digits = 4 then
-       begin
-         if (disc1 < 10) then
-           filenameconvert := edConvFilename.Text + '000' + cbConvDisk1.Text
-         else
-         if (disc1 > 9) and (disc1 < 100) then
-           filenameconvert := edConvFilename.Text + '00' + cbConvDisk1.Text
-         else
-         if (disc1 > 99) and (disc1 < 1000) then
-           filenameconvert := edConvFilename.Text + '0' + cbConvDisk1.Text
-         else
-         if disc1 > 999 then
-           filenameconvert := edConvFilename.Text + cbConvDisk1.Text;
-       end;
-       // Digits 5
-       if digits = 5 then
-       begin
-         if (disc1 < 10) then
-           filenameconvert := edConvFilename.Text + '0000' + cbConvDisk1.Text
-         else
-         if (disc1 > 9) and (disc1 < 100) then
-           filenameconvert := edConvFilename.Text + '000' + cbConvDisk1.Text
-         else
-         if (disc1 > 99) and (disc1 < 1000) then
-           filenameconvert := edConvFilename.Text + '00' + cbConvDisk1.Text
-         else
-         if (disc1 > 999) and (disc1 < 10000) then
-           filenameconvert := edConvFilename.Text + '0' + cbConvDisk1.Text
-         else
-         if (disc1 > 9999) then
-           filenameconvert := edConvFilename.Text + cbConvDisk1.Text;
-       end;
-     end;
+        filenameConvert := edConvFilename.Text + Format('%.*d', [digits, disc1]);
 
-     // Disc2
-     if disc2 > 0 then
-     begin
-       // digits 1
-       if digits = 1 then
-         filenameconvert := filenameconvert + lblOf + cbConvDisk2.Text;
-       // digits 2
-       if digits = 2 then
-       begin
-         if (disc2 < 10) then
-           filenameconvert := filenameconvert + lblOf + '0' + cbConvDisk2.Text
-         else
-         if (disc2 > 9) then
-           filenameconvert := filenameconvert + lblOf + cbConvDisk2.Text;
-       end;
-
-       // digits 3
-       if digits = 3 then
-       begin
-         begin
-           if (disc2 < 10) then
-             filenameconvert := filenameconvert + lblOf + '00' + cbConvDisk2.Text
-           else
-           if (disc2 > 9) and (disc2 < 100) then
-             filenameconvert := filenameconvert + lblOf + '0' + cbConvDisk2.Text
-           else
-           if (disc2 > 99) then
-             filenameconvert := filenameconvert + lblOf + cbConvDisk2.Text;
-         end;
-       end;
-
-       // Digits 4
-       if digits = 4 then
-       begin
-         if (disc2 < 10) then
-           filenameconvert := filenameconvert + lblOf + '000' + cbConvDisk2.Text
-         else
-         if (disc2 > 9) and (disc2 < 100) then
-           filenameconvert := filenameconvert + lblOf + '00' + cbConvDisk2.Text
-         else
-         if (disc2 > 99) and (disc2 < 1000) then
-           filenameconvert := filenameconvert + lblOf + '0' + cbConvDisk2.Text
-         else
-         if (disc2 > 999) then
-           filenameconvert := filenameconvert + lblOf + cbConvDisk2.Text;
-       end;
-
-       // Digits 5
-       if digits = 5 then
-       begin
-         if (disc2 < 10) then
-           filenameconvert := filenameconvert + lblOf + '0000' + cbConvDisk2.Text
-         else
-         if (disc2 > 9) and (disc2 < 100) then
-           filenameconvert := filenameconvert + lblOf + '000' + cbConvDisk2.Text
-         else
-         if (disc2 > 99) and (disc2 < 1000) then
-           filenameconvert := filenameconvert + lblOf + '00' + cbConvDisk2.Text
-         else
-         if (disc2 > 999) and (disc2 < 10000) then
-           filenameconvert := filenameconvert + lblOf + '0' + cbConvDisk2.Text
-         else
-         if (disc2 > 9999) then
-           filenameconvert := filenameconvert + lblOf + cbConvDisk2.Text;
-       end;
-     end;
+       if disc2 > 0 then
+        filenameConvert := filenameConvert + lblOf + Format('%.*d', [digits, disc2]);
 
     // conv file extension - FMFF 4.0
+    cbConvFormatOption.Enabled := false;
     cbConvFormatOptionHFEVer.Enabled :=false;
     cbConvFormatOptionHFEInt.Enabled :=false;
     cbConvFormatOptionHFEEnc.Enabled :=false;
-    case leftStr(cbConvFileFormat.Text,3) of
-     'EDS':
-      edConvFilenamePreview.Text := FilenameConvert + '.' + lowercase(trim(leftStr(cbConvFileFormat.Text,4)));
-     'HFE':
+
+    case GetConvFormatSelection of
+     COMBO_SELECTION_EDS: //EDSK
        begin
+        edConvFilenamePreview.Text := FilenameConvert + '.' + lowercase(trim(leftStr(cbConvFileFormat.Text,4)));
+       end;
+     COMBO_SELECTION_HFE:
+       begin
+        cbConvFormatOption.Enabled := true;
         cbConvFormatOptionHFEVer.Enabled :=true;
         cbConvFormatOptionHFEInt.Enabled :=true;
         cbConvFormatOptionHFEEnc.Enabled :=true;
-        edConvFilenamePreview.Text := FilenameConvert + '.' + Lowercase(leftStr(cbConvFileFormat.Text,3)) + cbConvFormatOption.Text + cbConvFormatOptionHFEVer.Text + cbConvFormatOptionHFEInt.Text + cbConvFormatOptionHFEEnc.Text;
+        edConvFilenamePreview.Text := FilenameConvert + '.' + Lowercase(GetConvFormatSelection) + cbConvFormatOption.Text + cbConvFormatOptionHFEVer.Text + cbConvFormatOptionHFEInt.Text + cbConvFormatOptionHFEEnc.Text;
        end;
-     'SCP':
-       edConvFilenamePreview.Text := FilenameConvert + '.' + Lowercase(leftStr(cbConvFileFormat.Text,3)) + cbConvFormatOption.Text;
-     'RAW':
-       edConvFilenamePreview.Text := FilenameConvert + '00.0.' + lowercase(leftStr(cbConvFileFormat.Text,3));
+     COMBO_SELECTION_SCP:
+       begin
+        cbConvFormatOption.Enabled := true;
+        edConvFilenamePreview.Text := FilenameConvert + '.' + Lowercase(GetConvFormatSelection) + cbConvFormatOption.Text;
+       end;
+     COMBO_SELECTION_RAW:
+       begin
+        edConvFilenamePreview.Text := FilenameConvert + '00.0.' + lowercase(GetConvFormatSelection);
+       end;
      else
        if cbConvFileFormat.Text <> '' then edConvFilenamePreview.Text := FilenameConvert + '.' + lowercase(trim(leftStr(cbConvFileFormat.Text,3)));
        if cbConvFileFormat.Text = '' then edConvFilenamePreview.Text := FilenameConvert;
@@ -4357,9 +4250,12 @@ begin
             if OptionNode.NodeName <> 'option' then Continue;
 
             case TDOMElement(OptionNode).GetAttribute('name') of
-              'Bitrate':      LoadOption(OptionNode, HFEFormatOptions.BitRate);
-              'Interface':    LoadOption(OptionNode, HFEFormatOptions.DiskInterface);
-              'Encoding':     LoadOption(OptionNode, HFEFormatOptions.Encoding);
+              HFE_OPTION_BITRATE:
+                LoadOption(OptionNode, HFEFormatOptions.BitRate);
+              HFE_OPTION_INTERFACE:
+                LoadOption(OptionNode, HFEFormatOptions.DiskInterface);
+              HFE_OPTION_ENCODING:
+                LoadOption(OptionNode, HFEFormatOptions.Encoding);
             end;
           end;
         end;

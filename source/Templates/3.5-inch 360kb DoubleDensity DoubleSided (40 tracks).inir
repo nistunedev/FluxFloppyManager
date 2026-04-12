@@ -24,3 +24,4 @@ Log_InOneFile=0
 Hard-Sectors=0
 DD=
 FlippyReverse=0
+Format=IMG (Disk Image)

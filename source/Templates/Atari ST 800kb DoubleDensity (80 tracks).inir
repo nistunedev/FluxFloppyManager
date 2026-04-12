@@ -27,3 +27,6 @@ Diskdefs=Internal
 Seek-Retries=
 PLL=
 DD=
+Hard-Sectors=0
+FlippyReverse=0
+Format=ST (Atari ST)

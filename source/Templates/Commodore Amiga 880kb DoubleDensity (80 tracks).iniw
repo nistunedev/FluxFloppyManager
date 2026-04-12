@@ -1,5 +1,5 @@
 [FluxMyFluffyFloppy-Write-Template]
-Version=2.00
+Version=3.00
 Name=Commodore Amiga 880kb DoubleDensity (80 tracks)
 Description=Commodore Amiga 880kb DoubleDensity DoubleSided (80 tracks)
 
@@ -7,15 +7,12 @@ Description=Commodore Amiga 880kb DoubleDensity DoubleSided (80 tracks)
 COM=
 DrvSel=
 FormatSpec=amiga.amigados
-Cylinders=
+Cylinders=80
 Steps=
 Heads=
-HSwap=
 Flippy=
-Retries=
-NoVerify=
+Retries=3
 Precompensate=
-EraseEmpty=
 CommandsWrite=write --format amiga.amigados
 Greaseweazle=
 Fake-index=
@@ -23,3 +20,5 @@ Precomp=
 Log_Param=
 Log_Output=
 Log_InOneFile=
+Diskdefs=Internal
+Format=amiga.amigados

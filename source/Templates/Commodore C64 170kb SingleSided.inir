@@ -1,12 +1,12 @@
 [FluxMyFluffyFloppy-Read-Template]
-Version=2.00
+Version=v4.00
 Name=Commodore C64 170kb SingleSided
 Description=Commodore C64 170kb SingleSided (41 tracks, half tracks included)
 
 [Settings]
 COM=
 DrvSel=
-Cylinders=0-79
+Cylinders=0-41
 Steps=
 Heads=0
 Revs=5
@@ -15,11 +15,8 @@ Flippy=
 CommandsRead=read --tracks=c=0-79:h=0 --revs=5 --rpm=300
 Greaseweazle=
 FormatSpec=
-HSwap=
-Raw=
 Fake-index=
 Adjust-speed=
 No-Clobber=
-Log_Param=
-Log_Output=
-Log_InOneFile=
+Diskdefs=Internal
+Format=D64 (Commodore 1541)
