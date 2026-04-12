@@ -31,6 +31,11 @@ uses
   ExtCtrls, LConvEncoding, UnTerminal, TermVT, CommonConsts;
 
 type
+  TOperationDisplayMode = (
+    OPERATIONS_UNKNOWN,
+    OPERATIONS_READ,
+    OPERATIONS_WRITE
+  );
 
   { TFrmOperations }
 
@@ -57,7 +62,7 @@ type
   private
 
   public
-
+    DisplayMode: TOperationDisplayMode;
   end;
 
 var
@@ -85,6 +90,7 @@ end;
 // Resolve issues with larger DPI screen
 procedure TFrmOperations.FormCreate(Sender: TObject);
 begin
+  DisplayMode := OPERATIONS_UNKNOWN;
 {$IFDEF WINDOWS}
 {$ELSE}
 //  DisableAutoSizing;
@@ -96,6 +102,7 @@ end;
 procedure TFrmOperations.FormShow(Sender: TObject);
 var
   ExecPath, Params: string;
+  TerminalWidth: Integer;
 begin
   if INI.ReadBool('FluxMyFluffyFloppy', 'CodepageCMD', false) then
     aLine := ConvertEncoding(aLine, 'utf8', GetConsoleTextEncoding);
@@ -107,6 +114,7 @@ begin
   proc.OnAddLine       := @procAddLine;
 
   Memo1.Lines.Clear;
+  Memo1.Lines.Add(aLine);
   StrGrid_s0.Clean;
   StrGrid_s1.Clean;
 
@@ -203,8 +211,7 @@ begin
  prob := 0;
  s := '-';
 
- // TODO: This is dodgy; Uses the caption to determine display function
- if FrmOperations.Caption = 'Greaseweazle - Read' then
+ if DisplayMode = OPERATIONS_READ then
   begin
    pnSides.Visible:=true;
    s := 'R';
@@ -231,8 +238,7 @@ begin
    end;
   end;  // Read
 
-  // TODO: This is dodgy; Uses the caption to determine display function
- if FrmOperations.Caption = 'Greaseweazle - Write' then
+ if DisplayMode = OPERATIONS_WRITE then
   begin
    pnSides.Visible:=true;
    s := 'W';

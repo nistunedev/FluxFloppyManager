@@ -1162,6 +1162,7 @@ begin
      if cbReadTplLogOutput.Checked = false then
       begin
        aLine := EdGWCMD.Lines.Text;
+       FrmOperations.DisplayMode := OPERATIONS_READ;
        FrmOperations.Caption:= GW_APP_NAME + ' - Read';
        FrmOperations.showmodal;
       end;
@@ -1172,12 +1173,14 @@ begin
         if cbReadTplLogBoth.Checked = false then
          begin
           aLine := '' + EdGWCMD.Lines.Text + ' 2> "' + LogDir + LogFileName + '_output.txt"';
+          FrmOperations.DisplayMode := OPERATIONS_READ;
           FrmOperations.Caption:= GW_APP_NAME + ' - Read';
           FrmOperations.showmodal;
          end;
         if cbReadTplLogBoth.Checked = true then
          begin
           aLine := '' + EdGWCMD.Lines.Text + ' 2>> "' + LogDir + LogFilename + '"';
+          FrmOperations.DisplayMode := OPERATIONS_READ;
           FrmOperations.Caption:= GW_APP_NAME + ' - Read';
           FrmOperations.showmodal;
          end;
@@ -1208,6 +1211,7 @@ begin
         if answer = mrOk then exit;
        end;
       aLine := EdGWCMD.Lines.Text;
+      FrmOperations.DisplayMode := OPERATIONS_WRITE;
       FrmOperations.Caption:= GW_APP_NAME + ' - Write';
       FrmOperations.showmodal;
      end;
