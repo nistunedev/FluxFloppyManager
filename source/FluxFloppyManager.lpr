@@ -10,7 +10,7 @@ uses
   athreads,
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, Unit1, Unit2, Unit3, Unit4, CommonConsts;
+  Forms, MainForm, AboutDialog, OptionsDialog, OperationsDialog, CommonConsts;
 
 {$R *.res}
 
@@ -19,10 +19,10 @@ begin
   Application.Title:='Flux Floppy Manager';
   Application.Scaled:=True;
   Application.Initialize;
-  Application.CreateForm(TForm1, Form1);
+  Application.CreateForm(TFrmMain, FrmMain);
   Application.CreateForm(TFrmAbout, FrmAbout);
   Application.CreateForm(TFrmOptions, FrmOptions);
-  Application.CreateForm(TfrmGW, frmGW);
+  Application.CreateForm(TFrmOperations, FrmOperations);
   Application.Run;
 end.
 

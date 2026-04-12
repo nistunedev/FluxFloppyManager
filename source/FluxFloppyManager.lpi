@@ -51,37 +51,37 @@
         <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
-        <Filename Value="unit1.pas"/>
+        <Filename Value="MainForm.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="Form1"/>
+        <ComponentName Value="FrmMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="Unit1"/>
+        <UnitName Value="MainForm"/>
       </Unit>
       <Unit>
-        <Filename Value="unit2.pas"/>
+        <Filename Value="AboutDialog.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FrmAbout"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="Unit2"/>
+        <UnitName Value="AboutDialog"/>
       </Unit>
       <Unit>
-        <Filename Value="unit3.pas"/>
+        <Filename Value="OptionsDialog.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="FrmOptions"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="Unit3"/>
+        <UnitName Value="OptionsDialog"/>
       </Unit>
       <Unit>
-        <Filename Value="unit4.pas"/>
+        <Filename Value="OperationsDialog.pas"/>
         <IsPartOfProject Value="True"/>
-        <ComponentName Value="frmGW"/>
+        <ComponentName Value="FrmOperations"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="Unit4"/>
-      </Unit>
+        <UnitName Value="OperationsDialog"/>
+      </Unit>      
       <Unit>
         <Filename Value="commonconsts.pas"/>
         <IsPartOfProject Value="True"/>
@@ -110,13 +110,9 @@
         <StackChecks Value="True"/>
       </Checks>
       <VerifyObjMethodCallValidity Value="True"/>
-      <Optimizations>
-        <OptimizationLevel Value="3"/>
-      </Optimizations>
     </CodeGeneration>
     <Linking>
       <Debugging>
-        <GenerateDebugInfo Value="False"/>
         <RunWithoutDebug Value="True"/>
         <DebugInfoType Value="dsDwarf2Set"/>
         <UseExternalDbgSyms Value="True"/>
