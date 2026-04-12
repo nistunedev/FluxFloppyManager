@@ -56,7 +56,7 @@
         <ComponentName Value="FrmMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="MainForm">
+        <UnitName Value="MainForm"/>
       </Unit>
       <Unit>
         <Filename Value="AboutDialog.pas"/>
@@ -64,7 +64,7 @@
         <ComponentName Value="FrmAbout"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="AboutDialog">
+        <UnitName Value="AboutDialog"/>
       </Unit>
       <Unit>
         <Filename Value="OptionsDialog.pas"/>
@@ -72,7 +72,7 @@
         <ComponentName Value="FrmOptions"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="OptionsDialog">
+        <UnitName Value="OptionsDialog"/>
       </Unit>
       <Unit>
         <Filename Value="OperationsDialog.pas"/>
@@ -80,7 +80,7 @@
         <ComponentName Value="FrmOperations"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="OperationsDialog">
+        <UnitName Value="OperationsDialog"/>
       </Unit>      
       <Unit>
         <Filename Value="commonconsts.pas"/>
