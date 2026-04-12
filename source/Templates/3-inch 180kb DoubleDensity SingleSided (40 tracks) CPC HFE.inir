@@ -1,0 +1,17 @@
+[FluxMyFluffyFloppy-Read-Template]
+Version=4.00
+Name=3-inch 180kb DoubleDensity SingleSided (40 tracks) CPC HFE
+Description=3-inch 320x2kb "DoubleDensity" "SingleSided" "40 tracks" "96 tpi" CPC HFE
+
+[Settings]
+Diskdefs=Internal
+Revs=3
+Retries=3
+Cylinders=0-39
+Heads=0
+Steps=1
+Format=HFE (HxC Floppy Emulator)
+FormatOption=::bitrate=250
+FormatOptionHFEVer=::version=3
+FormatOptionHFEInt=::interface=CPC_DD
+FormatOptionHFEEnc=::encoding=ISOIBM_MFM

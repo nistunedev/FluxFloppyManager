@@ -1,0 +1,13 @@
+[FluxMyFluffyFloppy-Read-Template]
+Version=v4.00
+Name=3-inch 180kb DoubleDensity SingleSided (40 tracks) CPC DSK
+Description=3-inch 320x2kb "DoubleDensity" "SingleSided" "40 tracks" "96 tpi" CPC DSK
+
+[Settings]
+Diskdefs=Internal
+Revs=3
+Retries=3
+Cylinders=0-39
+Heads=0
+Steps=1
+Format=DSK (DSK)

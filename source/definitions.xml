@@ -168,13 +168,13 @@
         <format ext="FDI" desc="FDI" save="true" convert="true"/>
         <format ext="HDM" desc="HDM" save="true" convert="true"/>
         <format ext="HFE" desc="HxC Floppy Emulator" save="true" convert="true">
-          <option name="Bitrate">
+          <option name="bitrate">
             <value>125</value>
             <value>250</value>
             <value>300</value>
             <value>500</value>
           </option>
-          <option name="Interface">
+          <option name="interface">
             <value>IBMPC_DD</value>
             <value>IBMPC_HD</value>
             <value>ATARIST_DD</value>
@@ -194,7 +194,7 @@
             <value>QUICKDISK</value>
             <value>UNKNOWN</value>
           </option>
-          <option name="Encoding">
+          <option name="encoding">
             <value>ISOIBM_MFM</value>
             <value>AMIGA_MFM</value>
             <value>ISOIBM_FM</value>

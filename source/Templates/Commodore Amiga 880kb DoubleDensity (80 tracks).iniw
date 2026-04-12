@@ -21,3 +21,4 @@ Log_Param=
 Log_Output=
 Log_InOneFile=
 Diskdefs=Internal
+Format=amiga.amigados

@@ -71,6 +71,8 @@ const
   INI_FOLDER_CONVERT_DEST = 'LastFolder_Convert_Dest';
   INI_TIME = 'Time';
   INI_BACKTRACE = 'Backtrace';
+  INI_LAST_READ_TEMPLATE = 'LastReadTemplate';
+  INI_LAST_WRITE_TEMPLATE = 'LastWriteTemplate';
   
   INI_ACTIONS_TIME = 'cbSetGlobalActionsTime';
   INI_ACTIONS_SHELL = 'cbSetGlobalActionsShellWindow';
@@ -115,7 +117,7 @@ const
   INI_TEMPLATE_PRE_ERASE = 'Pre-Erase';
   INI_TEMPLATE_TP43_PIN2 = 'TP43Pin2';
 
-  // Additions V3.0
+  // Additions V4.0
   INI_TEMPLATE_FORMAT = 'Format';
   INI_TEMPLATE_FORMAT_OPTION = 'FormatOption';
   INI_TEMPLATE_FORMAT_OPTION_HFE_VER = 'FormatOptionHFEVer';
@@ -134,6 +136,11 @@ const
   GW_PROP_PAGE_TOOLS = 3;
   GW_PROP_PAGE_SETTINGS = 4;
 
+  // Casing is important for GW and this also must match XML tags
+  HFE_OPTION_BITRATE = 'bitrate';
+  HFE_OPTION_INTERFACE = 'interface';
+  HFE_OPTION_ENCODING = 'encoding';
+
 //  COMBO_SELECTION_SCP = 'SCP (SuperCardPro)';
 //  COMBO_SELECTION_HFE = 'HFE (HxC Floppy Emulator)';
 
@@ -145,6 +152,8 @@ const
   APP_NAME = 'Flux Floppy Manager ';
   APP_VERSION = 'v5.2.7.2';
   APP_DATE = '2026-03-09';
+
+  TEMPLATE_VERSION = '4.00';
 
   {$IFDEF WINDOWS}
     GW_EXECUTABLE = 'greaseweazle\gw.exe';
