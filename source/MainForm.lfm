@@ -439,7 +439,7 @@ object FrmMain: TFrmMain
             object pnReadAllArg: TPanel
               Left = 6
               Height = 220
-              Top = 41
+              Top = 35
               Width = 1469
               Align = alTop
               AutoSize = True
@@ -485,7 +485,7 @@ object FrmMain: TFrmMain
               object lblReadTplRaw: TLabel
                 Left = 0
                 Height = 21
-                Top = 41
+                Top = 40
                 Width = 33
                 Caption = 'Raw:'
                 ParentColor = False
@@ -494,7 +494,7 @@ object FrmMain: TFrmMain
                 Left = 141
                 Height = 20
                 Hint = 'Output raw stream (--format verifies only)'
-                Top = 41
+                Top = 40
                 Width = 21
                 ParentShowHint = False
                 ShowHint = True
@@ -555,7 +555,7 @@ object FrmMain: TFrmMain
                 ParentColor = False
               end
               object cbReadTplAdjustSpeed: TComboBox
-                Left = 496
+                Left = 516
                 Height = 29
                 Hint = 'Scale track data to effective drive SPEED'
                 Top = 0
@@ -575,13 +575,13 @@ object FrmMain: TFrmMain
               object lblReadTplRetries: TLabel
                 Left = 381
                 Height = 21
-                Top = 41
+                Top = 40
                 Width = 51
                 Caption = 'Retries:'
                 ParentColor = False
               end
               object cbReadTplRetries: TComboBox
-                Left = 496
+                Left = 516
                 Height = 29
                 Hint = 'Number of retries per seek-retry'
                 Top = 40
@@ -616,7 +616,7 @@ object FrmMain: TFrmMain
                 ParentColor = False
               end
               object cbReadTplSeekRetries: TComboBox
-                Left = 496
+                Left = 516
                 Height = 29
                 Hint = 'Number of seek retries'
                 Top = 80
@@ -650,7 +650,7 @@ object FrmMain: TFrmMain
                 ParentColor = False
               end
               object cbReadTplPLL: TComboBox
-                Left = 496
+                Left = 516
                 Height = 29
                 Hint = 'Manual PLL parameter override'
                 Top = 120
@@ -669,16 +669,16 @@ object FrmMain: TFrmMain
               object lblReadTplDD: TLabel
                 Left = 381
                 Height = 21
-                Top = 159
+                Top = 160
                 Width = 50
                 Caption = 'Densel:'
                 ParentColor = False
               end
               object cbReadTplDD: TComboBox
-                Left = 496
+                Left = 516
                 Height = 29
                 Hint = 'Set interface pin 2 for 5.25" drives'
-                Top = 152
+                Top = 160
                 Width = 100
                 DropDownCount = 10
                 ItemHeight = 21
@@ -734,7 +734,7 @@ object FrmMain: TFrmMain
               object cbReadTplHeads: TComboBox
                 Left = 976
                 Height = 29
-                Top = 41
+                Top = 40
                 Width = 99
                 Enabled = False
                 ItemHeight = 21
@@ -786,7 +786,7 @@ object FrmMain: TFrmMain
               object cbReadTplHSwap: TCheckBox
                 Left = 832
                 Height = 25
-                Top = 116
+                Top = 120
                 Width = 128
                 Caption = 'Side 1 as side 0'
                 Enabled = False
@@ -796,7 +796,7 @@ object FrmMain: TFrmMain
               object lblReadTplFlippy: TLabel
                 Left = 832
                 Height = 21
-                Top = 159
+                Top = 160
                 Width = 45
                 Caption = 'Flippy:'
                 ParentColor = False
@@ -804,7 +804,7 @@ object FrmMain: TFrmMain
               object cbReadTplFlippy: TComboBox
                 Left = 976
                 Height = 29
-                Top = 159
+                Top = 160
                 Width = 148
                 Enabled = False
                 ItemHeight = 21
@@ -1363,7 +1363,7 @@ object FrmMain: TFrmMain
               object lblWriteTplEraseEmpty: TLabel
                 Left = 0
                 Height = 21
-                Top = 41
+                Top = 40
                 Width = 88
                 Caption = 'Erase empty:'
                 ParentColor = False
@@ -1372,7 +1372,7 @@ object FrmMain: TFrmMain
                 Left = 141
                 Height = 20
                 Hint = 'Erase empty tracks (default: skip)'
-                Top = 41
+                Top = 40
                 Width = 21
                 ParentShowHint = False
                 ShowHint = True
@@ -1428,7 +1428,7 @@ object FrmMain: TFrmMain
               object lblWriteTplNoVerify: TLabel
                 Left = 0
                 Height = 21
-                Top = 159
+                Top = 160
                 Width = 67
                 Caption = 'No verify:'
                 ParentColor = False
@@ -1437,7 +1437,7 @@ object FrmMain: TFrmMain
                 Left = 141
                 Height = 20
                 Hint = 'Disable verify'
-                Top = 159
+                Top = 160
                 Width = 21
                 ParentShowHint = False
                 ShowHint = True
@@ -1453,7 +1453,7 @@ object FrmMain: TFrmMain
                 ParentColor = False
               end
               object cbWriteTplRetries: TComboBox
-                Left = 510
+                Left = 516
                 Height = 29
                 Hint = 'Number of retries on verify failure'
                 Top = 0
@@ -1481,16 +1481,16 @@ object FrmMain: TFrmMain
               object lblWriteTplPrecomp: TLabel
                 Left = 381
                 Height = 21
-                Top = 41
+                Top = 40
                 Width = 65
                 Caption = 'Precomp:'
                 ParentColor = False
               end
               object cbWriteTplPrecomp: TComboBox
-                Left = 510
+                Left = 516
                 Height = 29
                 Hint = 'Write precompensation'
-                Top = 41
+                Top = 40
                 Width = 219
                 DropDownCount = 4
                 ItemHeight = 21
@@ -1512,7 +1512,7 @@ object FrmMain: TFrmMain
                 ParentColor = False
               end
               object cbWriteTplDensel: TComboBox
-                Left = 511
+                Left = 516
                 Height = 29
                 Hint = 'Set interface pin 2 for 5.25" drives'
                 Top = 80
@@ -1539,10 +1539,10 @@ object FrmMain: TFrmMain
                 ParentShowHint = False
               end
               object cbWriteTplTplTP43Pin2: TCheckBox
-                Left = 511
+                Left = 516
                 Height = 20
                 Hint = 'Option --gen-tg43 generates 8-inch /TG43 signal on pin 2'
-                Top = 122
+                Top = 120
                 Width = 21
                 ParentShowHint = False
                 ShowHint = True
@@ -1593,7 +1593,7 @@ object FrmMain: TFrmMain
               object cbWriteTplHeads: TComboBox
                 Left = 920
                 Height = 29
-                Top = 41
+                Top = 40
                 Width = 99
                 DropDownCount = 11
                 Enabled = False
@@ -1653,7 +1653,7 @@ object FrmMain: TFrmMain
               object lblWriteTplFlippy: TLabel
                 Left = 791
                 Height = 21
-                Top = 159
+                Top = 160
                 Width = 45
                 Caption = 'Flippy:'
                 ParentColor = False
@@ -1661,7 +1661,7 @@ object FrmMain: TFrmMain
               object cbWriteTplFlippy: TComboBox
                 Left = 921
                 Height = 29
-                Top = 159
+                Top = 160
                 Width = 171
                 DropDownCount = 11
                 Enabled = False
@@ -1883,7 +1883,7 @@ object FrmMain: TFrmMain
             object pnConvAllArg: TPanel
               Left = 6
               Height = 260
-              Top = 41
+              Top = 35
               Width = 1469
               Align = alTop
               AutoSize = True
@@ -1918,7 +1918,7 @@ object FrmMain: TFrmMain
               object lblConvertPLL: TLabel
                 Left = 0
                 Height = 21
-                Top = 41
+                Top = 40
                 Width = 28
                 Caption = 'PLL:'
                 ParentColor = False
@@ -1926,7 +1926,7 @@ object FrmMain: TFrmMain
               object cbConvPLL: TComboBox
                 Left = 141
                 Height = 29
-                Top = 41
+                Top = 40
                 Width = 219
                 DropDownCount = 11
                 ItemHeight = 21
@@ -2064,7 +2064,7 @@ object FrmMain: TFrmMain
               object cbConvTracksetHSwap: TCheckBox
                 Left = 560
                 Height = 25
-                Top = 159
+                Top = 160
                 Width = 128
                 Caption = 'Side 1 as side 0'
                 Enabled = False
@@ -2106,7 +2106,7 @@ object FrmMain: TFrmMain
               object lblConvOutTracksetCyls: TLabel
                 Left = 824
                 Height = 21
-                Top = 41
+                Top = 40
                 Width = 68
                 Caption = 'Cylinders:'
                 ParentColor = False
@@ -2114,7 +2114,7 @@ object FrmMain: TFrmMain
               object cbConvOutTracksetCyls: TComboBox
                 Left = 944
                 Height = 29
-                Top = 41
+                Top = 40
                 Width = 141
                 DropDownCount = 15
                 ItemHeight = 21
@@ -2285,7 +2285,7 @@ object FrmMain: TFrmMain
                 OnChange = cbConvDiskdefsChange
               end
               object cbConvFormat: TComboBox
-                Left = 516
+                Left = 560
                 Height = 29
                 Top = 0
                 Width = 391
