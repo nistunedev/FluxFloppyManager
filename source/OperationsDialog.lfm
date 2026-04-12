@@ -243,6 +243,7 @@ object FrmOperations: TFrmOperations
       ReadOnly = True
       ScrollBars = ssBoth
       TabOrder = 0
+      WordWrap = False
     end
     object Label3: TLabel
       Left = 18

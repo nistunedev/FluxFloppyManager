@@ -113,20 +113,22 @@ begin
   proc.OnRefreshLines  := @procRefreshLines;
   proc.OnAddLine       := @procAddLine;
 
+  // The embedded VT100 terminal defaults to 120 columns, which causes
+  // long echoed command lines to hard-wrap and look truncated.
+  TerminalWidth := Length(aLine) + 32;
+  if TerminalWidth < 120 then
+    TerminalWidth := 120;
+  proc.TerminalWidth := TerminalWidth;
+
   Memo1.Lines.Clear;
   Memo1.Lines.Add(aLine);
   StrGrid_s0.Clean;
   StrGrid_s1.Clean;
 
-  {$IFDEF WINDOWS}
-    // Windows keeps original behavior
-    proc.Open('CMD', '');
-    proc.SendLn(aLine);
-  {$ELSE}
-    // Linux: split exec + params correctly
-    SplitCommandLine(aLine, ExecPath, Params);
-    proc.Open(ExecPath, Params);
-  {$ENDIF}
+  // Run the requested executable directly so the output window shows the
+  // program output itself rather than a shell prompt echoing the command.
+  SplitCommandLine(aLine, ExecPath, Params);
+  proc.Open(ExecPath, Params);
 end;
 
 
