@@ -34,6 +34,8 @@ type
   TOperationDisplayMode = (
     OPERATIONS_UNKNOWN,
     OPERATIONS_READ,
+    OPERATIONS_CONVERT,
+    OPERATIONS_OTHER,
     OPERATIONS_WRITE
   );
 
@@ -60,7 +62,6 @@ type
     procedure StrGrid_Fill(aLine : String);
     procedure SplitCommandLine(const CmdLine: string; out ExecPath, Params: string);
   private
-
   public
     DisplayMode: TOperationDisplayMode;
   end;

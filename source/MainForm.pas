@@ -29,7 +29,8 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs,
   ComCtrls, DBGrids, StdCtrls, DBCtrls, Menus, EditBtn, Spin, ExtCtrls,
-  IniFiles, Process, FileUtil, LazFileUtils, CommonConsts, DOM, XMLRead
+  IniFiles, Process, FileUtil, LazFileUtils, CommonConsts, DOM, XMLRead,
+  OperationsDialog
 
 {$IFDEF WINDOWS}
   , Registry, LCLIntf
@@ -547,6 +548,8 @@ type
                                const param: string;
                                const specifyDevice: boolean;
                                const specifyDrive: boolean);
+    procedure ShowOperationsDialog(const CommandLine, Title: string;
+      const DisplayMode: OperationsDialog.TOperationDisplayMode);
 
   private
     FInClick: Boolean;
@@ -588,7 +591,7 @@ var
 
 implementation
 uses
- AboutDialog, OptionsDialog, OperationsDialog;
+ AboutDialog, OptionsDialog;
 
 {$R *.lfm}
 
@@ -1161,10 +1164,7 @@ begin
 
      if cbReadTplLogOutput.Checked = false then
       begin
-       aLine := EdGWCMD.Lines.Text;
-       FrmOperations.DisplayMode := OPERATIONS_READ;
-       FrmOperations.Caption:= GW_APP_NAME + ' - Read';
-       FrmOperations.showmodal;
+       ShowOperationsDialog(EdGWCMD.Lines.Text, GW_APP_NAME + ' - Read', OPERATIONS_READ);
       end;
 
      // Output with Log
@@ -1172,17 +1172,13 @@ begin
        begin
         if cbReadTplLogBoth.Checked = false then
          begin
-          aLine := '' + EdGWCMD.Lines.Text + ' 2> "' + LogDir + LogFileName + '_output.txt"';
-          FrmOperations.DisplayMode := OPERATIONS_READ;
-          FrmOperations.Caption:= GW_APP_NAME + ' - Read';
-          FrmOperations.showmodal;
+          ShowOperationsDialog(EdGWCMD.Lines.Text + ' 2> "' + LogDir +
+            LogFileName + '_output.txt"', GW_APP_NAME + ' - Read', OPERATIONS_READ);
          end;
         if cbReadTplLogBoth.Checked = true then
          begin
-          aLine := '' + EdGWCMD.Lines.Text + ' 2>> "' + LogDir + LogFilename + '"';
-          FrmOperations.DisplayMode := OPERATIONS_READ;
-          FrmOperations.Caption:= GW_APP_NAME + ' - Read';
-          FrmOperations.showmodal;
+          ShowOperationsDialog(EdGWCMD.Lines.Text + ' 2>> "' + LogDir + LogFilename + '"',
+            GW_APP_NAME + ' - Read', OPERATIONS_READ);
          end;
        end;
 
@@ -1210,10 +1206,8 @@ begin
         answer := MessageDlg('Source file not found!',mtWarning, [mbOK], 0);
         if answer = mrOk then exit;
        end;
-      aLine := EdGWCMD.Lines.Text;
-      FrmOperations.DisplayMode := OPERATIONS_WRITE;
-      FrmOperations.Caption:= GW_APP_NAME + ' - Write';
-      FrmOperations.showmodal;
+      ShowOperationsDialog(EdGWCMD.Lines.Text, GW_APP_NAME + ' - Write',
+        OPERATIONS_WRITE);
      end;
 
    // Convert ####################################################################
@@ -1254,25 +1248,19 @@ begin
        answer := MessageDlg('Destination filename settings incomplete!',mtWarning, [mbOK], 0);
        if answer = mrOk then exit;
       end;
-     aLine := EdGWCMD.Lines.Text;
-     FrmOperations.Caption:= GW_APP_NAME + ' - Convert';
-     FrmOperations.showmodal;
+     ShowOperationsDialog(EdGWCMD.Lines.Text, GW_APP_NAME + ' - Convert', OPERATIONS_CONVERT);
     end;
 
    //Tools ####################################################################
    if pcActions.ActivePage.PageIndex = GW_PROP_PAGE_TOOLS then
      begin
-      aLine := EdGWCMD.Lines.Text;
-      FrmOperations.Caption:= GW_APP_NAME + ' - ' + btGo.Caption;
-      FrmOperations.showmodal;
+      ShowOperationsDialog(EdGWCMD.Lines.Text, GW_APP_NAME + ' - ' + btGo.Caption, OPERATIONS_OTHER);
      end;
 
    //Settings ####################################################################
    if pcActions.ActivePage.PageIndex = GW_PROP_PAGE_SETTINGS then
      begin
-      aLine := EdGWCMD.Lines.Text;
-      FrmOperations.Caption:= GW_APP_NAME + ' - ' + btGo.Caption;
-      FrmOperations.showmodal;
+      ShowOperationsDialog(EdGWCMD.Lines.Text, GW_APP_NAME + ' - ' + btGo.Caption, OPERATIONS_OTHER);
      end;
 end;
 
@@ -1334,15 +1322,11 @@ begin
 end;
 
 procedure TFrmMain.btGWInfoClick(Sender: TObject);
-var
-  answer : integer;
 begin
   performModalCmdAction('info');
 end;
 
 procedure TFrmMain.btGWResetClick(Sender: TObject);
-var
-  answer : integer;
 begin
   performModalCmdAction('reset');
 end;
@@ -4078,9 +4062,9 @@ begin
   begin
     if fileexists(edGWFile.Text) = true then
       begin
-        aLine := '"' + edGWFile.Text + '" ' + command + ' --device ' + cbGWDevCOM.Text;
-        FrmOperations.Caption:= GW_APP_NAME + ' - ' + aLine;
-        FrmOperations.showmodal;
+        ShowOperationsDialog('"' + edGWFile.Text + '" ' + command + ' --device ' +
+          cbGWDevCOM.Text, GW_APP_NAME + ' - "' + edGWFile.Text + '" ' + command +
+          ' --device ' + cbGWDevCOM.Text, OPERATIONS_OTHER);
       end
     else
       begin
@@ -4091,6 +4075,15 @@ begin
     begin
       MessageDlg('Greaseweazle port not selected!', mtWarning, [mbOK], 0);
     end;
+end;
+
+procedure TFrmMain.ShowOperationsDialog(const CommandLine, Title: string;
+  const DisplayMode: TOperationDisplayMode);
+begin
+  aLine := CommandLine;
+  FrmOperations.DisplayMode := TOperationDisplayMode(DisplayMode);
+  FrmOperations.Caption := Title;
+  FrmOperations.ShowModal;
 end;
 
 procedure CmdDir(aGW: string; aParam: string);
@@ -4148,17 +4141,13 @@ var
   Node, Child: TDOMNode;
   Spec, Ext, Desc: string;
   FormatDesc: string;
-  WriteFilter: string;
-  ConvFilter: string;
   CanRead, CanWrite, CanConvert, CanSave: Boolean;
   WriteFilterAll, WriteFilterList: string;
   ConvFilterAll, ConvFilterList: string;
   i, j: Integer;
-  Formats, FormatNode, OptionNode: TDOMNode;
+  OptionNode: TDOMNode;
 begin
   ReadXMLFile(Doc, FileName);
-  WriteFilter := '(*.*)';
-  ConvFilter := '(*.*)';
   WriteFilterAll := 'Floppy-Images (*.*)|';
   WriteFilterList := '';
   ConvFilterAll := 'Floppy-Images (*.*)|';
@@ -4240,9 +4229,9 @@ begin
         { SuperCardPro options }
         if Ext = 'SCP' then
         begin
-          for j := 0 to TDOMElement(Child).ChildNodes.Count - 1 do
+          for i := 0 to TDOMElement(Child).ChildNodes.Count - 1 do
           begin
-            OptionNode := TDOMElement(Child).ChildNodes[j];
+            OptionNode := TDOMElement(Child).ChildNodes[i];
             if OptionNode.NodeName = 'option' then
               LoadOption(OptionNode, SCPFormatOptions);
           end;
