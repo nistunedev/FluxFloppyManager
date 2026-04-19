@@ -983,11 +983,11 @@ begin
     TmplFolder := INITmplFolder.ReadString(FLUX_INI_NAME, GW_DISKDEF_FOLDER, '');
     INITmplFolder.Free;
     cbReadTplFormatSrc.Items.Clear;
-    cbReadTplFormatSrc.Items.Add('Internal');
+    cbReadTplFormatSrc.Items.Add(FORMAT_SPEC_INTERNAL);
     cbWriteTplFormatSrc.items.Clear;
-    cbWriteTplFormatSrc.items.Add('Internal');
+    cbWriteTplFormatSrc.items.Add(FORMAT_SPEC_INTERNAL);
     cbConvDiskdefs.items.Clear;
-    cbConvDiskdefs.items.Add('Internal');
+    cbConvDiskdefs.items.Add(FORMAT_SPEC_INTERNAL);
     i := 0;
     Diskdefs := FindAllFiles(DirCheck(TmplFolder), '*.cfg', True);
     if Diskdefs.Count = 0 then
@@ -1642,7 +1642,7 @@ begin
     WriteIniBoolIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_HSWAP, cbWriteTplHSwap.Enabled, cbWriteTplHSwap.Checked);
     WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_FLIPPY, cbWriteTplFlippy.Text);
     WriteIniBoolIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_FLIPPY_REV, cbWriteTplFlippyReverse.Enabled, cbWriteTplFlippyReverse.Checked);
-    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_FORMAT, cbWriteTplFormat.Text);
+    //WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_FORMAT, cbWriteTplFormat.Text);
 
 
     IniWrite.Free;
@@ -1675,6 +1675,7 @@ var
   Templates_Write: TStringList;
   TmplFolder : String;
   INITmplFolder : TIniFile;
+  i :integer = 0;
 begin
   try
     INITmplFolder := TINIFile.Create(sAppPath + GW_INI_FILE);
@@ -1683,7 +1684,6 @@ begin
     INITmplFolder.Free;
 
     cbWriteTplName.Items.Clear;
-    i := 0;
     Templates_Write := FindAllFiles(DirCheck(TmplFolder), '*.iniw', True);
     if Templates_Write.Count = 0 then
     begin
@@ -1721,7 +1721,7 @@ begin
     //name := iniRefreshRead.ReadString(WRITE_TEMPLATE, INI_TEMPLATE_NAME, '');
     //creator := iniRefreshRead.ReadString(WRITE_TEMPLATE, 'Creator', '');
 
-    cbWriteTplFormatSrc.Text := ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_FOLDER_DISKDEFS, 'Internal');
+    cbWriteTplFormatSrc.Text := ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_FOLDER_DISKDEFS, FORMAT_SPEC_INTERNAL);
     Refresh_WriteFormSpec;
     cbWriteTplFormat.Text := ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_FORMAT_SPEC);
     edWriteTplDesc.Text   := ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_DESC);
@@ -1805,7 +1805,7 @@ begin
   try
     edReadTplDesc.Text := iniRefreshRead.ReadString(READ_TEMPLATE, INI_TEMPLATE_DESC, '');
 
-    cbReadTplFormatSrc.Text        := iniRefreshRead.ReadString(INI_SETTINGS, INI_FOLDER_DISKDEFS, 'Internal');
+    cbReadTplFormatSrc.Text        := iniRefreshRead.ReadString(INI_SETTINGS, INI_FOLDER_DISKDEFS, FORMAT_SPEC_INTERNAL);
     Refresh_ReadFormSpec;
     cbReadTplFormat.Text           := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FORMAT_SPEC, '');
     cbReadTplRevs.Text             := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_REVS, '');
@@ -1876,12 +1876,12 @@ procedure TFrmMain.cbConvDiskdefsChange(Sender: TObject);
 begin
  if cbConvDiskdefs.Focused then
   begin
-   if cbConvDiskdefs.Text = 'Internal' then
+   if cbConvDiskdefs.Text = FORMAT_SPEC_INTERNAL then
     begin
      cbConvFormat.Clear;
      cbConvFormat.items.Text := FormatSpecs_Conv.Text;
-    end;
-   if cbConvDiskdefs.Text <> 'Internal' then
+    end
+   else
     begin
      Get_FormatSpecs_Conv;
     end;
@@ -2361,23 +2361,30 @@ end;
 
 procedure TFrmMain.Refresh_ReadFormSpec;
 begin
-  if cbReadTplFormatSrc.Text = 'Internal' then
+  if cbReadTplFormatSrc.Text = FORMAT_SPEC_INTERNAL then
    begin
     cbReadTplFormat.Clear;
     cbReadTplFormat.items.Text := FormatSpecs_Read.Text;
     cbReadTplFormat.ItemIndex:=0;
-   end;
-  if cbReadTplFormatSrc.Text <> 'Internal' then
+   end
+  else
    begin
     Get_FormatSpecs_Read;
    end;
   CMD_Generate;
 end;
 
+// Runs through diskdefs_XXX.cfg file looking for entries 'disk' and adds them to the top list
+// This logic was updated in 5.2.5 to use the 'ibm' from  '# prefix: ibm' and ends up with just a format size number
+// Same logic for read, write and convert. Could be optimised probably
+
+// This does change what is showed in the dropdown form so no longer see 'ibm.1440' only '1440' does not match
+// GW format options shown in 1.23 help
+
 procedure TFrmMain.Get_FormatSpecs_Read;
 var
-  i, l : integer;
-  tmp : string;
+  i : integer;
+  line : string;
 begin
   FormatSpecs_ReadDiskDefs := TStringList.Create;
   FormatSpecs_ReadDiskDefs.Clear;
@@ -2389,27 +2396,23 @@ begin
     Memo1.Lines.LoadFromFile(dd);
     for i := 0 to Memo1.Lines.Count - 1 do
      begin
-      if Memo1.Lines[i].StartsWith('disk ') = true then
-       begin
-        tmp := TrimLeft(Memo1.Lines[i]);
-        l := length(tmp);
-        FormatSpecs_ReadDiskDefs.Add(TrimRight(RightStr(tmp,l-5)));
-       end;
-      end;
-     cbReadTplFormat.Clear;
-     cbReadTplFormat.items.Text := FormatSpecs_ReadDiskDefs.Text;
-     cbReadTplFormat.ItemIndex:=0;
-    end;
-  if fileexists(dd) = false then
-   begin
-    cbReadTplFormat.Clear;
-   end;
+       line := TrimLeft(Memo1.Lines[i]);
+       if line.StartsWith(DISK_DEF_TYPE_PREFIX) then
+         FormatSpecs_ReadDiskDefs.Add(TrimRight(Copy(line, Length(DISK_DEF_TYPE_PREFIX)+1, MaxInt)));
+     end;
+
+    cbReadTplFormat.Items.Assign(FormatSpecs_ReadDiskDefs);
+
+    if cbReadTplFormat.Items.Count > 0 then
+      cbReadTplFormat.ItemIndex := 0;
+   end
+  else
 end;
 
 procedure TFrmMain.Get_FormatSpecs_Write;
 var
-  i, l  : integer;
-  tmp : string;
+  i : integer;
+  line : string;
 begin
   FormatSpecs_WriteDiskDefs := TStringList.Create;
   FormatSpecs_WriteDiskDefs.Clear;
@@ -2421,27 +2424,24 @@ begin
     Memo1.Lines.LoadFromFile(dd);
     for i := 0 to Memo1.Lines.Count - 1 do
      begin
-      if Memo1.Lines[i].StartsWith('disk ') = true then
-       begin
-        tmp := TrimLeft(Memo1.Lines[i]);
-        l := length(tmp);
-        FormatSpecs_WriteDiskDefs.Add(TrimRight(RightStr(tmp,l-5)));
-       end;
-      end;
-     cbWriteTplFormat.Clear;
-     cbWriteTplFormat.items.Text := FormatSpecs_WriteDiskDefs.Text;
-     cbWriteTplFormat.ItemIndex:=0;
-    end;
-  if fileexists(dd) = false then
-   begin
+      line := TrimLeft(Memo1.Lines[i]);
+      if line.StartsWith(DISK_DEF_TYPE_PREFIX) then
+          FormatSpecs_WriteDiskDefs.Add(TrimRight(Copy(line, Length(DISK_DEF_TYPE_PREFIX)+1, MaxInt)));
+     end;
+
+     cbWriteTplFormat.Items.Assign(FormatSpecs_WriteDiskDefs);
+
+     if cbWriteTplFormat.Items.Count > 0 then
+       cbWriteTplFormat.ItemIndex:=0;
+    end
+  else
     cbWriteTplFormat.Clear;
-   end;
 end;
 
 procedure TFrmMain.Get_FormatSpecs_Conv;
 var
- i, l : integer;
- tmp : string;
+ i : integer;
+ line : string;
 begin
  FormatSpecs_ConvDiskDefs := TStringList.Create;
  FormatSpecs_ConvDiskDefs.Clear;
@@ -2453,21 +2453,18 @@ begin
    Memo1.Lines.LoadFromFile(dd);
    for i := 0 to Memo1.Lines.Count - 1 do
     begin
-     if Memo1.Lines[i].StartsWith('disk ') = true then
-      begin
-       tmp := TrimLeft(Memo1.Lines[i]);
-       l := length(tmp);
-       FormatSpecs_ConvDiskDefs.Add(TrimRight(RightStr(tmp,l-5)));
-      end;
-     end;
+      line := TrimLeft(Memo1.Lines[i]);
+      if line.StartsWith(DISK_DEF_TYPE_PREFIX) then
+       FormatSpecs_ConvDiskDefs.Add(TrimRight(Copy(line, Length(DISK_DEF_TYPE_PREFIX)+1, MaxInt)));
+    end;
+
+    cbConvFormat.Items.Assign(FormatSpecs_ConvDiskDefs);
+
+   if cbConvFormat.items.Count > 0 then
+    cbConvFormat.ItemIndex:=0;
+  end
+ else
    cbConvFormat.Clear;
-   cbConvFormat.items.Text := FormatSpecs_ConvDiskDefs.Text;
-   cbConvFormat.ItemIndex:=0;
-  end;
- if fileexists(dd) = false then
-  begin
-   cbConvFormat.Clear;
-  end;
 end;
 
 procedure TFrmMain.lblToolsEraseHFreqClick(Sender: TObject);
@@ -3130,17 +3127,20 @@ end;
 
 procedure TFrmMain.Refresh_WriteFormSpec;
 begin
-  if cbWriteTplFormatSrc.Text = 'Internal' then
+ // This will reset the format spec dropdown combo box if Internal is selected
+ // May be confusing to the user if they set that, and then it auto clears
+  if cbWriteTplFormatSrc.Text = FORMAT_SPEC_INTERNAL then
    begin
     cbWriteTplFormat.Clear;
     cbWriteTplFormat.items.Text := FormatSpecs_Write.Text;
     cbWriteTplFormat.ItemIndex:=0;
-   end;
-  if cbWriteTplFormatSrc.Text <> 'Internal' then
+   end
+  else
    begin
     Get_FormatSpecs_Write;
    end;
-   CMD_Generate;
+
+  CMD_Generate;
 end;
 
 procedure TFrmMain.cbWriteTplHeadsChange(Sender: TObject);
@@ -3606,14 +3606,14 @@ begin
 
  if edGWFile.Text = '' then
   begin
-   edGWCMD.SelStart := edGWCMD.GetTextLen;
-   edGWCMD.SelLength := 0;
-   edGWCMD.SelText := 'No Greaseweazle application defined!';
-   exit;
-  end;
- if edGWFile.Text <> '' then
+    edGWCMD.SelStart := edGWCMD.GetTextLen;
+    edGWCMD.SelLength := 0;
+    edGWCMD.SelText := 'No Greaseweazle application defined!';
+    exit;
+  end
+ else
   begin
-    if fileexists(edGWFile.Text) = false then
+   if fileexists(edGWFile.Text) = false then
     begin
      edGWCMD.SelStart := edGWCMD.GetTextLen;
      edGWCMD.SelLength := 0;
@@ -3623,8 +3623,11 @@ begin
   end;
 
  // Generate the cmdline parameters
- if cbSetGlobalActionsBacktrace.Checked = true then cmd := cmd + ' --bt';
- if cbSetGlobalActionsTime.Checked = true then cmd := cmd + ' --time';
+ if cbSetGlobalActionsBacktrace.Checked = true then
+   cmd := cmd + ' --bt';
+
+ if cbSetGlobalActionsTime.Checked = true then
+   cmd := cmd + ' --time';
 
  // Read options
  if pCActions.ActivePageIndex = GW_PROP_PAGE_READ then
@@ -3632,15 +3635,11 @@ begin
   cmd := 'read';
   specifyDevice := true;
   specifyDrive := true;
-  if cbReadTplFormatSrc.Text <> 'Internal' then
-   begin
-   param := param + ' --diskdefs "' + dd + '"';
-   if cbReadTplFormat.Text <> '' then param := param + ' --format ' + cbReadTplFormat.Text;
-   end;
-  if cbReadTplFormatSrc.Text = 'Internal' then
-   begin
-    if cbReadTplFormat.Text <> '' then param := param + ' --format ' + cbReadTplFormat.Text;
-   end;
+  if cbReadTplFormatSrc.Text <> FORMAT_SPEC_INTERNAL then
+    param := param + ' --diskdefs "' + dd + '"';
+
+  if cbReadTplFormat.Text <> '' then
+    param := param + ' --format ' + cbReadTplFormat.Text;
 
   // Use all arguments ?
   If mnuArguments.Checked = true then
@@ -3652,101 +3651,80 @@ begin
       cbReadTplHSwap.Enabled := true;
       cbReadTplFlippy.Enabled := true;
       param := param + Trackset(' --tracks=',cbReadTplCyls.Text,cbReadTplHeads.Text,cbReadTplSteps.Text,cbReadTplHSwap.Checked,cbReadTplFlippy.Text);
-      if cbReadTplFlippy.Text <> '' then
-       begin
-        cbReadTplFlippyReverse.Enabled := true;
-        if cbReadTplFlippyReverse.Checked = true then cmd := cmd + ' --reverse';
-       end
-      else
-       cbReadTplFlippyReverse.Enabled := false;
-      end;
-    if cbReadTplCyls.Text = '' then                       //Trackset
-     begin
-      cbReadTplHeads.Enabled := false;
-      cbReadTplSteps.Enabled := false;
-      cbReadTplHSwap.Enabled := false;
-      cbReadTplFlippy.Enabled := false;
-      cbReadTplFlippyReverse.Enabled := false;
-     end;
-    if cbReadTplRevs.Text <> '' then
-     begin
-      param := param + ' --revs=' + cbReadTplRevs.Text;
-     end;
-    if cbReadTplRaw.Checked = true then
-     begin
-      param := param + ' --raw ';
-     end;
-    if cbReadTplFakeIndex.Text <> '' then
-     begin
-      param := param + ' --fake-index=' + cbReadTplFakeIndex.Text;
-     end;
-    if cbReadTplHardSec.Checked = true then
-     begin
-      param := param + ' --hard-sectors ';
-     end;
-    if cbReadTplAdjustSpeed.Text <> '' then
-     begin
-      param := param + ' --adjust-speed=' + cbReadTplAdjustSpeed.Text ;
-     end;
-    if cbReadTplRetries.Text <> '' then
-     begin
-      param := param + ' --retries=' + cbReadTplRetries.Text;
-     end;
-    if cbReadTplSeekRetries.Text <> '' then
-     begin
-      param := param + ' --seek-retries=' + cbReadTplSeekRetries.Text;
-     end;
-    if cbReadNoOverwrite.Checked = true then
-     begin
-      param := param + ' -n ';
-     end;
-    if cbReadTplPLL.Text <> '' then
-     begin
-      param := param + ' --pll ' + cbReadTplPLL.Text;
-     end;
-    if cbReadTplDD.Text <> '' then
-     begin
-      param := param + ' --densel ' + cbReadTplDD.Text;
-     end;
-   end;
-   if cbReadPreview.text <> '' then param := param + ' "' + Dircheck(edReadDirDest.Text) + cbReadPreview.text + '"';
- end;
+      cbReadTplFlippyReverse.Enabled := cbReadTplFlippy.Text <> '';
 
- // Write options
+      if cbReadTplFlippyReverse.Enabled then
+       begin
+        if cbReadTplFlippyReverse.Checked = true then
+          cmd := cmd + ' --reverse';
+       end;
+     end
+    else
+     begin
+       cbReadTplHeads.Enabled := false;
+       cbReadTplSteps.Enabled := false;
+       cbReadTplHSwap.Enabled := false;
+       cbReadTplFlippy.Enabled := false;
+       cbReadTplFlippyReverse.Enabled := false;
+     end;
+
+    if cbReadTplRevs.Text <> '' then
+      param := param + ' --revs=' + cbReadTplRevs.Text;
+    if cbReadTplRaw.Checked = true then
+      param := param + ' --raw ';
+    if cbReadTplFakeIndex.Text <> '' then
+      param := param + ' --fake-index=' + cbReadTplFakeIndex.Text;
+    if cbReadTplHardSec.Checked = true then
+      param := param + ' --hard-sectors ';
+    if cbReadTplAdjustSpeed.Text <> '' then
+      param := param + ' --adjust-speed=' + cbReadTplAdjustSpeed.Text ;
+    if cbReadTplRetries.Text <> '' then
+      param := param + ' --retries=' + cbReadTplRetries.Text;
+    if cbReadTplSeekRetries.Text <> '' then
+      param := param + ' --seek-retries=' + cbReadTplSeekRetries.Text;
+    if cbReadNoOverwrite.Checked = true then
+      param := param + ' -n ';
+    if cbReadTplPLL.Text <> '' then
+      param := param + ' --pll ' + cbReadTplPLL.Text;
+    if cbReadTplDD.Text <> '' then
+      param := param + ' --densel ' + cbReadTplDD.Text;
+   end;
+
+   if cbReadPreview.text <> '' then
+     param := param + ' "' + Dircheck(edReadDirDest.Text) + cbReadPreview.text + '"';
+  end;
+
+  // Write options
   if pcActions.ActivePageIndex = GW_PROP_PAGE_WRITE then
-   begin
+  begin
     cmd := 'write';
     specifyDevice := true;
     specifyDrive := true;
-    if cbWriteTplFormatSrc.Text <> 'Internal' then
-     begin
+    if cbWriteTplFormatSrc.Text <> FORMAT_SPEC_INTERNAL then
       param := param + ' --diskdefs "' + dd + '"';
-      if cbWriteTplFormat.Text <> '' then param := param + ' --format ' + cbWriteTplFormat.Text;
-     end;
-    if cbWriteTplFormatSrc.Text = 'Internal' then
-     begin
-      if cbWriteTplFormat.Text <> '' then param := param + ' --format ' + cbWriteTplFormat.Text;
-     end;
+
+    if cbWriteTplFormat.Text <> '' then
+      param := param + ' --format ' + cbWriteTplFormat.Text;
 
    // Use all arguments ?
    If mnuArguments.Checked = true then
-    begin
-      if cbWriteTplCyls.Text <> '' then
-       begin
-        cbWriteTplHeads.Enabled := true;
-        cbWriteTplSteps.Enabled := true;
-        cbWriteTplHSwap.Enabled := true;
-        cbWriteTplFlippy.Enabled := true;
-        param := param + Trackset(' --tracks=',cbWriteTplCyls.Text,cbWriteTplHeads.Text,cbWriteTplSteps.Text,cbWriteTplHSwap.Checked,cbWriteTplFlippy.Text);
-        if cbWriteTplFlippy.Text <> '' then
-         begin
-          cbWriteTplFlippyReverse.Enabled := true;
-          if cbWriteTplFlippyReverse.Checked = true then param := param + ' --reverse';
-         end
-        else
-         cbWriteTplFlippyReverse.Enabled := false;
+   begin
+     if cbWriteTplCyls.Text <> '' then
+     begin
+       cbWriteTplHeads.Enabled := true;
+       cbWriteTplSteps.Enabled := true;
+       cbWriteTplHSwap.Enabled := true;
+       cbWriteTplFlippy.Enabled := true;
+       param := param + Trackset(' --tracks=',cbWriteTplCyls.Text,cbWriteTplHeads.Text,cbWriteTplSteps.Text,cbWriteTplHSwap.Checked,cbWriteTplFlippy.Text);
+
+       cbWriteTplFlippyReverse.Enabled := cbWriteTplFlippy.Text <> '';
+
+       if cbWriteTplFlippyReverse.Enabled then
+         if cbWriteTplFlippyReverse.Checked = true then
+             param := param + ' --reverse';
        end;
-      if cbWriteTplCyls.Text = '' then                       //Trackset
+
+       if cbWriteTplCyls.Text = '' then                       //Trackset
        begin
         cbWriteTplHeads.Enabled := false;
         cbWriteTplSteps.Enabled := false;
@@ -3754,42 +3732,33 @@ begin
         cbWriteTplFlippy.Enabled := false;
         cbWriteTplFlippyReverse.Enabled := false;
        end;
-      if cbWriteTplPreErase.Checked = true then
-       begin
+
+       if cbWriteTplPreErase.Checked = true then
         param := param + ' --pre-erase ';
-       end;
-      if cbWriteTplEraseEmpty.Checked = true then
-       begin
-        param := param + ' --erase-empty ';
-       end;
-      if cbWriteTplFakeIndex.Text <> '' then
-       begin
-        param := param + ' --fake-index=' + cbWriteTplFakeIndex.Text;
-       end;
-      if cbWriteTplHardSec.Checked = true then
-       begin
-        param := param + ' --hard-sectors ';
-       end;
-      if cbWriteTplNoVerify.Checked = true then
-       begin
-        param := param + ' --no-verify ';
-       end;
-      if cbWriteTplRetries.Text <> '' then
-       begin
-        param := param + ' --retries=' + cbWriteTplRetries.Text;
-       end;
-      if cbWriteTplPrecomp.Text <> '' then
-       begin
-        param := param + ' --precomp=' + cbWriteTplPrecomp.Text;
-       end;
-      if cbWriteTplDensel.Text <> '' then
-       begin
-        param := param + ' --densel ' + cbWriteTplDensel.Text;
-       end;
-      if cbWriteTplTplTP43Pin2.Checked then
-       begin
-        param := param + ' --gen-tg43';
-       end;
+
+       if cbWriteTplEraseEmpty.Checked = true then
+         param := param + ' --erase-empty ';
+
+       if cbWriteTplFakeIndex.Text <> '' then
+         param := param + ' --fake-index=' + cbWriteTplFakeIndex.Text;
+
+       if cbWriteTplHardSec.Checked = true then
+         param := param + ' --hard-sectors ';
+
+       if cbWriteTplNoVerify.Checked = true then
+         param := param + ' --no-verify ';
+
+       if cbWriteTplRetries.Text <> '' then
+         param := param + ' --retries=' + cbWriteTplRetries.Text;
+
+       if cbWriteTplPrecomp.Text <> '' then
+         param := param + ' --precomp=' + cbWriteTplPrecomp.Text;
+
+       if cbWriteTplDensel.Text <> '' then
+         param := param + ' --densel ' + cbWriteTplDensel.Text;
+
+       if cbWriteTplTplTP43Pin2.Checked then
+         param := param + ' --gen-tg43';
     end;
     btGo.Default:=false;
     if edWriteFileName.Text <> '' then
@@ -3797,174 +3766,155 @@ begin
       param := param + ' "' + edWriteFileName.Text + '"';
       btGo.Default:=true;
      end;
-   end;
+  end;
 
 
-  // Convert options
-   if pcActions.ActivePageIndex = GW_PROP_PAGE_CONVERT then
-    begin
+   // Convert options
+  if pcActions.ActivePageIndex = GW_PROP_PAGE_CONVERT then
+   begin
      cmd := 'convert';
-     if cbConvDiskdefs.Text <> 'Internal' then
-      begin
+     if cbConvDiskdefs.Text <> FORMAT_SPEC_INTERNAL then
        param := param + ' --diskdefs "' + dd +'"';
-       if cbConvFormat.Text <> '' then param := param + ' --format ' + cbConvFormat.Text
-      end;
-     if cbConvDiskdefs.Text = 'Internal' then
-      begin
-       if cbConvFormat.Text <> '' then param := param + ' --format ' + cbConvFormat.Text;
-      end;
 
-    // Use all arguments ?
-    If mnuArguments.Checked = true then
+     if cbConvFormat.Text <> '' then
+       param := param + ' --format ' + cbConvFormat.Text;
+
+     // Use all arguments ?
+     if mnuArguments.Checked = true then
      begin
        if cbConvTracksetCyls.Text <> '' then
-        begin
-          param := param + Trackset(' --tracks=',cbConvTracksetCyls.Text,cbConvTracksetHeads.Text,cbConvTracksetSteps.Text,cbConvTracksetHSwap.Checked,cbConvTracksetFlippy.Text);
-        end;
+         param := param + Trackset(' --tracks=',cbConvTracksetCyls.Text,cbConvTracksetHeads.Text,cbConvTracksetSteps.Text,cbConvTracksetHSwap.Checked,cbConvTracksetFlippy.Text);
+
        if cbConvOutTracksetCyls.Text <> '' then
-        begin
+       begin
          param := param + Trackset(' --out-tracks=',cbConvOutTracksetCyls.Text,cbConvOutTracksetHeads.Text,cbConvOutTracksetSteps.Text,cbConvOutTracksetHSwap.Checked,cbConvOutTracksetFlippy.Text);
-         if cbConvOutTracksetFlippy.Text <> '' then
-          begin
-           cbConvTplFlippyReverse.Enabled := true;
-           if cbConvTplFlippyReverse.Checked = true then param := param + ' --reverse';
-          end
-         else
-          cbConvTplFlippyReverse.Enabled := false;
-        end;
+
+         cbConvTplFlippyReverse.Enabled := cbConvOutTracksetFlippy.Text <> '';
+         if cbConvTplFlippyReverse.Enabled and cbConvTplFlippyReverse.Checked = true then
+           param := param + ' --reverse';
+       end;
+
        if cbConvAdjustSpeed.Text <> '' then
-        begin
          param := param + ' --adjust-speed=' + cbConvAdjustSpeed.Text;
-        end;
        if cbConvNoOverwrite.Checked = true then
-        begin
-         param := param + ' -n';
-        end;
-      if cbConvPLL.Text <> '' then
-       begin
-        param := param + ' --pll ' + cbConvPLL.Text;
-       end;
-      if cbConvIndexMarks.Text <> '' then
-       begin
-        param := param + ' ' + cbConvIndexMarks.Text;
-       end;
-      if edConvFileSource.Text <> '' then
-       begin
-        param := param + ' "' + edConvFileSource.Text + '"';
-       end;
-    end;
-    if edConvFileName.text <> '' then
+          param := param + ' -n';
+       if cbConvPLL.Text <> '' then
+         param := param + ' --pll ' + cbConvPLL.Text;
+       if cbConvIndexMarks.Text <> '' then
+         param := param + ' ' + cbConvIndexMarks.Text;
+       if edConvFileSource.Text <> '' then
+         param := param + ' "' + edConvFileSource.Text + '"';
+     end;
+
+     if edConvFileName.text <> '' then
      begin
-      if cbSrcAsDesDir.Checked then edConvDirDest.Directory:= DirCheck(ExtractfileDir(edConvFileSource.Text));
-      param := param + ' "' + Dircheck(edConvDirDest.Text) + edConvFilenamePreview.text + '"';
+       if cbSrcAsDesDir.Checked then
+         edConvDirDest.Directory:= DirCheck(ExtractfileDir(edConvFileSource.Text));
+       param := param + ' "' + Dircheck(edConvDirDest.Text) + edConvFilenamePreview.text + '"';
      end;
    end;
 
    // Tools options
-    if pcActions.ActivePageIndex = GW_PROP_PAGE_TOOLS then
-     begin
+   if pcActions.ActivePageIndex = GW_PROP_PAGE_TOOLS then
+   begin
      // Erase
-      if rbToolsErase.Checked then
-       begin
-        btGo.Caption:='Erase';
-        cmd := 'erase';
-        specifyDevice := true;
-        specifyDrive := true;
-        if cbToolsEraseRevs.Text <> '' then
-         begin
-          param := param + ' --revs=' + cbToolsEraseRevs.Text;
-         end;
-         if cbToolsEraseCyl.Text <> '' then
-          begin
-           param := param + Trackset(' --tracks=',cbToolsEraseCyl.Text,cbToolsEraseHeads.Text,cbToolsEraseSteps.Text,cbToolsEraseHSwap.Checked,cbToolsEraseFlippy.Text);
-          end;
-        if lblToolsEraseHFreq.Checked = true then
-         begin
-          param := param + ' --hfreq';
-         end;
-        if cbToolsEraseFakeIndex.Text <> '' then
-         begin
-          param := param + ' --fake-index=' + cbToolsEraseFakeIndex.Text;
-         end;
-       end;
-
-      // Seek
-      if rbToolsSeek.Checked then
-       begin
-        btGo.Caption:='Seek';
-        cmd := 'seek';
-        specifyDevice := true;
-        specifyDrive := true;
-         if cbToolsSeekTrackForce.Checked then param := param + ' --force';
-         if cbToolsSeekMotorOn.Checked then param := param + ' --motor-on';
-         param := param + ' ' + cbToolsSeekTrack.Text;
-       end;
-      // Clean
-      if rbToolsClean.Checked then
-       begin
-        btGo.Caption:='Clean';
-        cmd := 'clean';
-        specifyDevice := true;
-        specifyDrive := true;
-        param := param + ' --cyls=' + cbToolsCleanCyl.Text;
-        param := param + ' --linger=' + cbToolsCleanLinger.Text;
-        param := param + ' --passes=' + cbToolsCleanPasses.Text;
-       end;
-      // RPM
-      if rbToolsRPM.Checked then
-       begin
-        btGo.Caption:='RPM';
-        cmd := ' rpm';
-        specifyDevice := true;
-        specifyDrive := true;
-        param := param + ' --nr=' + cbToolsRPMNumbIter.Text;
-       end;
-    end;
-
-    // Settings
-    if pcActions.ActivePageIndex = GW_PROP_PAGE_SETTINGS then
+     if rbToolsErase.Checked then
      begin
+       btGo.Caption:='Erase';
+       cmd := 'erase';
+       specifyDevice := true;
+       specifyDrive := true;
+       if cbToolsEraseRevs.Text <> '' then
+         param := param + ' --revs=' + cbToolsEraseRevs.Text;
+       if cbToolsEraseCyl.Text <> '' then
+         param := param + Trackset(' --tracks=',cbToolsEraseCyl.Text,cbToolsEraseHeads.Text,cbToolsEraseSteps.Text,cbToolsEraseHSwap.Checked,cbToolsEraseFlippy.Text);
+       if lblToolsEraseHFreq.Checked = true then
+         param := param + ' --hfreq';
+       if cbToolsEraseFakeIndex.Text <> '' then
+         param := param + ' --fake-index=' + cbToolsEraseFakeIndex.Text;
+     end;
+
+     // Seek
+     if rbToolsSeek.Checked then
+     begin
+       btGo.Caption:='Seek';
+       cmd := 'seek';
+       specifyDevice := true;
+       specifyDrive := true;
+       if cbToolsSeekTrackForce.Checked then
+         param := param + ' --force';
+       if cbToolsSeekMotorOn.Checked then
+         param := param + ' --motor-on';
+       param := param + ' ' + cbToolsSeekTrack.Text;
+     end;
+
+     // Clean
+     if rbToolsClean.Checked then
+     begin
+       btGo.Caption:='Clean';
+       cmd := 'clean';
+       specifyDevice := true;
+       specifyDrive := true;
+       param := param + ' --cyls=' + cbToolsCleanCyl.Text;
+       param := param + ' --linger=' + cbToolsCleanLinger.Text;
+       param := param + ' --passes=' + cbToolsCleanPasses.Text;
+     end;
+
+     // RPM
+     if rbToolsRPM.Checked then
+     begin
+       btGo.Caption:='RPM';
+       cmd := ' rpm';
+       specifyDevice := true;
+       specifyDrive := true;
+       param := param + ' --nr=' + cbToolsRPMNumbIter.Text;
+     end;
+   end;
+
+   // Settings
+   if pcActions.ActivePageIndex = GW_PROP_PAGE_SETTINGS then
+   begin
      if rbSetDelays.Checked = true then
-      begin
-      cmd := 'delays';
-      specifyDevice := true;
-      if cbSetDelaySelect.Text <>'' then
-        param := param + ' --select ' + cbSetDelaySelect.Text;
-      if cbSetDelayStep.Text <>'' then
-        param := param + ' --step ' + cbSetDelayStep.Text;
-      if cbSetDelaySettle.Text <>'' then
-        param := param + ' --settle ' + cbSetDelaySettle.Text;
-      if cbSetDelayMotor.Text <>'' then
-        param := param + ' --motor ' + cbSetDelayMotor.Text;
-      if cbSetDelayAutoOff.Text <>'' then
-        param := param + ' --watchdog ' + cbSetDelayAutoOff.Text;
-      if cbSetDelayPreWrite.Text <>'' then
-        param := param + ' --pre-write ' + cbSetDelayPreWrite.Text;
-      if cbSetDelayPostWrite.Text <>'' then
-        param := param + ' --post-write ' + cbSetDelayPostWrite.Text;
-      if cbSetDelayIndexMask.Text <>'' then
+     begin
+       cmd := 'delays';
+       specifyDevice := true;
+       if cbSetDelaySelect.Text <>'' then
+         param := param + ' --select ' + cbSetDelaySelect.Text;
+       if cbSetDelayStep.Text <>'' then
+         param := param + ' --step ' + cbSetDelayStep.Text;
+       if cbSetDelaySettle.Text <>'' then
+         param := param + ' --settle ' + cbSetDelaySettle.Text;
+       if cbSetDelayMotor.Text <>'' then
+         param := param + ' --motor ' + cbSetDelayMotor.Text;
+       if cbSetDelayAutoOff.Text <>'' then
+         param := param + ' --watchdog ' + cbSetDelayAutoOff.Text;
+       if cbSetDelayPreWrite.Text <>'' then
+         param := param + ' --pre-write ' + cbSetDelayPreWrite.Text;
+       if cbSetDelayPostWrite.Text <>'' then
+         param := param + ' --post-write ' + cbSetDelayPostWrite.Text;
+       if cbSetDelayIndexMask.Text <>'' then
         param := param + ' --index-mask ' + cbSetDelayIndexMask.Text;
-      end;
+     end;
 
      if rbSetGetPIN.Checked = true then
-      begin
+     begin
        specifyDevice := true;
        // H = true, L = false
        if rbGetPIN.Checked = true then
-        begin
-           cmd := 'pin get';
-           cbSetPINLevel.Text:='';
-           cbSetPINLevel.Enabled:=false;
-        end;
+       begin
+         cmd := 'pin get';
+         cbSetPINLevel.Text:='';
+         cbSetPINLevel.Enabled:=false;
+       end;
        if rbSetPIN.Checked = true then
-        begin
-           cmd := 'pin set';
-           cbSetPINLevel.Enabled:=true;
-        end;
+       begin
+         cmd := 'pin set';
+         cbSetPINLevel.Enabled:=true;
+       end;
        if cbSetPINNumber.Text <>'' then
-        begin
+       begin
          param := param + ' ' + cbSetPINNumber.Text;
-        end;
+       end;
        if cbSetPINLevel.Text <>'' then
        begin
          if cbSetPINLevel.Text = 'Low (0v)' then param := param + ' L';
@@ -3973,23 +3923,17 @@ begin
     end;
 
     if rbSetFirmware.Checked = true then
-     begin
+    begin
       cmd := 'update';
       specifyDevice := true;
       if cbSetFirmwareBootloader.Checked  = true then
-       begin
         param := param + ' --bootloader';
-       end;
       if opSetFWFile.Checked = true then
-       begin
         param := param + ' --force "' + edToolsFW.Text + '"';
-       end;
       if opSetFWTag.Checked = true then
-       begin
         param := param + ' --tag "' + edToolsFWtag.Text + '"';
-       end;
-     end;
     end;
+  end;
 
   // Execute GW with cmd, param and where applicable device/drive
   performCmdAction(cmd, param, specifyDevice, specifyDrive);
@@ -4016,19 +3960,15 @@ begin
  begin
    // Adafruit doesn't use equals
    if cbGWHW.Text = 'Adafruit RP2040' then
-     begin
-       execCmdLine := execCmdLine + ' --device ' + cbGWDevCOM.Text;
-     end
+     execCmdLine := execCmdLine + ' --device ' + cbGWDevCOM.Text
    else
-     begin
-       execCmdLine := execCmdLine + ' --device=' + cbGWDevCOM.Text;
-     end
+     execCmdLine := execCmdLine + ' --device=' + cbGWDevCOM.Text;
  end;
+
  if (cbGWDrive.Text <> '') and (specifyDrive) then
  begin
    execCmdLine := execCmdLine + ' --drive=' + cbGWDrive.Text;
  end;
-
 
  edGWCMD.SelStart := edGWCMD.GetTextLen;
  edGWCMD.SelLength := 0;
@@ -4042,15 +3982,15 @@ begin
   if cbGWDevCOM.Text <> '' then
   begin
     if fileexists(edGWFile.Text) = true then
-      begin
+    begin
         ShowOperationsDialog('"' + edGWFile.Text + '" ' + command + ' --device ' +
           cbGWDevCOM.Text, GW_APP_NAME + ' - "' + edGWFile.Text + '" ' + command +
           ' --device ' + cbGWDevCOM.Text, OPERATIONS_OTHER);
-      end
+    end
     else
-      begin
-        MessageDlg('Invalid filename or file (' + GW_APP + ') not found!',mtWarning, [mbOK], 0);
-      end;
+    begin
+      MessageDlg('Invalid filename or file (' + GW_APP + ') not found!',mtWarning, [mbOK], 0);
+    end;
   end
   else
     begin

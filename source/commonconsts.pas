@@ -149,6 +149,9 @@ const
   COMBO_SELECTION_SCP = 'SCP';
   COMBO_SELECTION_RAW = 'RAW';
 
+  FORMAT_SPEC_INTERNAL = 'Internal';
+  DISK_DEF_TYPE_PREFIX = 'disk ';
+
   APP_NAME = 'Flux Floppy Manager ';
   APP_VERSION = 'v5.2.7.2';
   APP_DATE = '2026-03-09';
