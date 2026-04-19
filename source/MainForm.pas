@@ -1461,46 +1461,49 @@ begin
    begin
     INIRead := TINIFile.Create(DirCheck(tmp) + cbReadTplName.Text + GW_INI_READ_EXT);
     try
-      INIRead.DeleteKey(INI_SETTINGS,INI_TEMPLATE_LEGACY_RPM); // older than 2.00
-      WriteIniStringIfNotEmpty(INIRead, READ_TEMPLATE, INI_VERSION, sAppVersion_ReadTmpl);
-      WriteIniStringIfNotEmpty(INIRead, READ_TEMPLATE, INI_TEMPLATE_NAME, cbReadTplName.Text);
-      WriteIniStringIfNotEmpty(INIRead, READ_TEMPLATE, INI_TEMPLATE_DESC, edReadTplDesc.Text);
+     // Read template section
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_READ_TEMPLATE, INI_VERSION, sAppVersion_ReadTmpl);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_READ_TEMPLATE, INI_TEMPLATE_NAME, cbReadTplName.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_READ_TEMPLATE, INI_TEMPLATE_DESC, edReadTplDesc.Text);
 
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_FOLDER_DISKDEFS, cbReadTplFormatSrc.Text);
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_FORMAT_SPEC, cbReadTplFormat.Text);
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_REVS, cbReadTplRevs.Text);
+      // Setting section
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_FOLDER_DISKDEFS, cbReadTplFormatSrc.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_SPEC, cbReadTplFormat.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_REVS, cbReadTplRevs.Text);
 
-      WriteIniBoolIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_RAW, cbReadTplRaw.Enabled, cbReadTplRaw.Checked);
+      WriteIniBoolIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_RAW, cbReadTplRaw.Enabled, cbReadTplRaw.Checked);
 
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_FAKE_INDEX, cbReadTplFakeIndex.Text);
-      WriteIniBoolIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_HARD_SECTORS, cbReadTplHardSec.Enabled, cbReadTplHardSec.Checked);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_FAKE_INDEX, cbReadTplFakeIndex.Text);
+      WriteIniBoolIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_HARD_SECTORS, cbReadTplHardSec.Enabled, cbReadTplHardSec.Checked);
 
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_ADJUST_SPEED, cbReadTplAdjustSpeed.Text);
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_RETRIES, cbReadTplRetries.Text);
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_SEEK_RETRIES, cbReadTplSeekRetries.Text);
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_PLL, cbReadTplPLL.Text);
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_DD, cbReadTplDD.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_ADJUST_SPEED, cbReadTplAdjustSpeed.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_RETRIES, cbReadTplRetries.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_SEEK_RETRIES, cbReadTplSeekRetries.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_PLL, cbReadTplPLL.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_DD, cbReadTplDD.Text);
 
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_CYLINDERS, cbReadTplCyls.Text);
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_HEADS, cbReadTplHeads.Text);
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_STEPS, cbReadTplSteps.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_CYLINDERS, cbReadTplCyls.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_HEADS, cbReadTplHeads.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_STEPS, cbReadTplSteps.Text);
 
-      WriteIniBoolIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_HSWAP, cbReadTplHSwap.Enabled, cbReadTplHSwap.Checked);
+      WriteIniBoolIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_HSWAP, cbReadTplHSwap.Enabled, cbReadTplHSwap.Checked);
 
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_FLIPPY, cbReadTplFlippy.Text);
-      WriteIniBoolIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_FLIPPY_REV, cbReadTplFlippyReverse.Enabled, cbReadTplFlippyReverse.Checked);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_FLIPPY, cbReadTplFlippy.Text);
+      WriteIniBoolIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_FLIPPY_REV, cbReadTplFlippyReverse.Enabled, cbReadTplFlippyReverse.Checked);
 
-      WriteIniBoolIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_LOG_PARAM, cbReadTplLogParam.Enabled, cbReadTplLogParam.Checked);
-      WriteIniBoolIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_LOG_OUTPUT, cbReadTplLogOutput.Enabled, cbReadTplLogOutput.Checked);
-      WriteIniBoolIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_LOG_ONEFILE, cbReadTplLogBoth.Enabled, cbReadTplLogBoth.Checked);
+      WriteIniBoolIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_LOG_PARAM, cbReadTplLogParam.Enabled, cbReadTplLogParam.Checked);
+      WriteIniBoolIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_LOG_OUTPUT, cbReadTplLogOutput.Enabled, cbReadTplLogOutput.Checked);
+      WriteIniBoolIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_LOG_ONEFILE, cbReadTplLogBoth.Enabled, cbReadTplLogBoth.Checked);
 
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_FORMAT, cbReadFormat.Text);
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION, cbReadFormatOption.Text);
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_VER, cbReadFormatOptionHFEVer.Text);
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_INT, cbReadFormatOptionHFEInt.Text);
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_ENC, cbReadFormatOptionHFEEnc.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT, cbReadFormat.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_OPTION, cbReadFormatOption.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_VER, cbReadFormatOptionHFEVer.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_INT, cbReadFormatOptionHFEInt.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_ENC, cbReadFormatOptionHFEEnc.Text);
 
-      WriteIniStringIfNotEmpty(INIRead, INI_SETTINGS, INI_TEMPLATE_DIRECTORY, edReadDirDest.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_DIRECTORY, edReadDirDest.Text);
+      INIRead.DeleteKey(INI_SECTION_SETTINGS,INI_TEMPLATE_LEGACY_RPM); // older than 2.00
+
       INIRead.Free;
 
       tmp := cbReadTplName.Text;
@@ -1618,32 +1621,37 @@ begin
   begin
    IniWrite := TINIFile.Create(DirCheck(tmp) + cbWriteTplName.Text + GW_INI_WRITE_EXT);
    try
-    IniWrite.DeleteKey(INI_SETTINGS,INI_TEMPLATE_LEGACY_RPM); // older than 2.00
-    IniWrite.DeleteKey(INI_SETTINGS,INI_TEMPLATE_LEGACY_ERASE_EMPTY); // older than 2.00
-    IniWrite.DeleteKey(INI_SETTINGS,INI_TEMPLATE_LEGACY_NO_VERIFY); // older than 2.00
-    WriteIniStringIfNotEmpty(IniWrite, WRITE_TEMPLATE, INI_VERSION, sAppVersion_WriteTmpl);
-    WriteIniStringIfNotEmpty(IniWrite, WRITE_TEMPLATE, INI_TEMPLATE_NAME, cbWriteTplName.Text);
-    //WriteIniStringIfNotEmpty(IniWrite, WRITE_TEMPLATE, 'Creator', '');
-    WriteIniStringIfNotEmpty(IniWrite, WRITE_TEMPLATE, INI_TEMPLATE_DESC, edWriteTplDesc.Text);
-    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_FOLDER_DISKDEFS, cbWriteTplFormatSrc.Text);
-    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_FORMAT_SPEC, cbWriteTplFormat.Text);
-    WriteIniBoolIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_ERASE_EMPTY, cbWriteTplEraseEmpty.Enabled, cbWriteTplEraseEmpty.Checked);
-    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_FAKE_INDEX, cbWriteTplFakeIndex.Text);
-    WriteIniBoolIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_HARD_SECTORS, cbWriteTplHardSec.Enabled, cbWriteTplHardSec.Checked);
-    WriteIniBoolIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_NO_VERIFY, cbWriteTplNoVerify.Enabled, cbWriteTplNoVerify.Checked);
-    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_RETRIES, cbWriteTplRetries.Text);
-    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_PRE_COMP, cbWriteTplPrecomp.Text);
-    WriteIniBoolIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_PRE_ERASE, cbWriteTplPreErase.Enabled, cbWriteTplPreErase.Checked);
-    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_DD, cbWriteTplDensel.Text);
-    WriteIniBoolIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_TP43_PIN2, cbWriteTplTplTP43Pin2.Enabled, cbWriteTplTplTP43Pin2.Checked);
-    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_CYLINDERS, cbWriteTplCyls.Text);
-    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_HEADS, cbWriteTplHeads.Text);
-    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_STEPS, cbWriteTplSteps.Text);
-    WriteIniBoolIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_HSWAP, cbWriteTplHSwap.Enabled, cbWriteTplHSwap.Checked);
-    WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_FLIPPY, cbWriteTplFlippy.Text);
-    WriteIniBoolIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_FLIPPY_REV, cbWriteTplFlippyReverse.Enabled, cbWriteTplFlippyReverse.Checked);
-    //WriteIniStringIfNotEmpty(IniWrite, INI_SETTINGS, INI_TEMPLATE_FORMAT, cbWriteTplFormat.Text);
 
+    // Write-Template Section
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_WRITE_TEMPLATE, INI_VERSION, sAppVersion_WriteTmpl);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_WRITE_TEMPLATE, INI_TEMPLATE_NAME, cbWriteTplName.Text);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_WRITE_TEMPLATE, INI_TEMPLATE_DESC, edWriteTplDesc.Text);
+    //WriteIniStringIfNotEmpty(IniWrite, WRITE_TEMPLATE, 'Creator', '');
+
+    // Settings section
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_FOLDER_DISKDEFS, cbWriteTplFormatSrc.Text);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_SPEC, cbWriteTplFormat.Text);
+    WriteIniBoolIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_ERASE_EMPTY, cbWriteTplEraseEmpty.Enabled, cbWriteTplEraseEmpty.Checked);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_FAKE_INDEX, cbWriteTplFakeIndex.Text);
+    WriteIniBoolIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_HARD_SECTORS, cbWriteTplHardSec.Enabled, cbWriteTplHardSec.Checked);
+    WriteIniBoolIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_NO_VERIFY, cbWriteTplNoVerify.Enabled, cbWriteTplNoVerify.Checked);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_RETRIES, cbWriteTplRetries.Text);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_PRE_COMP, cbWriteTplPrecomp.Text);
+    WriteIniBoolIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_PRE_ERASE, cbWriteTplPreErase.Enabled, cbWriteTplPreErase.Checked);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DD, cbWriteTplDensel.Text);
+    WriteIniBoolIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_TP43_PIN2, cbWriteTplTplTP43Pin2.Enabled, cbWriteTplTplTP43Pin2.Checked);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_CYLINDERS, cbWriteTplCyls.Text);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_HEADS, cbWriteTplHeads.Text);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_STEPS, cbWriteTplSteps.Text);
+    WriteIniBoolIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_HSWAP, cbWriteTplHSwap.Enabled, cbWriteTplHSwap.Checked);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_FLIPPY, cbWriteTplFlippy.Text);
+    WriteIniBoolIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_FLIPPY_REV, cbWriteTplFlippyReverse.Enabled, cbWriteTplFlippyReverse.Checked);
+    //WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT, cbWriteTplFormat.Text);
+
+    // Remove legacy items
+    IniWrite.DeleteKey(INI_SECTION_SETTINGS,INI_TEMPLATE_LEGACY_RPM); // older than 2.00
+    IniWrite.DeleteKey(INI_SECTION_SETTINGS,INI_TEMPLATE_LEGACY_ERASE_EMPTY); // older than 2.00
+    IniWrite.DeleteKey(INI_SECTION_SETTINGS,INI_TEMPLATE_LEGACY_NO_VERIFY); // older than 2.00
 
     IniWrite.Free;
 
@@ -1717,30 +1725,33 @@ begin
   If TmplFolder = '' then exit;
   iniRefreshWrite := TINIFile.Create(DirCheck(TmplFolder) + cbWriteTplName.Text + GW_INI_WRITE_EXT);
   try
-    //ver := iniRefreshRead.ReadString(WRITE_TEMPLATE,INI_VERSION,'');
-    //name := iniRefreshRead.ReadString(WRITE_TEMPLATE, INI_TEMPLATE_NAME, '');
-    //creator := iniRefreshRead.ReadString(WRITE_TEMPLATE, 'Creator', '');
 
-    cbWriteTplFormatSrc.Text := ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_FOLDER_DISKDEFS, FORMAT_SPEC_INTERNAL);
+    // Write template section (not used)
+    //ver := iniRefreshRead.ReadString(INI_SECTION_WRITE_TEMPLATE,INI_VERSION,'');
+    //name := iniRefreshRead.ReadString(INI_SECTION_WRITE_TEMPLATE, INI_TEMPLATE_NAME, '');
+    //creator := iniRefreshRead.ReadString(INI_SECTION_WRITE_TEMPLATE, 'Creator', '');
+
+    // Setting section
+    cbWriteTplFormatSrc.Text := ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_FOLDER_DISKDEFS, FORMAT_SPEC_INTERNAL);
     Refresh_WriteFormSpec;
-    cbWriteTplFormat.Text := ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_FORMAT_SPEC);
-    edWriteTplDesc.Text   := ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_DESC);
-    cbWriteTplEraseEmpty.checked := ReadIniBool(iniRefreshWrite,WRITE_TEMPLATE, INI_TEMPLATE_ERASE_EMPTY);
-    cbWriteTplFakeIndex.Text:= ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_FAKE_INDEX);
-    cbWriteTplHardSec.checked := ReadIniBool(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_HARD_SECTORS);
-    cbWriteTplNoVerify.checked := ReadIniBool(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_NO_VERIFY);
-    cbWriteTplRetries.Text:= ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_RETRIES);
-    cbWriteTplPrecomp.Text:= ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_PRE_COMP);
-    cbWriteTplPreErase.Checked:= ReadIniBool(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_PRE_ERASE);
-    cbWriteTplDensel.Text:= ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_DD);
-    cbWriteTplTplTP43Pin2.Checked := ReadIniBool(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_TP43_PIN2);
+    cbWriteTplFormat.Text := ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_SPEC);
+    edWriteTplDesc.Text   := ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DESC);
+    cbWriteTplEraseEmpty.checked := ReadIniBool(iniRefreshWrite,INI_SECTION_SETTINGS, INI_TEMPLATE_ERASE_EMPTY);
+    cbWriteTplFakeIndex.Text:= ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_FAKE_INDEX);
+    cbWriteTplHardSec.checked := ReadIniBool(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_HARD_SECTORS);
+    cbWriteTplNoVerify.checked := ReadIniBool(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_NO_VERIFY);
+    cbWriteTplRetries.Text:= ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_RETRIES);
+    cbWriteTplPrecomp.Text:= ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_PRE_COMP);
+    cbWriteTplPreErase.Checked:= ReadIniBool(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_PRE_ERASE);
+    cbWriteTplDensel.Text:= ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DD);
+    cbWriteTplTplTP43Pin2.Checked := ReadIniBool(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_TP43_PIN2);
 
-    cbWriteTplCyls.Text:= ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_CYLINDERS);
-    cbWriteTplHeads.Text:= ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_HEADS);
-    cbWriteTplSteps.Text:= ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_STEPS);
-    cbWriteTplHSwap.Checked:= ReadIniBool(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_HSWAP);
-    cbWriteTplFlippy.Text:= ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_FLIPPY);
-    cbWriteTplFlippyReverse.checked := ReadIniBool(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_FLIPPY_REV);
+    cbWriteTplCyls.Text:= ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_CYLINDERS);
+    cbWriteTplHeads.Text:= ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_HEADS);
+    cbWriteTplSteps.Text:= ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_STEPS);
+    cbWriteTplHSwap.Checked:= ReadIniBool(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_HSWAP);
+    cbWriteTplFlippy.Text:= ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_FLIPPY);
+    cbWriteTplFlippyReverse.checked := ReadIniBool(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_FLIPPY_REV);
 
     if cbWriteTplName.Text <> '' then
     begin
@@ -1803,41 +1814,43 @@ begin
 
   iniRefreshRead := TINIFile.Create(DirCheck(tmplFolder) + cbReadTplName.Text + GW_INI_READ_EXT);
   try
-    edReadTplDesc.Text := iniRefreshRead.ReadString(READ_TEMPLATE, INI_TEMPLATE_DESC, '');
+    // Read template section
+    edReadTplDesc.Text := iniRefreshRead.ReadString(INI_SECTION_READ_TEMPLATE, INI_TEMPLATE_DESC, '');
 
-    cbReadTplFormatSrc.Text        := iniRefreshRead.ReadString(INI_SETTINGS, INI_FOLDER_DISKDEFS, FORMAT_SPEC_INTERNAL);
+    // Settings Section
+    cbReadTplFormatSrc.Text        := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_FOLDER_DISKDEFS, FORMAT_SPEC_INTERNAL);
     Refresh_ReadFormSpec;
-    cbReadTplFormat.Text           := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FORMAT_SPEC, '');
-    cbReadTplRevs.Text             := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_REVS, '');
-    cbReadTplRaw.Checked           := iniRefreshRead.ReadBool(INI_SETTINGS, INI_TEMPLATE_REVS, false);
-    cbReadTplFakeIndex.Text        := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FAKE_INDEX, '');
-    cbReadTplHardSec.Checked       := iniRefreshRead.ReadBool(INI_SETTINGS, INI_TEMPLATE_HARD_SECTORS, false);
-    cbReadTplAdjustSpeed.Text      := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_ADJUST_SPEED, '');
-    cbReadTplRetries.Text          := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_RETRIES, '');
-    cbReadTplSeekRetries.Text      := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_SEEK_RETRIES, '');
-    cbReadTplPLL.Text              := iniRefreshRead.ReadString(INI_SETTINGS,INI_TEMPLATE_PLL, '');
-    cbReadTplDD.Text               := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_DD, '');
+    cbReadTplFormat.Text           := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_SPEC, '');
+    cbReadTplRevs.Text             := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_REVS, '');
+    cbReadTplRaw.Checked           := iniRefreshRead.ReadBool(INI_SECTION_SETTINGS, INI_TEMPLATE_REVS, false);
+    cbReadTplFakeIndex.Text        := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_FAKE_INDEX, '');
+    cbReadTplHardSec.Checked       := iniRefreshRead.ReadBool(INI_SECTION_SETTINGS, INI_TEMPLATE_HARD_SECTORS, false);
+    cbReadTplAdjustSpeed.Text      := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_ADJUST_SPEED, '');
+    cbReadTplRetries.Text          := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_RETRIES, '');
+    cbReadTplSeekRetries.Text      := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_SEEK_RETRIES, '');
+    cbReadTplPLL.Text              := iniRefreshRead.ReadString(INI_SECTION_SETTINGS,INI_TEMPLATE_PLL, '');
+    cbReadTplDD.Text               := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DD, '');
 
-    cbReadTplCyls.Text             := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_CYLINDERS, '');
-    cbReadTplHeads.Text            := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_HEADS, '');
-    cbReadTplSteps.Text            := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_STEPS, '');
-    cbReadTplHSwap.Checked         := iniRefreshRead.ReadBool(INI_SETTINGS, INI_TEMPLATE_HSWAP, false);
-    cbReadTplFlippy.Text           := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FLIPPY, '');
-    cbReadTplFlippyReverse.Checked := iniRefreshRead.ReadBool(INI_SETTINGS, INI_TEMPLATE_FLIPPY_REV, false);
+    cbReadTplCyls.Text             := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_CYLINDERS, '');
+    cbReadTplHeads.Text            := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_HEADS, '');
+    cbReadTplSteps.Text            := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_STEPS, '');
+    cbReadTplHSwap.Checked         := iniRefreshRead.ReadBool(INI_SECTION_SETTINGS, INI_TEMPLATE_HSWAP, false);
+    cbReadTplFlippy.Text           := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_FLIPPY, '');
+    cbReadTplFlippyReverse.Checked := iniRefreshRead.ReadBool(INI_SECTION_SETTINGS, INI_TEMPLATE_FLIPPY_REV, false);
 
-    cbReadTplLogParam.Checked      := iniRefreshRead.ReadBool(INI_SETTINGS, INI_TEMPLATE_LOG_PARAM, false);
-    cbReadTplLogOutput.Checked     := iniRefreshRead.ReadBool(INI_SETTINGS, INI_TEMPLATE_LOG_OUTPUT, false);
-    cbReadTplLogBoth.Checked       := iniRefreshRead.ReadBool(INI_SETTINGS, INI_TEMPLATE_LOG_ONEFILE, false);
+    cbReadTplLogParam.Checked      := iniRefreshRead.ReadBool(INI_SECTION_SETTINGS, INI_TEMPLATE_LOG_PARAM, false);
+    cbReadTplLogOutput.Checked     := iniRefreshRead.ReadBool(INI_SECTION_SETTINGS, INI_TEMPLATE_LOG_OUTPUT, false);
+    cbReadTplLogBoth.Checked       := iniRefreshRead.ReadBool(INI_SECTION_SETTINGS, INI_TEMPLATE_LOG_ONEFILE, false);
 
-    cbReadFormat.Text              := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FORMAT, '');
+    cbReadFormat.Text              := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT, '');
 
     // Update the combo boxes after format is determined
     UpdateReadFormatSelection;
-    cbReadFormatOption.Text        := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION, '');
-    cbReadFormatOptionHFEVer.Text  := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_VER, '');
-    cbReadFormatOptionHFEInt.Text  := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_INT, '');
-    cbReadFormatOptionHFEEnc.Text  := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_ENC, '');
-    edReadDirDest.Text            := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_DIRECTORY, '');
+    cbReadFormatOption.Text        := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_OPTION, '');
+    cbReadFormatOptionHFEVer.Text  := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_VER, '');
+    cbReadFormatOptionHFEInt.Text  := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_INT, '');
+    cbReadFormatOptionHFEEnc.Text  := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_ENC, '');
+    edReadDirDest.Text            := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DIRECTORY, '');
 
     if cbReadTplName.Text <> '' then
     begin

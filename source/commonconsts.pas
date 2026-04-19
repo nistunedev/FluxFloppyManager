@@ -48,9 +48,9 @@ const
 // INI Main section
   FLUX_INI_NAME = 'FluxMyFluffyFloppy';
   
-// INI Settings
-  READ_TEMPLATE = 'FluxMyFluffyFloppy-Read-Template';
-  WRITE_TEMPLATE = 'FluxMyFluffyFloppy-Write-Template';
+// Section INI Settings
+  INI_SECTION_READ_TEMPLATE = 'FluxMyFluffyFloppy-Read-Template';
+  INI_SECTION_WRITE_TEMPLATE = 'FluxMyFluffyFloppy-Write-Template';
   INI_VERSION = 'Version';
   INI_VERSION_INI = 'VersionINI';
   INI_VERSION_DEFAULT = 10;
@@ -79,9 +79,8 @@ const
   INI_ACTIONS_BACKTRACE = 'cbSetGlobalActionsBacktrace';
   INI_ACTIONS_GW_HW = 'GWHW';
 
-// INI Templates
-
-  INI_SETTINGS = 'Settings';
+// Section INI Templates
+  INI_SECTION_SETTINGS = 'Settings';
   
   // Pre 2.0 Version
   INI_TEMPLATE_LEGACY_RPM = 'RPM';
