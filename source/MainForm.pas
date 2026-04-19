@@ -1,3 +1,4 @@
+
 {
 -------------------------------------------------------------------
 Flux Floppy Manager
@@ -449,6 +450,7 @@ type
     procedure cbReadTplFormatSrcChange(Sender: TObject);
     procedure cbReadTplHeadsChange(Sender: TObject);
     procedure cbReadTplHSwapChange(Sender: TObject);
+    procedure checkUpdateReadTemplateButtons;
     procedure cbReadTplNameChange(Sender: TObject);
     procedure cbReadTplNameSelect(Sender: TObject);
     procedure cbReadTplPLLChange(Sender: TObject);
@@ -469,6 +471,7 @@ type
     procedure cbWriteTplFormatSrcChange(Sender: TObject);
     procedure cbWriteTplHeadsChange(Sender: TObject);
     procedure cbWriteTplHSwapChange(Sender: TObject);
+    procedure checkUpdateWriteTemplateButtons;
     procedure cbWriteTplNameChange(Sender: TObject);
     procedure cbWriteTplNameSelect(Sender: TObject);
     procedure cbWriteTplNoVerifyChange(Sender: TObject);
@@ -1670,7 +1673,6 @@ end;
 procedure TFrmMain.Refresh_Templates_Write_DropDown;
 var
   Templates_Write: TStringList;
-  i: integer;
   TmplFolder : String;
   INITmplFolder : TIniFile;
 begin
@@ -1686,8 +1688,7 @@ begin
     if Templates_Write.Count = 0 then
     begin
       Templates_Write.Free;
-      btWriteTplSave.Enabled:=false;
-      btWriteTplDel.Enabled:=false;
+      checkUpdateWriteTemplateButtons;
       btWriteTplNew.Click;
       exit;
     end;
@@ -1722,27 +1723,30 @@ begin
 
     cbWriteTplFormatSrc.Text := ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_FOLDER_DISKDEFS, 'Internal');
     Refresh_WriteFormSpec;
-    cbWriteTplFormat.Text := ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_FORMAT_SPEC);
+    cbWriteTplFormat.Text := ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_FORMAT_SPEC);
     edWriteTplDesc.Text   := ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_DESC);
-    cbWriteTplEraseEmpty.checked := ReadIniBool(iniRefreshWrite,INI_SETTINGS, INI_TEMPLATE_ERASE_EMPTY);
-    cbWriteTplFakeIndex.Text:= ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_FAKE_INDEX);
-    cbWriteTplHardSec.checked := ReadIniBool(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_HARD_SECTORS);
-    cbWriteTplNoVerify.checked := ReadIniBool(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_NO_VERIFY);
-    cbWriteTplRetries.Text:= ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_RETRIES);
-    cbWriteTplPrecomp.Text:= ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_PRE_COMP);
-    cbWriteTplPreErase.Checked:= ReadIniBool(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_PRE_ERASE);
-    cbWriteTplDensel.Text:= ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_DD);
-    cbWriteTplTplTP43Pin2.Checked := ReadIniBool(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_TP43_PIN2);
+    cbWriteTplEraseEmpty.checked := ReadIniBool(iniRefreshWrite,WRITE_TEMPLATE, INI_TEMPLATE_ERASE_EMPTY);
+    cbWriteTplFakeIndex.Text:= ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_FAKE_INDEX);
+    cbWriteTplHardSec.checked := ReadIniBool(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_HARD_SECTORS);
+    cbWriteTplNoVerify.checked := ReadIniBool(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_NO_VERIFY);
+    cbWriteTplRetries.Text:= ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_RETRIES);
+    cbWriteTplPrecomp.Text:= ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_PRE_COMP);
+    cbWriteTplPreErase.Checked:= ReadIniBool(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_PRE_ERASE);
+    cbWriteTplDensel.Text:= ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_DD);
+    cbWriteTplTplTP43Pin2.Checked := ReadIniBool(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_TP43_PIN2);
 
-    cbWriteTplCyls.Text:= ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_CYLINDERS);
-    cbWriteTplHeads.Text:= ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_HEADS);
-    cbWriteTplSteps.Text:= ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_STEPS);
-    cbWriteTplHSwap.Checked:= ReadIniBool(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_HSWAP);
-    cbWriteTplFlippy.Text:= ReadIniString(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_FLIPPY);
-    cbWriteTplFlippyReverse.checked := ReadIniBool(iniRefreshWrite, INI_SETTINGS, INI_TEMPLATE_FLIPPY_REV);
+    cbWriteTplCyls.Text:= ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_CYLINDERS);
+    cbWriteTplHeads.Text:= ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_HEADS);
+    cbWriteTplSteps.Text:= ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_STEPS);
+    cbWriteTplHSwap.Checked:= ReadIniBool(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_HSWAP);
+    cbWriteTplFlippy.Text:= ReadIniString(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_FLIPPY);
+    cbWriteTplFlippyReverse.checked := ReadIniBool(iniRefreshWrite, WRITE_TEMPLATE, INI_TEMPLATE_FLIPPY_REV);
 
     if cbWriteTplName.Text <> '' then
+    begin
       WriteIniString(iniFile, FLUX_INI_NAME, INI_LAST_WRITE_TEMPLATE, cbWriteTplName.Text);
+      checkUpdateWriteTemplateButtons;
+    end;
     iniRefreshWrite.Free;
     iniFile.Free;
   finally
@@ -1769,8 +1773,7 @@ begin
     if Templates_Read.Count = 0 then
     begin
       Templates_Read.Free;
-      btReadTplSave.Enabled:=false;
-      btReadTplDel.Enabled:=false;
+      checkUpdateReadTemplateButtons;
       btReadTplNew.Click;
       exit;
     end;
@@ -1837,7 +1840,10 @@ begin
     edReadDirDest.Text            := iniRefreshRead.ReadString(INI_SETTINGS, INI_TEMPLATE_DIRECTORY, '');
 
     if cbReadTplName.Text <> '' then
+    begin
       WriteIniString(iniFile, FLUX_INI_NAME, INI_LAST_READ_TEMPLATE, cbReadTplName.Text);
+      checkUpdateReadTemplateButtons;
+    end;
     iniRefreshRead.Free;
     iniFile.Free;
 
@@ -2609,23 +2615,15 @@ begin
   btGo.Default:=false;
   if pcActions.ActivePageIndex = GW_PROP_PAGE_READ then
    begin
-    if cbReadTplName.Text <> '' then
-    begin
-     btReadTplSave.Enabled := true;
-     btReadTplDel.Enabled := true;
-    end;
     btGo.Caption:='Read';
+    checkUpdateReadTemplateButtons;
     cbReadTplLogParam.Visible:=true;
     cbReadTplLogOutput.Visible:=true;
     cbReadTplLogBoth.Visible:=true;
    end;
   if pcActions.ActivePageIndex = GW_PROP_PAGE_WRITE then
    begin
-    if cbWriteTplName.Text <> '' then
-    begin
-     btWriteTplSave.Enabled := true;
-     btWriteTplDel.Enabled := true;
-    end;
+    checkUpdateWriteTemplateButtons;
     btGo.Caption:='Write';
     cbReadTplLogParam.Visible:=false;
     cbReadTplLogOutput.Visible:=false;
@@ -3006,31 +3004,22 @@ end;
 
 procedure TFrmMain.cbReadTplNameChange(Sender: TObject);
 begin
-  if cbReadTplName.Text = '' then
-  begin
-   btReadTplSave.Enabled := false;
-   btReadTplDel.Enabled := false;
-  end;
- if cbReadTplName.Text <> '' then
-  begin
-   btReadTplSave.Enabled := true;
-   btReadTplDel.Enabled := true;
-  end;
+  checkUpdateReadTemplateButtons;
+  Refresh_Templates_Read;
+end;
+
+procedure TFrmMain.checkUpdateReadTemplateButtons;
+  var
+    buttonsEnabled: boolean;
+begin
+   buttonsEnabled := cbReadTplName.Text <> '';
+   btReadTplSave.Enabled := buttonsEnabled;
+   btReadTplDel.Enabled := buttonsEnabled;
 end;
 
 procedure TFrmMain.cbReadTplNameSelect(Sender: TObject);
 begin
- if cbReadTplName.Text = '' then
-  begin
-   btReadTplSave.Enabled := false;
-   btReadTplDel.Enabled := false;
-  end;
- if cbReadTplName.Text <> '' then
-  begin
-   btReadTplSave.Enabled := true;
-   btReadTplDel.Enabled := true;
-   Refresh_Templates_Read;
-  end;
+  checkUpdateReadTemplateButtons;
 end;
 
 procedure TFrmMain.cbReadTplPLLChange(Sender: TObject);
@@ -3166,31 +3155,23 @@ end;
 
 procedure TFrmMain.cbWriteTplNameChange(Sender: TObject);
 begin
-  if cbWriteTplName.Text = '' then
-  begin
-   btWriteTplSave.Enabled := false;
-   btWriteTplDel.Enabled := false;
-  end;
- if cbWriteTplName.Text <> '' then
-  begin
-   btWriteTplSave.Enabled := true;
-   btWriteTplDel.Enabled := true;
-  end;
+  checkUpdateWriteTemplateButtons;
+  Refresh_Templates_Write;
+end;
+
+procedure TFrmMain.checkUpdateWriteTemplateButtons;
+var enableButtons : boolean;
+begin
+   enableButtons := cbWriteTplName.Text <> '';
+   btWriteTplSave.Enabled := enableButtons;
+   btWriteTplDel.Enabled := enableButtons;
 end;
 
 procedure TFrmMain.cbWriteTplNameSelect(Sender: TObject);
+var
+  enableButtons: boolean;
 begin
-  if cbWriteTplName.Text = '' then
-  begin
-   btWriteTplSave.Enabled := false;
-   btWriteTplDel.Enabled := false;
-  end;
- if cbWriteTplName.Text <> '' then
-  begin
-   btWriteTplSave.Enabled := true;
-   btWriteTplDel.Enabled := true;
-   Refresh_Templates_Write;
-  end;
+ checkUpdateWriteTemplateButtons;
 end;
 
 procedure TFrmMain.cbWriteTplNoVerifyChange(Sender: TObject);
