@@ -1,11 +1,11 @@
 object FrmOptions: TFrmOptions
   Left = 1553
-  Height = 666
+  Height = 730
   Top = 720
   Width = 1362
   BorderStyle = bsDialog
   Caption = 'Options'
-  ClientHeight = 666
+  ClientHeight = 730
   ClientWidth = 1362
   DesignTimePPI = 120
   Position = poMainFormCenter
@@ -14,7 +14,7 @@ object FrmOptions: TFrmOptions
   object Cancel: TButton
     Left = 18
     Height = 55
-    Top = 595
+    Top = 648
     Width = 164
     Caption = 'Cancel'
     TabOrder = 0
@@ -23,7 +23,7 @@ object FrmOptions: TFrmOptions
   object OK: TButton
     Left = 1184
     Height = 55
-    Top = 595
+    Top = 648
     Width = 164
     Caption = 'OK'
     TabOrder = 1
@@ -31,11 +31,11 @@ object FrmOptions: TFrmOptions
   end
   object gbLocations: TGroupBox
     Left = 18
-    Height = 298
+    Height = 356
     Top = 280
     Width = 1330
     Caption = 'Locations:'
-    ClientHeight = 263
+    ClientHeight = 321
     ClientWidth = 1326
     TabOrder = 2
     object lblDiskdefs: TLabel
@@ -49,7 +49,7 @@ object FrmOptions: TFrmOptions
     object lblTemplates: TLabel
       Left = 35
       Height = 30
-      Top = 122
+      Top = 102
       Width = 170
       Caption = 'Templates (folder):'
       ParentColor = False
@@ -57,7 +57,7 @@ object FrmOptions: TFrmOptions
     object folderTemplates: TDirectoryEdit
       Left = 52
       Height = 38
-      Top = 175
+      Top = 136
       Width = 1248
       ShowHidden = False
       ButtonWidth = 50
@@ -75,6 +75,26 @@ object FrmOptions: TFrmOptions
       NumGlyphs = 1
       MaxLength = 0
       TabOrder = 1
+    end
+    object lblSamdisk: TLabel
+      Left = 35
+      Height = 30
+      Top = 186
+      Width = 150
+      Caption = 'Samdisk (location):'
+      ParentColor = False
+    end
+    object edSamdiskFile: TFileNameEdit
+      Left = 52
+      Height = 38
+      Top = 220
+      Width = 1248
+      FilterIndex = 0
+      HideDirectories = False
+      ButtonWidth = 50
+      NumGlyphs = 1
+      MaxLength = 0
+      TabOrder = 2
     end
   end
   object gbStart: TGroupBox
