@@ -145,6 +145,7 @@ const
 
   // Casing is important for GW and this also must match XML tags
   HFE_OPTION_BITRATE = 'bitrate';
+  HFE_OPTION_VERSION = 'version';
   HFE_OPTION_INTERFACE = 'interface';
   HFE_OPTION_ENCODING = 'encoding';
 

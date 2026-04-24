@@ -1,0 +1,19 @@
+[FluxMyFluffyFloppy-Read-Template]
+Version=4.00
+Name=3-inch 180kb DoubleDensity SingleSided (40 tracks) CPC EDSK
+
+[Settings]
+Diskdefs=diskdefs_ibm
+FormatSpec=scan
+Cylinders=0-39
+Heads=0
+Format=EDSK (EDSK, use: format=ibm.scan)
+Directory=D:\CPC
+DelaySelect=10
+DelayStep=12000
+DelaySettle=30
+DelayMotor=750
+DelayAutoOff=10000
+DelayPreWrite=100
+DelayPostWrite=1000
+DelayIndexMask=200

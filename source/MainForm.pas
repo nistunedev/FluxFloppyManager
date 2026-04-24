@@ -578,6 +578,7 @@ type
 
   THfeFormatEntry = record
     BitRate: TFormatOption;
+    Version: TFormatOption;
     DiskInterface: TFormatOption;
     Encoding: TFormatOption;
   end;
@@ -2237,8 +2238,16 @@ begin
   cbConvFormatOption.ItemIndex := 0;
 
   //HFEVersion
+  cbConvFormatOptionHFEVer.Items.Clear;
   cbConvFormatOptionHFEVer.ItemIndex := -1;
   cbConvFormatOptionHFEVer.Enabled:= true;
+  cbConvFormatOptionHFEVer.Items.Add('');
+  for index := 0 to High(HFEFormatOptions.Version.Value) do
+  begin
+    entryLine := '::' + HFEFormatOptions.Version.Name + '=' + HFEFormatOptions.Version.Value[index];
+    cbConvFormatOptionHFEVer.Items.Add(entryLine);
+  end;
+  cbConvFormatOptionHFEVer.ItemIndex := 0;
 
   //HLE InterfaceMode
   cbConvFormatOptionHFEInt.Items.Clear;
@@ -3385,8 +3394,16 @@ begin
    cbReadFormatOption.ItemIndex := 0;
 
    //HFEVersion
+   cbReadFormatOptionHFEVer.Items.Clear;
    cbReadFormatOptionHFEVer.ItemIndex := -1;
    cbReadFormatOptionHFEVer.Enabled:= true;
+   cbReadFormatOptionHFEVer.Items.Add('');
+   for index := 0 to High(HFEFormatOptions.Version.Value) do
+   begin
+     entryLine := '::' + HFEFormatOptions.Version.Name + '=' + HFEFormatOptions.Version.Value[index];
+     cbReadFormatOptionHFEVer.Items.Add(entryLine);
+   end;
+   cbReadFormatOptionHFEVer.ItemIndex := 0;
 
    //HLE InterfaceMode
    cbReadFormatOptionHFEInt.Items.Clear;
@@ -4230,6 +4247,8 @@ begin
             case TDOMElement(OptionNode).GetAttribute('name') of
               HFE_OPTION_BITRATE:
                 LoadOption(OptionNode, HFEFormatOptions.BitRate);
+              HFE_OPTION_VERSION:
+                LoadOption(OptionNode, HFEFormatOptions.Version);
               HFE_OPTION_INTERFACE:
                 LoadOption(OptionNode, HFEFormatOptions.DiskInterface);
               HFE_OPTION_ENCODING:
