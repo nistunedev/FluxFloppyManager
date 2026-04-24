@@ -3351,7 +3351,10 @@ procedure TFrmMain.UpdateReadFormatSelection;
 var
   entryLine : string;
   index: Integer;
+  hasReadFilename: Boolean;
 begin
+  hasReadFilename := Trim(edReadFilename.Text) <> '';
+
   cbReadFormatOption.Items.Clear;
   cbReadFormatOption.ItemIndex := -1;
   cbReadFormatOption.Enabled:= false;
@@ -3367,7 +3370,7 @@ begin
   begin
    cbReadFormatOption.Items.Clear;
    cbReadFormatOption.ItemIndex := -1;
-   cbReadFormatOption.Enabled:= true;
+   cbReadFormatOption.Enabled:= hasReadFilename;
    cbReadFormatOption.Items.Add('');
 
    // DiskType
@@ -3384,7 +3387,7 @@ begin
   begin
    cbReadFormatOption.Items.Clear;
    cbReadFormatOption.ItemIndex := -1;
-   cbReadFormatOption.Enabled:= true;
+    cbReadFormatOption.Enabled:= hasReadFilename;
    cbReadFormatOption.Items.Add('');
    // BitRate
    for index := 0 to High(HFEFormatOptions.BitRate.Value) do
@@ -3397,7 +3400,7 @@ begin
    //HFEVersion
    cbReadFormatOptionHFEVer.Items.Clear;
    cbReadFormatOptionHFEVer.ItemIndex := -1;
-   cbReadFormatOptionHFEVer.Enabled:= true;
+   cbReadFormatOptionHFEVer.Enabled:= hasReadFilename;
    cbReadFormatOptionHFEVer.Items.Add('');
    for index := 0 to High(HFEFormatOptions.Version.Value) do
    begin
@@ -3409,7 +3412,7 @@ begin
    //HLE InterfaceMode
    cbReadFormatOptionHFEInt.Items.Clear;
    cbReadFormatOptionHFEInt.ItemIndex := -1;
-   cbReadFormatOptionHFEInt.Enabled:= true;
+   cbReadFormatOptionHFEInt.Enabled:= hasReadFilename;
    cbReadFormatOptionHFEInt.Items.Add('');
    for index := 0 to High(HFEFormatOptions.DiskInterface.Value) do
    begin
@@ -3421,7 +3424,7 @@ begin
    //HLE EncodingType
    cbReadFormatOptionHFEEnc.Items.Clear;
    cbReadFormatOptionHFEEnc.ItemIndex := -1;
-   cbReadFormatOptionHFEEnc.Enabled:= true;
+   cbReadFormatOptionHFEEnc.Enabled:= hasReadFilename;
    cbReadFormatOptionHFEEnc.Items.Add('');
    for index := 0 to High(HFEFormatOptions.Encoding.Value) do
    begin
