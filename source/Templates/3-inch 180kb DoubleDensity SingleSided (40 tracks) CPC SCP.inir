@@ -1,0 +1,8 @@
+[FluxMyFluffyFloppy-Read-Template]
+Version=4.00
+Name=3-inch 180kb DoubleDensity SingleSided (40 tracks) CPC SCP
+Description=3-inch 180kb DoubleDensity SingleSided (40 tracks) CPC SCP
+
+[Settings]
+Diskdefs=Internal
+Format=SCP (SuperCardPro)

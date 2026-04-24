@@ -52,6 +52,7 @@ type
     btGWReset: TButton;
     btReadDestExplore: TButton;
     btReadDiskReset: TButton;
+    btWriteDiskReset: TButton;
     btReadTplDel: TButton;
     btReadTplNew: TButton;
     btReadTplSave: TButton;
@@ -174,14 +175,15 @@ type
     EdGWFile: TFileNameEdit;
     edReadDigits: TSpinEdit;
     edReadDirDest: TDirectoryEdit;
+    edWriteDirDest: TDirectoryEdit;
     edReadDisk1: TSpinEdit;
     edReadDisk2: TSpinEdit;
     edReadDiskOf: TEdit;
-    EdReadFilename: TEdit;
+    edReadFilename: TEdit;
+    edWriteFilename: TFileNameEdit;
     edReadTplDesc: TEdit;
     edToolsFW: TFileNameEdit;
     edToolsFWTag: TEdit;
-    edWriteFileName: TFileNameEdit;
     edWriteTplDesc: TEdit;
     gbCmd: TGroupBox;
     gbConvArg: TGroupBox;
@@ -235,8 +237,10 @@ type
     lblGWHW: TLabel;
     lblReadDestDigits: TLabel;
     lblReadDestDir: TLabel;
+    lblWriteDestDir: TLabel;
     lblReadDestDiskNr: TLabel;
     lblReadDestFile: TLabel;
+    lblWriteDestFile: TLabel;
     lblReadDestFormatExt: TLabel;
     lblReadDestFormatExtOpt: TLabel;
     lblReadDestFormatExtOpt1: TLabel;
@@ -285,7 +289,6 @@ type
     lblToolsRPMNumbIter: TLabel;
     lblToolsSeek: TLabel;
     lblWriteDescription: TLabel;
-    lblWriteFile: TLabel;
     lblWriteTemplate: TLabel;
     lblWriteTplCyls: TLabel;
     lblWriteTplDD: TLabel;
@@ -335,7 +338,6 @@ type
     pnToolsFWSelect: TPanel;
     pnWriteAllArg: TPanel;
     pnWriteFormSpec: TPanel;
-    pnWriteSourceFile: TPanel;
     pnWriteTpl: TPanel;
     rbGetPIN: TRadioButton;
     rbSetDelays: TCheckBox;
@@ -365,6 +367,7 @@ type
     procedure btGWResetClick(Sender: TObject);
     procedure btReadDestExploreClick(Sender: TObject);
     procedure btReadDiskResetClick(Sender: TObject);
+    procedure btWriteDiskResetClick(Sender: TObject);
     procedure btReadTplDelClick(Sender: TObject);
     procedure btReadTplNewClick(Sender: TObject);
     procedure btReadTplSaveClick(Sender: TObject);
@@ -485,11 +488,12 @@ type
     procedure EdGWFileChange(Sender: TObject);
     procedure edReadDigitsChange(Sender: TObject);
     procedure edReadDirDestChange(Sender: TObject);
+    procedure edWriteDirDestChange(Sender: TObject);
     procedure edReadDisk1Change(Sender: TObject);
     procedure edReadDisk2Change(Sender: TObject);
     procedure edReadDiskOfChange(Sender: TObject);
     procedure cbReadFormatOptionChange(Sender: TObject);
-    procedure EdReadFilenameChange(Sender: TObject);
+    procedure edReadFilenameChange(Sender: TObject);
     procedure cbReadFormatChange(Sender: TObject);
     procedure edToolsFWChange(Sender: TObject);
     procedure edToolsFWTagChange(Sender: TObject);
@@ -858,6 +862,7 @@ begin
   mnuArguments.Checked := ReadIniBool(INI, FLUX_INI_NAME, INI_SHOWARG, true);
   edReadDirDest.Directory := ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_READ_DEST,'');
   edWriteFilename.InitialDir := ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_WRITE_SRC,'');
+  edWriteDirDest.Directory := ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_WRITE_SRC,'');
   edConvFileSource.InitialDir := ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_CONVERT_SRC,'');
   edConvDirDest.Directory := ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST,'');
 
@@ -1376,6 +1381,11 @@ begin
  cbReadPreview.Text:='';
 end;
 
+procedure TFrmMain.btWriteDiskResetClick(Sender: TObject);
+begin
+  edWriteFilename.Text := '';
+end;
+
 procedure TFrmMain.btReadTplDelClick(Sender: TObject);
 var
   tmp : string;
@@ -1647,6 +1657,7 @@ begin
     WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_FLIPPY, cbWriteTplFlippy.Text);
     WriteIniBoolIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_FLIPPY_REV, cbWriteTplFlippyReverse.Enabled, cbWriteTplFlippyReverse.Checked);
     //WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT, cbWriteTplFormat.Text);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DIRECTORY, edWriteDirDest.Directory);
 
     // Remove legacy items
     IniWrite.DeleteKey(INI_SECTION_SETTINGS,INI_TEMPLATE_LEGACY_RPM); // older than 2.00
@@ -1717,11 +1728,12 @@ end;
 procedure TFrmMain.Refresh_Templates_Write;
 var
   iniFile, iniRefreshWrite: TiniFile;
-  TmplFolder: String;
+  initialDir, TmplFolder: String;
 begin
   //Read-Template
   iniFile := TiniFile.Create(sAppPath + GW_INI_FILE);
   TmplFolder := iniFile.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
+  initialDir := ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_WRITE_SRC,'');
   If TmplFolder = '' then exit;
   iniRefreshWrite := TINIFile.Create(DirCheck(TmplFolder) + cbWriteTplName.Text + GW_INI_WRITE_EXT);
   try
@@ -1752,6 +1764,9 @@ begin
     cbWriteTplHSwap.Checked:= ReadIniBool(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_HSWAP);
     cbWriteTplFlippy.Text:= ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_FLIPPY);
     cbWriteTplFlippyReverse.checked := ReadIniBool(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_FLIPPY_REV);
+
+    edWriteDirDest.Directory := ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DIRECTORY, initialDir);
+    edWriteFilename.InitialDir := edWriteDirDest.Directory;
 
     if cbWriteTplName.Text <> '' then
     begin
@@ -3181,8 +3196,6 @@ begin
 end;
 
 procedure TFrmMain.cbWriteTplNameSelect(Sender: TObject);
-var
-  enableButtons: boolean;
 begin
  checkUpdateWriteTemplateButtons;
 end;
@@ -3261,6 +3274,11 @@ begin
   CMD_Generate;
 end;
 
+procedure TFrmMain.edWriteDirDestChange(Sender: TObject);
+begin
+  CMD_Generate;
+end;
+
 procedure TFrmMain.edReadDisk1Change(Sender: TObject);
 begin
   Create_Filename;
@@ -3281,7 +3299,7 @@ begin
   Create_Filename;
 end;
 
-procedure TFrmMain.EdReadFilenameChange(Sender: TObject);
+procedure TFrmMain.edReadFilenameChange(Sender: TObject);
 begin
   Create_Filename;
 end;
@@ -4193,7 +4211,7 @@ begin
   end;
   Doc.Free;
 
-  EdWriteFileName.Filter := WriteFilterAll + '|' + WriteFilterList;
+  edWriteFileName.Filter := WriteFilterAll + '|' + WriteFilterList;
   edConvFileSource.Filter := ConvFilterAll + '|' + ConvFilterList;
 
 end;

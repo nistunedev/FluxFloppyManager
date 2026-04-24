@@ -28,7 +28,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, Grids,
-  ExtCtrls, LConvEncoding, UnTerminal, TermVT, CommonConsts;
+  ExtCtrls, LConvEncoding, UnTerminal, TermVT;
 
 type
   TOperationDisplayMode = (

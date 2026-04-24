@@ -298,10 +298,10 @@ object FrmMain: TFrmMain
       Height = 910
       Top = 1
       Width = 1497
-      ActivePage = tbRead
+      ActivePage = tbWrite
       Align = alClient
       BorderSpacing.Left = 5
-      TabIndex = 0
+      TabIndex = 1
       TabOrder = 0
       OnChange = pcActionsChange
       object tbRead: TTabSheet
@@ -439,7 +439,7 @@ object FrmMain: TFrmMain
             object pnReadAllArg: TPanel
               Left = 6
               Height = 220
-              Top = 35
+              Top = 41
               Width = 1469
               Align = alTop
               AutoSize = True
@@ -950,7 +950,7 @@ object FrmMain: TFrmMain
                 Caption = 'Filename:'
                 ParentColor = False
               end
-              object EdReadFilename: TEdit
+              object edReadFilename: TEdit
                 Left = 141
                 Height = 29
                 Top = 41
@@ -958,7 +958,7 @@ object FrmMain: TFrmMain
                 Anchors = [akTop, akLeft, akRight]
                 MaxLength = 200
                 TabOrder = 2
-                OnChange = EdReadFilenameChange
+                OnChange = edReadFilenameChange
               end
               object btReadDiskReset: TButton
                 Left = 1343
@@ -1193,15 +1193,15 @@ object FrmMain: TFrmMain
         ClientWidth = 1489
         object sbWrite: TScrollBox
           Left = 0
-          Height = 876
-          Top = 0
+          Height = 771
+          Top = 105
           Width = 1489
           HorzScrollBar.Page = 1112
-          VertScrollBar.Page = 440
+          VertScrollBar.Page = 405
           Align = alClient
           AutoSize = True
           BorderStyle = bsNone
-          ClientHeight = 876
+          ClientHeight = 771
           ClientWidth = 1489
           TabOrder = 0
           object Memo1: TMemo
@@ -1319,14 +1319,14 @@ object FrmMain: TFrmMain
           end
           object gbWriteArg: TGroupBox
             Left = 0
-            Height = 329
+            Height = 294
             Top = 111
             Width = 1485
             Align = alTop
             AutoSize = True
             BorderSpacing.Right = 4
             Caption = 'Arguments:'
-            ClientHeight = 303
+            ClientHeight = 268
             ClientWidth = 1481
             TabOrder = 1
             object pnWriteAllArg: TPanel
@@ -1340,7 +1340,7 @@ object FrmMain: TFrmMain
               BevelOuter = bvNone
               ClientHeight = 221
               ClientWidth = 1469
-              TabOrder = 1
+              TabOrder = 0
               object lblWriteTplPreErase: TLabel
                 Left = 0
                 Height = 21
@@ -1695,45 +1695,6 @@ object FrmMain: TFrmMain
                 OnClick = cbWriteTplFlippyReverseClick
               end
             end
-            object pnWriteSourceFile: TPanel
-              Left = 6
-              Height = 29
-              Top = 268
-              Width = 1469
-              Align = alTop
-              AutoSize = True
-              BorderSpacing.Around = 6
-              BevelOuter = bvNone
-              ClientHeight = 29
-              ClientWidth = 1469
-              TabOrder = 0
-              object lblWriteFile: TLabel
-                Left = 0
-                Height = 21
-                Top = 0
-                Width = 76
-                Caption = 'Source file:'
-                ParentColor = False
-              end
-              object edWriteFileName: TFileNameEdit
-                Left = 141
-                Height = 29
-                Hint = 'Select source file'
-                Top = 0
-                Width = 1330
-                OnAcceptFileName = edWriteFileNameAcceptFileName
-                FilterIndex = 0
-                HideDirectories = False
-                ButtonWidth = 50
-                NumGlyphs = 1
-                Anchors = [akTop, akLeft, akRight]
-                MaxLength = 0
-                ParentShowHint = False
-                ShowHint = True
-                TabOrder = 0
-                OnChange = edWriteFileNameChange
-              end
-            end
             object pnWriteFormSpec: TPanel
               Left = 6
               Height = 29
@@ -1745,7 +1706,7 @@ object FrmMain: TFrmMain
               BevelOuter = bvNone
               ClientHeight = 29
               ClientWidth = 1469
-              TabOrder = 2
+              TabOrder = 1
               object lblWriteTplFormat: TLabel
                 Left = 0
                 Height = 21
@@ -1781,6 +1742,91 @@ object FrmMain: TFrmMain
                 OnChange = cbWriteTplFormatChange
               end
             end
+          end
+        end
+        object gbWriteSource: TGroupBox
+          Left = 0
+          Height = 105
+          Top = 470
+          Width = 1485
+          Align = alTop
+          AutoSize = True
+          BorderSpacing.Right = 4
+          Caption = 'Source:'
+          ClientHeight = 79
+          ClientWidth = 1481
+          TabOrder = 1
+          object pnWriteSource: TPanel
+            Left = 6
+            Height = 80
+            Top = 268
+            Width = 1469
+            Align = alTop
+            AutoSize = True
+            BorderSpacing.Around = 6
+            BevelOuter = bvNone
+            ClientHeight = 80
+            ClientWidth = 1469
+            TabOrder = 0
+          end
+          object lblWriteDestDir: TLabel
+            Left = 0
+            Height = 21
+            Top = 10
+            Width = 67
+            Caption = 'Directory:'
+            ParentColor = False
+          end
+          object edWriteDirDest: TDirectoryEdit
+            Left = 144
+            Height = 29
+            Top = 2
+            Width = 1182
+            ShowHidden = False
+            ButtonWidth = 36
+            NumGlyphs = 1
+            Anchors = [akTop, akLeft, akRight]
+            MaxLength = 0
+            TabOrder = 3
+            OnChange = edWriteDirDestChange
+          end
+          object btWriteDiskReset: TButton
+            Left = 1352
+            Height = 31
+            Hint = 'Clear file settings'
+            Top = 0
+            Width = 118
+            Anchors = [akTop, akRight]
+            Caption = 'Clear'
+            Enabled = False
+            ParentShowHint = False
+            ShowHint = True
+            TabOrder = 1
+            OnClick = btWriteDiskResetClick
+          end
+          object edWriteFilename: TFileNameEdit
+            Left = 144
+            Height = 29
+            Top = 50
+            Width = 1238
+            OnAcceptFileName = edWriteFileNameAcceptFileName
+            FilterIndex = 0
+            HideDirectories = False
+            ButtonWidth = 23
+            NumGlyphs = 1
+            Anchors = [akTop, akLeft, akRight]
+            MaxLength = 200
+            ParentShowHint = False
+            TabOrder = 2
+            OnChange = edWriteFilenameChange
+          end
+          object lblWriteDestFile: TLabel
+            Left = 1
+            Height = 21
+            Top = 50
+            Width = 66
+            Caption = 'Filename:'
+            ParentColor = False
           end
         end
       end
@@ -1883,7 +1929,7 @@ object FrmMain: TFrmMain
             object pnConvAllArg: TPanel
               Left = 6
               Height = 260
-              Top = 35
+              Top = 41
               Width = 1469
               Align = alTop
               AutoSize = True
