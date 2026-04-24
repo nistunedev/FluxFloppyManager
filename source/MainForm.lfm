@@ -1193,15 +1193,15 @@ object FrmMain: TFrmMain
         ClientWidth = 1489
         object sbWrite: TScrollBox
           Left = 0
-          Height = 771
-          Top = 105
+          Height = 876
+          Top = 0
           Width = 1489
           HorzScrollBar.Page = 1112
           VertScrollBar.Page = 405
           Align = alClient
           AutoSize = True
           BorderStyle = bsNone
-          ClientHeight = 771
+          ClientHeight = 876
           ClientWidth = 1489
           TabOrder = 0
           object Memo1: TMemo
@@ -1743,90 +1743,90 @@ object FrmMain: TFrmMain
               end
             end
           end
-        end
-        object gbWriteSource: TGroupBox
-          Left = 0
-          Height = 105
-          Top = 470
-          Width = 1485
-          Align = alTop
-          AutoSize = True
-          BorderSpacing.Right = 4
-          Caption = 'Source:'
-          ClientHeight = 79
-          ClientWidth = 1481
-          TabOrder = 1
-          object pnWriteSource: TPanel
-            Left = 6
-            Height = 80
-            Top = 268
-            Width = 1469
+          object gbWriteSource: TGroupBox
+            Left = 0
+            Height = 105
+            Top = 405
+            Width = 1485
             Align = alTop
             AutoSize = True
-            BorderSpacing.Around = 6
-            BevelOuter = bvNone
-            ClientHeight = 80
-            ClientWidth = 1469
-            TabOrder = 0
-          end
-          object lblWriteDestDir: TLabel
-            Left = 0
-            Height = 21
-            Top = 10
-            Width = 67
-            Caption = 'Directory:'
-            ParentColor = False
-          end
-          object edWriteDirDest: TDirectoryEdit
-            Left = 144
-            Height = 29
-            Top = 2
-            Width = 1182
-            ShowHidden = False
-            ButtonWidth = 36
-            NumGlyphs = 1
-            Anchors = [akTop, akLeft, akRight]
-            MaxLength = 0
+            BorderSpacing.Right = 4
+            Caption = 'Source:'
+            ClientHeight = 79
+            ClientWidth = 1481
             TabOrder = 3
-            OnChange = edWriteDirDestChange
-          end
-          object btWriteDiskReset: TButton
-            Left = 1352
-            Height = 31
-            Hint = 'Clear file settings'
-            Top = 0
-            Width = 118
-            Anchors = [akTop, akRight]
-            Caption = 'Clear'
-            Enabled = False
-            ParentShowHint = False
-            ShowHint = True
-            TabOrder = 1
-            OnClick = btWriteDiskResetClick
-          end
-          object edWriteFilename: TFileNameEdit
-            Left = 144
-            Height = 29
-            Top = 50
-            Width = 1238
-            OnAcceptFileName = edWriteFileNameAcceptFileName
-            FilterIndex = 0
-            HideDirectories = False
-            ButtonWidth = 23
-            NumGlyphs = 1
-            Anchors = [akTop, akLeft, akRight]
-            MaxLength = 200
-            ParentShowHint = False
-            TabOrder = 2
-            OnChange = edWriteFilenameChange
-          end
-          object lblWriteDestFile: TLabel
-            Left = 1
-            Height = 21
-            Top = 50
-            Width = 66
-            Caption = 'Filename:'
-            ParentColor = False
+            object pnWriteSource: TPanel
+              Left = 6
+              Height = 73
+              Top = 6
+              Width = 1469
+              Align = alTop
+              AutoSize = True
+              BorderSpacing.Around = 6
+              BevelOuter = bvNone
+              ClientHeight = 73
+              ClientWidth = 1469
+              TabOrder = 0
+              object lblWriteDestDir: TLabel
+                Left = 0
+                Height = 21
+                Top = 0
+                Width = 67
+                Caption = 'Directory:'
+                ParentColor = False
+              end
+              object edWriteDirDest: TDirectoryEdit
+                Left = 141
+                Height = 29
+                Top = 0
+                Width = 1185
+                ShowHidden = False
+                ButtonWidth = 36
+                NumGlyphs = 1
+                Anchors = [akTop, akLeft, akRight]
+                MaxLength = 0
+                TabOrder = 0
+                OnChange = edWriteDirDestChange
+              end
+              object btWriteDiskReset: TButton
+                Left = 1344
+                Height = 32
+                Hint = 'Clear file settings'
+                Top = 0
+                Width = 118
+                Anchors = [akTop, akRight]
+                Caption = 'Clear'
+                Enabled = False
+                ParentShowHint = False
+                ShowHint = True
+                TabOrder = 1
+                OnClick = btWriteDiskResetClick
+              end
+              object lblWriteDestFile: TLabel
+                Left = 0
+                Height = 21
+                Top = 44
+                Width = 66
+                Caption = 'Filename:'
+                ParentColor = False
+              end
+              object edWriteFilename: TFileNameEdit
+                Left = 141
+                Height = 29
+                Top = 44
+                Width = 1321
+                OnAcceptFileName = edWriteFileNameAcceptFileName
+                FilterIndex = 0
+                HideDirectories = False
+                ButtonWidth = 23
+                NumGlyphs = 1
+                Anchors = [akTop, akLeft, akRight]
+                MaxLength = 200
+                ParentShowHint = False
+                TabOrder = 2
+                OnChange = edWriteFilenameChange
+              end
+            end
           end
         end
       end
