@@ -1,5 +1,5 @@
 [FluxMyFluffyFloppy-Write-Template]
-Version=3.00
+Version=4.00
 Name=3.0 inch 180kb DoubleDensity SingleSided (40 tracks)
 Description=3.0 inch 180kb DoubleDensity SingleSided (40 tracks)
 
@@ -21,3 +21,11 @@ Steps=
 HSwap=0
 Flippy=
 FlippyReverse=0
+DelaySelect=10
+DelayStep=12000
+DelaySettle=30
+DelayMotor=750
+DelayAutoOff=10000
+DelayPreWrite=100
+DelayPostWrite=1000
+DelayIndexMask=200

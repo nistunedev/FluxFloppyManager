@@ -4,3 +4,11 @@ Name=3.0 inch 180kb DoubleDensity SingleSided (40 tracks) CPC
 
 [Settings]
 Diskdefs=Internal
+DelaySelect=10
+DelayStep=12000
+DelaySettle=30
+DelayMotor=750
+DelayAutoOff=10000
+DelayPreWrite=100
+DelayPostWrite=1000
+DelayIndexMask=200

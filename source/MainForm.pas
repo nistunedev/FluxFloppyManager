@@ -1512,6 +1512,14 @@ begin
       WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_ENC, cbReadFormatOptionHFEEnc.Text);
 
       WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_DIRECTORY, edReadDirDest.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_SELECT, cbSetDelaySelect.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_STEP, cbSetDelayStep.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_SETTLE, cbSetDelaySettle.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_MOTOR, cbSetDelayMotor.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_AUTOOFF, cbSetDelayAutoOff.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_PREWRITE, cbSetDelayPreWrite.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_POSTWRITE, cbSetDelayPostWrite.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_INDEXMASK, cbSetDelayIndexMask.Text);
       INIRead.DeleteKey(INI_SECTION_SETTINGS,INI_TEMPLATE_LEGACY_RPM); // older than 2.00
 
       INIRead.Free;
@@ -1658,6 +1666,14 @@ begin
     WriteIniBoolIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_FLIPPY_REV, cbWriteTplFlippyReverse.Enabled, cbWriteTplFlippyReverse.Checked);
     //WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT, cbWriteTplFormat.Text);
     WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DIRECTORY, edWriteDirDest.Directory);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_SELECT, cbSetDelaySelect.Text);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_STEP, cbSetDelayStep.Text);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_SETTLE, cbSetDelaySettle.Text);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_MOTOR, cbSetDelayMotor.Text);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_AUTOOFF, cbSetDelayAutoOff.Text);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_PREWRITE, cbSetDelayPreWrite.Text);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_POSTWRITE, cbSetDelayPostWrite.Text);
+    WriteIniStringIfNotEmpty(IniWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_INDEXMASK, cbSetDelayIndexMask.Text);
 
     // Remove legacy items
     IniWrite.DeleteKey(INI_SECTION_SETTINGS,INI_TEMPLATE_LEGACY_RPM); // older than 2.00
@@ -1767,6 +1783,14 @@ begin
 
     edWriteDirDest.Directory := ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DIRECTORY, initialDir);
     edWriteFilename.InitialDir := edWriteDirDest.Directory;
+    cbSetDelaySelect.Text := ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_SELECT, cbSetDelaySelect.Text);
+    cbSetDelayStep.Text := ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_STEP, cbSetDelayStep.Text);
+    cbSetDelaySettle.Text := ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_SETTLE, cbSetDelaySettle.Text);
+    cbSetDelayMotor.Text := ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_MOTOR, cbSetDelayMotor.Text);
+    cbSetDelayAutoOff.Text := ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_AUTOOFF, cbSetDelayAutoOff.Text);
+    cbSetDelayPreWrite.Text := ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_PREWRITE, cbSetDelayPreWrite.Text);
+    cbSetDelayPostWrite.Text := ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_POSTWRITE, cbSetDelayPostWrite.Text);
+    cbSetDelayIndexMask.Text := ReadIniString(iniRefreshWrite, INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_INDEXMASK, cbSetDelayIndexMask.Text);
 
     if cbWriteTplName.Text <> '' then
     begin
@@ -1866,6 +1890,14 @@ begin
     cbReadFormatOptionHFEInt.Text  := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_INT, '');
     cbReadFormatOptionHFEEnc.Text  := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_ENC, '');
     edReadDirDest.Text            := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DIRECTORY, '');
+    cbSetDelaySelect.Text         := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_SELECT, cbSetDelaySelect.Text);
+    cbSetDelayStep.Text           := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_STEP, cbSetDelayStep.Text);
+    cbSetDelaySettle.Text         := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_SETTLE, cbSetDelaySettle.Text);
+    cbSetDelayMotor.Text          := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_MOTOR, cbSetDelayMotor.Text);
+    cbSetDelayAutoOff.Text        := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_AUTOOFF, cbSetDelayAutoOff.Text);
+    cbSetDelayPreWrite.Text       := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_PREWRITE, cbSetDelayPreWrite.Text);
+    cbSetDelayPostWrite.Text      := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_POSTWRITE, cbSetDelayPostWrite.Text);
+    cbSetDelayIndexMask.Text      := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_INDEXMASK, cbSetDelayIndexMask.Text);
 
     if cbReadTplName.Text <> '' then
     begin

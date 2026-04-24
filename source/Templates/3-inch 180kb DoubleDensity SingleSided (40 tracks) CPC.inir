@@ -1,5 +1,5 @@
 [FluxMyFluffyFloppy-Read-Template]
-Version=v4.00
+Version=4.00
 Name=3-inch 180kb DoubleDensity SingleSided (40 tracks) CPC
 Description=3-inch 320x2kb "DoubleDensity" "SingleSided" "40 tracks" "96 tpi" CPC
 
@@ -23,3 +23,11 @@ Log_Param=0
 Log_Output=0
 Log_InOneFile=0
 Format=DSK (DSK)
+DelaySelect=10
+DelayStep=12000
+DelaySettle=30
+DelayMotor=750
+DelayAutoOff=10000
+DelayPreWrite=100
+DelayPostWrite=1000
+DelayIndexMask=200

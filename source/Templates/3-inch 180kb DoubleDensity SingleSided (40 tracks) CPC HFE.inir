@@ -15,3 +15,11 @@ FormatOption=::bitrate=250
 FormatOptionHFEVer=::version=3
 FormatOptionHFEInt=::interface=CPC_DD
 FormatOptionHFEEnc=::encoding=ISOIBM_MFM
+DelaySelect=10
+DelayStep=12000
+DelaySettle=30
+DelayMotor=750
+DelayAutoOff=10000
+DelayPreWrite=100
+DelayPostWrite=1000
+DelayIndexMask=200
