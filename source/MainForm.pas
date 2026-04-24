@@ -676,6 +676,7 @@ end;
 
 procedure WriteIniStringIfNotEmpty(ThisFile: TIniFile; const Section, Key, Value: string);
 begin
+  ThisFile.DeleteKey(Section, Key);
   if Value <> '' then
     WriteIniString(ThisFile,Section, Key, Value);
 end;
