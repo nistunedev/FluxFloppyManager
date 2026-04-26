@@ -129,6 +129,8 @@ const
   // Additions V4.0
   INI_TEMPLATE_FORMAT = 'Format';
   INI_TEMPLATE_FORMAT_OPTION = 'FormatOption';
+  INI_TEMPLATE_CONV_FORMAT = 'ConvFormatOption';
+
   INI_TEMPLATE_FORMAT_OPTION_HFE_VER = 'FormatOptionHFEVer';
   INI_TEMPLATE_FORMAT_OPTION_HFE_INT = 'FormatOptionHFEInt';
   INI_TEMPLATE_FORMAT_OPTION_HFE_ENC = 'FormatOptionHFEEnc';
@@ -150,6 +152,14 @@ const
   HFE_OPTION_VERSION = 'version';
   HFE_OPTION_INTERFACE = 'interface';
   HFE_OPTION_ENCODING = 'encoding';
+
+  XML_OPTION_SAVE = 'save';
+  XML_OPTION_CONVERT = 'convert';
+  XML_OPTION_HFE_CONVERT = 'hfeconvert';
+  HFE_CONV_MODULE_ID = 'moduleid';
+  HFE_CONV_EXT = 'ext';
+  HFE_CONV_DESC = 'desc';
+  HFE_CONV_DISKTYPE = 'disktype';
 
 //  COMBO_SELECTION_SCP = 'SCP (SuperCardPro)';
 //  COMBO_SELECTION_HFE = 'HFE (HxC Floppy Emulator)';

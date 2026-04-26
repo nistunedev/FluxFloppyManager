@@ -298,10 +298,10 @@ object FrmMain: TFrmMain
       Height = 910
       Top = 1
       Width = 1497
-      ActivePage = tbWrite
+      ActivePage = tbRead
       Align = alClient
       BorderSpacing.Left = 5
-      TabIndex = 1
+      TabIndex = 0
       TabOrder = 0
       OnChange = pcActionsChange
       object tbRead: TTabSheet
@@ -314,7 +314,7 @@ object FrmMain: TFrmMain
           Height = 876
           Top = 0
           Width = 1489
-          HorzScrollBar.Page = 1144
+          HorzScrollBar.Page = 1238
           VertScrollBar.Page = 711
           Align = alClient
           BorderStyle = bsNone
@@ -1042,6 +1042,16 @@ object FrmMain: TFrmMain
                 Enabled = False
                 TabOrder = 8
               end
+              object cbReadNoOverwrite: TCheckBox
+                Left = 1080
+                Height = 25
+                Top = 80
+                Width = 138
+                Caption = 'Do not overwrite'
+                Enabled = False
+                TabOrder = 9
+                OnClick = cbReadNoOverwriteClick
+              end
               object lblReadDestFormatExt: TLabel
                 Left = 0
                 Height = 21
@@ -1054,21 +1064,29 @@ object FrmMain: TFrmMain
                 Left = 141
                 Height = 29
                 Top = 120
-                Width = 356
+                Width = 288
                 Enabled = False
                 ItemHeight = 21
-                TabOrder = 9
+                TabOrder = 10
                 OnChange = cbReadFormatChange
               end
-              object cbReadNoOverwrite: TCheckBox
-                Left = 784
-                Height = 25
+              object lblReadDestConvFormat: TLabel
+                Left = 516
+                Height = 21
                 Top = 120
-                Width = 138
-                Caption = 'Do not overwrite'
+                Width = 93
+                Caption = 'Conv Format:'
+                ParentColor = False
+              end
+              object cbReadConvFormat: TComboBox
+                Left = 695
+                Height = 29
+                Top = 120
+                Width = 300
                 Enabled = False
-                TabOrder = 10
-                OnClick = cbReadNoOverwriteClick
+                ItemHeight = 21
+                TabOrder = 11
+                OnChange = cbReadConvFormatChange
               end
               object lblReadDestFormatExtOpt: TLabel
                 Left = 18
@@ -1085,7 +1103,7 @@ object FrmMain: TFrmMain
                 Width = 288
                 Enabled = False
                 ItemHeight = 21
-                TabOrder = 11
+                TabOrder = 12
                 OnChange = cbReadFormatOptionChange
               end
               object lblReadDestFormatExtOpt1: TLabel
@@ -1109,7 +1127,7 @@ object FrmMain: TFrmMain
                 ItemHeight = 21
                 ParentShowHint = False
                 ShowHint = True
-                TabOrder = 12
+                TabOrder = 13
                 OnChange = cbReadFormatOptionChange
               end
               object lblReadDestFormatExtOpt3: TLabel
@@ -1137,7 +1155,7 @@ object FrmMain: TFrmMain
                 )
                 ParentShowHint = False
                 ShowHint = True
-                TabOrder = 13
+                TabOrder = 14
                 OnChange = cbReadFormatOptionChange
               end
               object lblReadDestFormatExtOpt2: TLabel
@@ -1161,7 +1179,7 @@ object FrmMain: TFrmMain
                 ItemHeight = 21
                 ParentShowHint = False
                 ShowHint = True
-                TabOrder = 14
+                TabOrder = 15
                 OnChange = cbReadFormatOptionChange
               end
               object lblReadDestPreview: TLabel
@@ -1179,7 +1197,7 @@ object FrmMain: TFrmMain
                 Width = 1366
                 Anchors = [akTop, akLeft, akRight]
                 Enabled = False
-                TabOrder = 15
+                TabOrder = 16
                 OnChange = cbReadPreviewChange
               end
             end
@@ -1197,7 +1215,7 @@ object FrmMain: TFrmMain
           Top = 0
           Width = 1489
           HorzScrollBar.Page = 1112
-          VertScrollBar.Page = 405
+          VertScrollBar.Page = 516
           Align = alClient
           AutoSize = True
           BorderStyle = bsNone
@@ -1745,14 +1763,14 @@ object FrmMain: TFrmMain
           end
           object gbWriteSource: TGroupBox
             Left = 0
-            Height = 105
+            Height = 111
             Top = 405
             Width = 1485
             Align = alTop
             AutoSize = True
             BorderSpacing.Right = 4
             Caption = 'Source:'
-            ClientHeight = 79
+            ClientHeight = 85
             ClientWidth = 1481
             TabOrder = 3
             object pnWriteSource: TPanel

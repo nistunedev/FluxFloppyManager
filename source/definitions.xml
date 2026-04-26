@@ -162,7 +162,7 @@
         <format ext="DMK" desc="TRS80 Tandy Dragon MSX" save="true" convert="true"/>
         <format ext="DO" desc="Apple II" save="true" convert="true"/>
         <format ext="DSD" desc="Acorn" save="true" convert="true"/>
-        <format ext="DSK" desc="DSK" save="true" convert="true"/>
+        <format ext="DSK" desc="DSK" save="true" convert="true" hfeconvert="true"/>
         <format ext="EDSK" desc="EDSK, use: format=ibm.scan" save="true" convert="true"/>
         <format ext="FD" desc="FD" save="true" convert="true"/>
         <format ext="FDI" desc="FDI" save="true" convert="true"/>
@@ -235,7 +235,7 @@
         <format ext="RAW" desc="KryoFlux" save="true" convert="true"/>
         <format ext="SF7" desc="SEGA" save="true" convert="true"/>
         <format ext="SCP" desc="SuperCardPro" save="true" convert="true">
-          <option name="DiskType">
+          <option name="disktype">
             <value>amiga</value>
             <value>amigahd</value>
             <value>c64</value>
@@ -277,4 +277,136 @@
         <format ext="TD0" desc="Teledisk" save="true" convert="true"/>
         <format ext="XDF" desc="XDF" save="true" convert="true"/>
     </formats>
+    <hxcformats>
+        <format moduleid="KRYOFLUXSTREAM" ext="raw" desc="KryoFlux Stream Loader" disktype=""/>
+        <format moduleid="AMIGA_DMS" ext="dms" desc="AMIGA DMS Loader" disktype=""/>
+        <format moduleid="AMIGA_ADZ" ext="adz" desc="AMIGA ADZ Loader" disktype=""/>
+        <format moduleid="AMIGA_EXTADF" ext="adf" desc="AMIGA EXTENDED ADF Loader" disktype=""/>
+        <format moduleid="AMIGA_OLDEXTADF" ext="adf" desc="AMIGA OLD EXTENDED ADF Loader" disktype=""/>
+        <format moduleid="ZXSPECTRUM_FDI" ext="fdi" desc="ZX SPECTRUM FDI Loader" disktype=""/>
+        <format moduleid="NEC_FDI" ext="fdi" desc="NEC FDI Loader" disktype=""/>
+        <format moduleid="AMIGA_ADF" ext="adf" desc="AMIGA ADF Loader" disktype="amiga"/>
+        <format moduleid="BBC_ADL" ext="adl" desc="BBC ADL floppy image loader" disktype=""/>
+        <format moduleid="ACORN_ADF" ext="adf" desc="ACORN ADF Loader" disktype=""/>
+        <format moduleid="AMSTRADCPC_DSK" ext="dsk" desc="Amstrad CPC DSK Loader" disktype="amstrad-cpc"/>
+        <format moduleid="ATARIST_DIM" ext="dim" desc="ATARI ST DIM Loader" disktype=""/>
+        <format moduleid="ATARIST_STX" ext="stx" desc="Atari ST STX/Pasti Loader" disktype=""/>
+        <format moduleid="ATARIST_STT" ext="stt" desc="ATARI ST STT Loader" disktype=""/>
+        <format moduleid="COPYQM" ext="dsk" desc="COPYQM IMG Loader" disktype=""/>
+        <format moduleid="TELEDISK_TD0" ext="td0" desc="TELEDISK TD0 Loader" disktype=""/>
+        <format moduleid="ATARIST_MSA" ext="msa" desc="ATARI ST MSA Loader" disktype=""/>
+        <format moduleid="ATARIST_STW" ext="stw" desc="STW Loader" disktype=""/>
+        <format moduleid="RAW_IMZ" ext="imz" desc="IBM PC IMZ Loader" disktype=""/>
+        <format moduleid="HXCMFM_IMG" ext="mfm" desc="HXC MFM IMG Loader" disktype=""/>
+        <format moduleid="ORIC_DSK" ext="dsk" desc="ORIC DSK Loader" disktype=""/>
+        <format moduleid="ATARIST_ST" ext="st" desc="ATARI ST ST Loader" disktype="atarist-ds,atarist-ss"/>
+        <format moduleid="ROLAND_W30" ext="w30" desc="Roland W30 file Loader" disktype=""/>
+        <format moduleid="SPS_IPF" ext="ipf" desc="SPS IPF Loader" disktype=""/>
+        <format moduleid="TI994A_V9T9" ext="v9t9" desc="TI99 4A V9T9 Loader" disktype="ti-99/4a"/>
+        <format moduleid="AMIGA_FS" ext="amigados" desc="AMIGA FS Loader" disktype=""/>
+        <format moduleid="PROPHET2000" ext="img" desc="PROPHET 2000 Loader" disktype=""/>
+        <format moduleid="RAW_IMG" ext="img" desc="IBM PC IMG Loader" disktype=""/>
+        <format moduleid="FLP_IMG" ext="flp" desc="FLP PC Magazine image Loader" disktype=""/>
+        <format moduleid="MSX_DSK" ext="dsk" desc="MSX DSK Loader" disktype=""/>
+        <format moduleid="FAT12FLOPPY" ext="fat" desc="FAT12/MS DOS Loader" disktype=""/>
+        <format moduleid="HXC_HFE" ext="hfe" desc="SD Card HxCFE HFE file Loader" disktype=""/>
+        <format moduleid="HXC_HFEV3" ext="hfe" desc="SD Card HxCFE HFE V3 file Loader" disktype=""/>
+        <format moduleid="HXC_EXTHFE" ext="hfe" desc="SD Card HxCFE EXTENDED HFE file Loader" disktype=""/>
+        <format moduleid="HXC_HDDD_A2_HFE" ext="hfe" desc="SD Card HxCFE HFE file Loader (HDDD A2 Support)" disktype=""/>
+        <format moduleid="HXC_STREAMHFE" ext="hfe" desc="Stream HFE file Loader" disktype=""/>
+        <format moduleid="VTR_IMG" ext="vtr" desc="VTR IMG Loader" disktype=""/>
+        <format moduleid="IMD_IMG" ext="imd" desc="ImageDisk IMD file Loader" disktype=""/>
+        <format moduleid="SDU_IMG" ext="sdu" desc="SAB Diskette Utility Loader" disktype=""/>
+        <format moduleid="HXC_AFI" ext="afi" desc="HxC AFI file loader" disktype=""/>
+        <format moduleid="C64_D64" ext="d64" desc="C64 D64 file image loader" disktype="c64"/>
+        <format moduleid="C64_D81" ext="d81" desc="C64 D81 Loader" disktype=""/>
+        <format moduleid="ZXSPECTRUM_TRD" ext="trd" desc="Zx Spectrum TRD Loader" disktype=""/>
+        <format moduleid="ZXSPECTRUM_SCL" ext="scl" desc="ZX SPECTRUM SCL Loader" disktype=""/>
+        <format moduleid="THOMSONTO8D_SAP" ext="sap" desc="THOMSON TO8D SAP Loader" disktype=""/>
+        <format moduleid="TRS80_JV1" ext="jv1" desc="TRS80 JV1 Loader" disktype=""/>
+        <format moduleid="TRS80_JV3" ext="jv3" desc="TRS80 JV3 Loader" disktype=""/>
+        <format moduleid="TRS80_JVC" ext="jvc" desc="TRS80 JVC Loader" disktype=""/>
+        <format moduleid="SVD" ext="svd" desc="SVD Loader" disktype=""/>
+        <format moduleid="NEC_D88" ext="d88" desc="NEC D88 Loader" disktype=""/>
+        <format moduleid="X68000_HDM" ext="hdm" desc="X68000 HDM file Loader" disktype=""/>
+        <format moduleid="RAW_LOADER" ext="img" desc="RAW Sector loader" disktype=""/>
+        <format moduleid="SNES_SMC" ext="smc" desc="Super famicom SMC / Game Doctor Loader" disktype=""/>
+        <format moduleid="VEGAS6809" ext="veg" desc="VEGAS6809 image Loader" disktype=""/>
+        <format moduleid="TRS80_DMK" ext="dmk" desc="TRS80 DMK Loader" disktype=""/>
+        <format moduleid="TI994A_PC99" ext="pc99" desc="TI99 4A PC99 Loader" disktype=""/>
+        <format moduleid="APRIDISK" ext="dsk" desc="APRIDISK Loader" disktype=""/>
+        <format moduleid="ENSONIQ_EDE" ext="ede" desc="ENSONIQ EDE Loader" disktype=""/>
+        <format moduleid="ENSONIQ_GKH" ext="gkh" desc="ENSONIQ GKH Loader" disktype=""/>
+        <format moduleid="THOMSON_FD" ext="fd" desc="THOMSON FD Loader" disktype=""/>
+        <format moduleid="CASIO_FZF" ext="fzf" desc="Casio FZF file Loader" disktype=""/>
+        <format moduleid="DRAGON3264_VDK" ext="vdk" desc="DRAGON32 &amp; 64 VDK Loader" disktype=""/>
+        <format moduleid="OBERHEIM_DPX" ext="dpx" desc="Oberheim DPX Loader" disktype=""/>
+        <format moduleid="ENSONIQ_EDM" ext="edm" desc="Ensoniq mirage EDM Loader" disktype=""/>
+        <format moduleid="EMAX_EM" ext="em1" desc="EMAX EM1 &amp; EM2 Loader" disktype=""/>
+        <format moduleid="SAMCOUPE_MGT" ext="mgt" desc="SAM COUPE MGT Loader" disktype=""/>
+        <format moduleid="SAMCOUPE_SAD" ext="sad" desc="SAM COUPE SAD Loader" disktype=""/>
+        <format moduleid="EMULATORII" ext="emuiifd" desc="E-mu Emulator II / SP1200 dsk Loader" disktype=""/>
+        <format moduleid="EMULATORII_EMUII" ext="eii" desc="E-mu Emulator II *.eii Loader" disktype=""/>
+        <format moduleid="EMULATORI" ext="emufd" desc="E-mu Emulator I dsk Loader" disktype=""/>
+        <format moduleid="CAMPUTERSLYNX" ext="ldf" desc="CAMPUTERSLYNX Loader" disktype=""/>
+        <format moduleid="BBC_SSD_DSD" ext="dsd" desc="BBC SSD &amp; DSD floppy image loader" disktype=""/>
+        <format moduleid="FEI" ext="fei" desc="FEI Loader" disktype=""/>
+        <format moduleid="SYSTEM_24" ext="s24" desc="System 24 loader" disktype=""/>
+        <format moduleid="SCP_FLUX_STREAM" ext="scp" desc="SCP Stream Loader" disktype=""/>
+        <format moduleid="DFI_FLUX_STREAM" ext="dfi" desc="DiscFerret DFI Stream Loader" disktype=""/>
+        <format moduleid="A2R_FLUX_STREAM" ext="a2r" desc="A2R Stream Loader" disktype=""/>
+        <format moduleid="APPLE2_NIB" ext="nib" desc="Apple II NIB Loader" disktype=""/>
+        <format moduleid="APPLE2_DO" ext="do" desc="Apple II DO Loader" disktype="appleii,appleiipro"/>
+        <format moduleid="SPECCYDOS_SDD" ext="sdd" desc="Speccy DOS SDD File Loader" disktype=""/>
+        <format moduleid="BMP_IMAGE" ext="bmp" desc="BMP floppy tracks layout image generator" disktype=""/>
+        <format moduleid="BMP_DISK_IMAGE" ext="bmp" desc="BMP floppy layout (disk) image generator" disktype=""/>
+        <format moduleid="ARBURG" ext="arburgfd" desc="ARBURG RAW Loader" disktype=""/>
+        <format moduleid="GENERIC_XML" ext="xml" desc="Generic XML file Loader" disktype=""/>
+        <format moduleid="ANA_IMG" ext="ana" desc="AnaDisk file Loader" disktype=""/>
+        <format moduleid="ATARI_ATR" ext="atr" desc="Atari ATR Loader" disktype="atari800-dd,atari800-ed,atari800-sd"/>
+        <format moduleid="NORTHSTAR" ext="nsi" desc="Northstar Loader" disktype=""/>
+        <format moduleid="HEATHKIT" ext="h8d" desc="Heathkit Loader" disktype=""/>
+        <format moduleid="HXC_QD" ext="qd" desc="HXC Quickdisk image Loader" disktype=""/>
+        <format moduleid="HXCSTREAM" ext="hxcstream" desc="HxC Stream Loader" disktype=""/>
+        <format moduleid="ABB_320KB" ext="xml" desc="ABB/Asea 3&quot;5 DD Floppy Disk (ABB IRB2000 S3 - Single sided)" disktype=""/>
+        <format moduleid="ABB_328KB" ext="xml" desc="ABB/Asea 3&quot;5 328KB DD Floppy Disk (ABB IRB)" disktype=""/>
+        <format moduleid="ABB_640KB" ext="xml" desc="ABB/Asea 3&quot;5 DD Floppy Disk" disktype=""/>
+        <format moduleid="ACORN_ADFS_160K" ext="xml" desc="Acorn ADFS 160K Floppy Disk" disktype=""/>
+        <format moduleid="ACORN_ADFM_320K" ext="xml" desc="Acorn ADFM 320K Floppy Disk" disktype=""/>
+        <format moduleid="ACORN_ADFL_640K" ext="xml" desc="Acorn ADFL 640K Floppy Disk" disktype=""/>
+        <format moduleid="AED 6200P Disk Layout" ext="xml" desc="AED 6200P Floppy Disk Storage System Disk Layout" disktype=""/>
+        <format moduleid="AKAIS950_HD_1600KB" ext="xml" desc="Akai S950 3&quot;5 HD Floppy Disk" disktype=""/>
+        <format moduleid="AKAIS950_DD_800KB" ext="xml" desc="Akai S900/S950 3&quot;5 DD Floppy Disk" disktype=""/>
+        <format moduleid="AKAIS3000_HD" ext="xml" desc="Akai S3000 3&quot;5 HD Floppy Disk" disktype=""/>
+        <format moduleid="AMSTRADCPC_DD" ext="xml" desc="Standard 3&quot; Amstrad CPC Floppy Disk" disktype=""/>
+        <format moduleid="GENERALMUSIC_GEM_S3_1600KB" ext="xml" desc="GeneralMusic Gem S3 HD Floppy Disk" disktype=""/>
+        <format moduleid="GENERALMUSIC_GEM_WX_EXPANDER" ext="xml" desc="GeneralMusic Gem WX Expander HD Floppy Disk" disktype=""/>
+        <format moduleid="GRAVOGRAPH_ISIS_640KB" ext="xml" desc="Gravograph ISIS 3&quot;5 DD Floppy Disk" disktype=""/>
+        <format moduleid="KORGDSS1_DD_800KB" ext="xml" desc="KORG DSS1 3&quot;5 DD Floppy Disk" disktype=""/>
+        <format moduleid="KORGT3_HD_1M6" ext="xml" desc="KORG T3 3&quot;5 HD Floppy Disk" disktype=""/>
+        <format moduleid="LIF_3_50_264KB" ext="xml" desc="Logical Interchange Format (LIF) 3&quot;1/2 264KB (single side)" disktype=""/>
+        <format moduleid="LIF_3_50_616KB" ext="xml" desc="Logical Interchange Format (LIF) 3&quot;1/2 616KB (double side)" disktype=""/>
+        <format moduleid="LIF_3_5O_1232KB" ext="xml" desc="Logical Interchange Format (LIF) 3&quot;1/2 1232KB (HD)" disktype=""/>
+        <format moduleid="LIF_5_25_264KB" ext="xml" desc="Logical Interchange Format (LIF) 5&quot;1/4 264KB" disktype=""/>
+        <format moduleid="LINNFORAT9K_720KB" ext="xml" desc="Linn/Forat 9000 Floppy Disk" disktype=""/>
+        <format moduleid="MEMOTECH_80T" ext="xml" desc="Memotech Floppy Disk (80 tracks)" disktype=""/>
+        <format moduleid="MEMOTECH_40T" ext="xml" desc="Memotech Floppy Disk (40 tracks)" disktype=""/>
+        <format moduleid="Microtan 65 TANDOS Floppy Disk" ext="xml" desc="Microtan 65 TANDOS Floppy Disk" disktype=""/>
+        <format moduleid="BALZERS_250KB" ext="xml" desc="Oerlikon Balzers 250KB SD Disks" disktype=""/>
+        <format moduleid="OPUS_DISCOVERY" ext="xml" desc="Spectrum Opus Discovery" disktype=""/>
+        <format moduleid="OS9_640KB" ext="xml" desc="OS9 640KB Floppy Disk" disktype=""/>
+        <format moduleid="OS9_1280KB" ext="xml" desc="OS9 1280KB Floppy Disk" disktype=""/>
+        <format moduleid="ORIC_JASMIN_357KB" ext="xml" desc="Oric Jasmin 357K Floppy Disk" disktype=""/>
+        <format moduleid="PUMA_ROBOT_DD_640KB" ext="xml" desc="PUMA Robot arm 560C DD 640KB Floppy Disk" disktype=""/>
+        <format moduleid="QD_TRIUMPH_ADLER" ext="xml" desc="Olivetti TOP 100 / Triumph-Adler typewriter Quickdisk raw image" disktype=""/>
+        <format moduleid="ROLAND_DD_W30_S330_W50_S50_S550" ext="xml" desc="Roland W30/S330/JW-50/W50/S50/S550 DD Floppy Disk" disktype=""/>
+        <format moduleid="SORD_M68_HD_998KB" ext="xml" desc="SORD M68 HD 998KB Floppy Disk" disktype=""/>
+        <format moduleid="TATUNG_EINSTEIN_DD_200KB" ext="xml" desc="Tatung Einstein DD 200KB Floppy Disk" disktype=""/>
+        <format moduleid="TATUNG_EINSTEIN_DD_400KB" ext="xml" desc="Tatung Einstein DD 400KB Floppy Disk" disktype=""/>
+        <format moduleid="TIMEX_FDD3000_80T2S" ext="xml" desc="Timex FDD3000 Floppy Disk (80 Tracks, 2 Sides)" disktype=""/>
+        <format moduleid="TIMEX_FDD3000_40T1S" ext="xml" desc="Timex FDD3000 Floppy Disk (40 Tracks, 1 Side)" disktype=""/>
+        <format moduleid="TRS80_JV1_XML" ext="xml" desc="Standard 3&quot; Amstrad CPC Floppy Disk" disktype=""/>
+        <format moduleid="UKNC MFM 800KB Disk Layout" ext="xml" desc="UKNC MFM 800KB Disk Layout" disktype=""/>
+        <format moduleid="Unitel Videotex Floppy Disk" ext="xml" desc="Unitel Videotex Floppy Disk" disktype=""/>
+    </hxcformats>
 </root>

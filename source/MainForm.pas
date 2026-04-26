@@ -90,6 +90,7 @@ type
     cbGWDevCOM: TComboBox;
     cbGWDrive: TComboBox;
     cbGWHW: TComboBox;
+    cbReadConvFormat: TComboBox;
     cbReadFormat: TComboBox;
     cbReadFormatOption: TComboBox;
     cbReadFormatOptionHFEEnc: TComboBox;
@@ -241,6 +242,7 @@ type
     lblReadDestDiskNr: TLabel;
     lblReadDestFile: TLabel;
     lblWriteDestFile: TLabel;
+    lblReadDestConvFormat: TLabel;
     lblReadDestFormatExt: TLabel;
     lblReadDestFormatExtOpt: TLabel;
     lblReadDestFormatExtOpt1: TLabel;
@@ -361,6 +363,7 @@ type
     procedure btConvClearClick(Sender: TObject);
     procedure btConvExplorerClick(Sender: TObject);
     procedure btGoClick(Sender: TObject);
+    procedure btGoHXCClick(Sender: TObject);
     procedure btGWBandwidthClick(Sender: TObject);
     procedure btGWCMDDirClick(Sender: TObject);
     procedure btGWInfoClick(Sender: TObject);
@@ -445,6 +448,7 @@ type
     procedure cbGWDriveChange(Sender: TObject);
     procedure cbReadNoOverwriteClick(Sender: TObject);
     procedure cbReadPreviewChange(Sender: TObject);
+    procedure cbReadConvFormatChange(Sender: TObject);
     procedure cbReadTplAdjustSpeedChange(Sender: TObject);
     procedure cbReadTplCylsChange(Sender: TObject);
     procedure cbReadTplFakeIndexChange(Sender: TObject);
@@ -547,9 +551,29 @@ type
     procedure LoadXML(const FileName: string);
 //    procedure LoadOption(OptionNode: TDOMNode; var Opt: TFormatOption);
     procedure performModalCmdAction(const command: string);
+    function getHfeFormatOptions: String;
+    function getScpFormatOptions(): String;
+    function BuildReadBaseFilename: String;
+    function BuildReadTargetFilename(const BaseName, FormatText: string): String;
     function GetReadFormatSelection : String;
     function GetConvFormatSelection : String;
+    function UseReadHXCConversion: Boolean;
+    procedure setOptionsRead(optenabled: boolean);
+    procedure setOptionsConvert(optenabled: boolean);
+    function GetHFXModule: String;
     procedure UpdateReadFormatSelection;
+    procedure Conv_CMD_Generate;
+    procedure GW_CMD_Generate;
+    function GW_CMD_Read_Generate: string;
+    function GW_CMD_Write_Generate: string;
+    function GW_CMD_Convert_Generate: string;
+    function GW_CMD_Tools_Erase_Generate: string;
+    function GW_CMD_Tools_Seek_Generate: string;
+    function GW_CMD_Tools_Clean_Generate: string;
+    function GW_CMD_Settings_Delays_Generate: string;
+    function GW_CMD_Settings_Pin_Generate: string;
+    function GW_CMD_Settings_Firmware_Generate: string;
+    function LogParameters: string;
 
     procedure performCmdAction(const cmd: string;
                                const param: string;
@@ -576,6 +600,13 @@ type
     Value: array of string;
   end;
 
+  THXCFormatModule = record
+    ModuleId: string;
+    Ext: string;
+    Desc: string;
+    DiskType: string; // Comma separated list
+  end;
+
   THfeFormatEntry = record
     BitRate: TFormatOption;
     Version: TFormatOption;
@@ -589,13 +620,14 @@ var
   FormatSpecs_Read, FormatSpecs_ReadDiskDefs: TStringList;
   FormatSpecs_Write, FormatSpecs_WriteDiskDefs: TStringList;
   FormatSpecs_Conv, FormatSpecs_ConvDiskDefs: TStringList;
-  FormatDest_Ext : TStringList;
+  FormatDest_Ext, FormstDestConv_Ext : TStringList;
   sAppName, sAppPath, sAppVersion, sAppDate, AboutGW, sAppVersion_ReadTmpl, sAppVersion_WriteTmpl : String;
   dd : String; // Diskdefs.cfg
   aLine : String; // GreaseWeazle (frmGW)
 
   SCPFormatOptions: TFormatOption;
   HFEFormatOptions: THfeFormatEntry;
+  HXCFormatModules: array of THXCFormatModule;
 
 implementation
 uses
@@ -936,6 +968,7 @@ begin
 
   cbReadTplFormat.items.Text := FormatSpecs_Read.Text;
   cbReadFormat.Items.Text := FormatDest_Ext.Text;        // bspw. .msa
+  cbReadConvFormat.Items.Text := FormstDestConv_Ext.Text;
   cbWriteTplFormat.items.Text := FormatSpecs_Write.Text;
   cbConvFormat.items.Text := FormatSpecs_Conv.Text;
   cbConvFileFormat.Items.Text := FormatDest_Ext.Text;    // bspw. .msa
@@ -1017,6 +1050,99 @@ begin
   end;
 end;
 
+
+function ConfirmAbort(const Msg: string; Ctrl: TWinControl): Boolean;
+begin
+  Result := MessageDlg(Msg, mtWarning, [mbCancel], 0) = mrCancel;
+
+  if Result then
+    Ctrl.SetFocus;
+end;
+
+function ConfirmAbort(const Msg: string): Boolean;
+begin
+  Result := MessageDlg(Msg, mtWarning, [mbCancel], 0) = mrCancel;
+end;
+
+function ConfirmYesNoAbort(const Msg: string; Ctrl: TWinControl): Integer;
+begin
+  Result := MessageDlg(Msg, mtWarning, [mbYes, mbCancel], 0);
+
+  if Result = mrCancel then
+    Ctrl.SetFocus;
+end;
+
+
+procedure TFrmMain.btGoHXCClick(Sender: TObject);
+var
+  hxcFile, hxcInputFile: String;
+begin
+  if UseReadHXCConversion then
+  begin
+     hxcFile := ReadIniString(INI, FLUX_INI_NAME, HXC_APP_NAME, '');
+     if hxcFile = '' then
+     begin
+       ConfirmAbort('Please define location of HxC Floppy Image Converter!');
+       exit;
+     end;
+
+     if FileExists(hxcFile) = false then
+       if ConfirmAbort('HxC Floppy Image Converter not found!') then
+         exit;
+
+     hxcInputFile := DirCheck(edReadDirDest.Text) +
+       BuildReadTargetFilename(BuildReadBaseFilename, cbReadFormat.Text);
+
+     if FileExists(hxcInputFile) = false then
+       if ConfirmAbort('HxC input file not found!' + chr(10) + hxcInputFile) then
+         exit;
+
+     ShowOperationsDialog(EdGWCMD.Lines.Text, 'HxC Floppy Image Converter - Convert', OPERATIONS_OTHER);
+     exit;
+   end;
+
+end;
+
+
+function TFrmMain.LogParameters: string;
+var
+ LogDir, LogFilename : String;
+begin
+  with TStringList.Create do
+   try
+    LogDir := DirCheck(edReadDirDest.Text);
+    LogFilename := ExtractFileName_WithoutExt(cbReadPreview.Text) + '.txt';
+
+    Add('Filename: ' + cbReadPreview.Text);
+    Add(lblReadTplFormat.Caption + ' Source: ' + cbReadTplFormatSrc.Text);
+    Add(lblReadTplFormat.Caption + ' Selected: ' + cbReadTplFormat.Text);
+    Add(lblReadTplRevs.Caption + ' ' + cbReadTplRevs.Text);
+    if cbReadTplRaw.Checked = True then
+      Add(lblReadTplRaw.Caption + ' Yes');
+    if cbReadTplRaw.Checked = False then
+      Add(lblReadTplRaw.Caption + ' No');
+    Add(lblReadTplFakeIndex.Caption + ' ' + cbReadTplFakeIndex.Text);
+    Add(cbReadTplAdjustSpeed.Caption + ' ' + cbReadTplAdjustSpeed.Text);
+    Add(lblReadTplRetries.Caption + ' ' + cbReadTplRetries.Text);
+    Add(lblReadTplSeekRetries.Caption + ' ' + cbReadTplSeekRetries.Text);
+    Add(lblReadTplCyls.Caption + ' ' + cbReadTplCyls.Text);
+    Add(lblReadTplHeads.Caption + ' ' + cbReadTplHeads.Text);
+    Add(lblReadTplSteps.Caption + ' ' + cbReadTplSteps.Text);
+    if cbReadTplHSwap.Checked = True
+      then Add(lblReadTplHSwap.Caption + ' Yes');
+    if cbReadTplHSwap.Checked = False then
+      Add(lblReadTplHSwap.Caption + ' No');
+    Add(lblReadTplFlippy.Caption + ' ' + cbReadTplFlippy.Text);
+    Add(lblReadTplPLL.Caption + ' ' + cbReadTplPLL.Text);
+    Add(' ');
+    SaveToFile(LogDir + LogFilename);
+    Result := LogDir + LogFilename;
+   finally
+    Free;
+   end;
+end;
+
+
 // btGoClick()
 
 // This procedure does preliminary checks and brings up the GW modal window
@@ -1030,11 +1156,10 @@ end;
 
 procedure TFrmMain.btGoClick(Sender: TObject);
 var
-    LogDir, LogFilename : String;
     answer : integer;
+    logDirFile : string = '';
 begin
-   LogDir := '';
-   LogFilename := '';
+
    if edGWFile.Text = '' then
     begin
       answer := MessageDlg('Please define location of Greaseweazle (' + GW_APP + ')!',mtWarning, [mbOK], 0);
@@ -1045,7 +1170,7 @@ begin
        end;
     end;
 
-   if Fileexists(edGWFile.Text) = false then
+   if (Fileexists(edGWFile.Text) = false) then
     begin
      answer := MessageDlg(GW_APP_NAME + ' (' + GW_APP + ') not found!',mtWarning, [mbCancel], 0);
      if answer = mrCancel then
@@ -1056,155 +1181,78 @@ begin
     end;
 
    // Read  ######################################################################
-   if pcActions.ActivePageIndex = GW_PROP_PAGE_READ then
+   case pcActions.ActivePageIndex of
+    GW_PROP_PAGE_READ:
      begin
        if edReadDirDest.Text = '' then
+         if ConfirmAbort('Destination directory not defined!') then exit;
+
+       if Directoryexists(Dircheck(edReadDirDest.Text)) = false then
         begin
-         answer := MessageDlg('Destination directory not defined!',mtWarning, [mbCancel], 0);
-         if answer = mrCancel then
-          begin
-           edReadDirDest.SetFocus;
-           exit;
-          end;
-        end;
-       if edReadDirDest.Text <> '' then
-        begin
-         if Directoryexists(Dircheck(edReadDirDest.Text)) = false then
-          begin
-           answer := MessageDlg('Destination directory not found! Create directory?',mtWarning, [mbYes,mbCancel], 0);
-           if answer = mrCancel then
-             begin
-              edReadDirDest.SetFocus;
-              exit;
-             end;
-           if answer = mrYes then
-             begin
+          answer := ConfirmYesNoAbort('Destination directory not found! Create directory?',edReadDirDest);
+           if answer = mrCancel then exit
+           else if answer = mrYes then
              Forcedirectories(dircheck(edReadDirDest.Text));
-             end;
-          end;
         end;
+
        if edReadFilename.Text = '' then
-        begin
-         answer := MessageDlg('Destination filename is not defined!',mtWarning, [mbCancel], 0);
-          if answer = mrCancel then
-            begin
-             edReadFilename.SetFocus;
-             exit;
-            end;
-        end;
-
-    if cbReadFormat.Text = '' then
-      begin
-        answer := MessageDlg('Destination format setting is missing!',mtWarning, [mbCancel], 0);
-        if answer = mrCancel then
-          begin
-           cbReadFormat.SetFocus;
+         if ConfirmAbort('Destination filename is not defined!',edReadFilename) then
            exit;
-          end;
-      end;
 
-   // RAW or not -format
-   if (cbReadFormat.Text = 'IMA (Disk Image)') or (cbReadFormat.Text = 'IMG (Disk Image)') then
-    begin
-     if cbReadTplFormat.Text = '' then
-      begin
-      answer := MessageDlg('Sector image requires a disk format to be specified!',mtWarning, [mbCancel], 0);
-      if answer = mrCancel then
-       begin
-        cbReadTplFormat.SetFocus;
-        exit;
-       end;
-      end;
-    end;
+       if cbReadFormat.Text = '' then
+         if ConfirmAbort('Destination format setting is missing!',cbReadFormat) then
+           exit;
 
-   // HFE bitrate
-   if (cbReadFormat.Text = 'HFE (HxC Floppy Emulator)') then
-    begin
-     if cbReadFormatoption.Text = '' then
-      begin
-      answer := MessageDlg('HFE: Requires bitrate to be specified (eg. filename.hfe::bitrate=500)',mtWarning, [mbCancel], 0);
-      if answer = mrCancel then
-       begin
-        cbReadFormatoption.SetFocus;
-        exit;
-       end;
-      end;
-    end;
+       // RAW or not -format
+       if (cbReadFormat.Text = 'IMA (Disk Image)') or (cbReadFormat.Text = 'IMG (Disk Image)') then
+         if cbReadTplFormat.Text = '' then
+          if ConfirmAbort('Sector image requires a disk format to be specified!',cbReadTplFormat) then
+            exit;
 
-   if FileExists(DirCheck(edReadDirDest.Text) + cbReadPreview.Text) then
-     begin
-       answer := MessageDlg('Destination file is already existing! Overwrite?',mtConfirmation, [mbYes,mbCancel], 0);
-       if answer = mrCancel then exit;
-     end;
+       // HFE bitrate
+       if (UseReadHXCConversion = false) and (cbReadFormat.Text = 'HFE (HxC Floppy Emulator)') then
+         if cbReadFormatoption.Text = '' then
+          if ConfirmAbort('HFE: Requires bitrate to be specified (eg. filename.hfe::bitrate=500)',cbReadFormatoption) then
+            exit;
 
-   //Log parameter
-   LogDir := DirCheck(edReadDirDest.Text);
-   LogFilename := ExtractFileName_WithoutExt(cbReadPreview.Text) + '.txt';
-   if cbReadTplLogParam.Checked = true then
-     begin
-     with TStringList.Create do
-      try
-       Add('Filename: ' + cbReadPreview.Text);
-       Add(lblReadTplFormat.Caption + ' Source: ' + cbReadTplFormatSrc.Text);
-       Add(lblReadTplFormat.Caption + ' Selected: ' + cbReadTplFormat.Text);
-       Add(lblReadTplRevs.Caption + ' ' + cbReadTplRevs.Text);
-       if cbReadTplRaw.Checked = True then
-         Add(lblReadTplRaw.Caption + ' Yes');
-       if cbReadTplRaw.Checked = False then
-         Add(lblReadTplRaw.Caption + ' No');
-       Add(lblReadTplFakeIndex.Caption + ' ' + cbReadTplFakeIndex.Text);
-       Add(cbReadTplAdjustSpeed.Caption + ' ' + cbReadTplAdjustSpeed.Text);
-       Add(lblReadTplRetries.Caption + ' ' + cbReadTplRetries.Text);
-       Add(lblReadTplSeekRetries.Caption + ' ' + cbReadTplSeekRetries.Text);
-       Add(lblReadTplCyls.Caption + ' ' + cbReadTplCyls.Text);
-       Add(lblReadTplHeads.Caption + ' ' + cbReadTplHeads.Text);
-       Add(lblReadTplSteps.Caption + ' ' + cbReadTplSteps.Text);
-       if cbReadTplHSwap.Checked = True
-         then Add(lblReadTplHSwap.Caption + ' Yes');
-       if cbReadTplHSwap.Checked = False then
-         Add(lblReadTplHSwap.Caption + ' No');
-       Add(lblReadTplFlippy.Caption + ' ' + cbReadTplFlippy.Text);
-       Add(lblReadTplPLL.Caption + ' ' + cbReadTplPLL.Text);
-       Add(' ');
-       SaveToFile(LogDir + LogFilename);
-      finally
-       Free;
-      end;
-     end;
+       // Existing file
+       if FileExists(DirCheck(edReadDirDest.Text) + cbReadPreview.Text) then
+           if ConfirmYesNoAbort('Destination file is already existing! Overwrite?', edReadDirDest) = mrCancel then
+             exit;
 
-     if cbReadTplLogOutput.Checked = false then
-      begin
-       ShowOperationsDialog(EdGWCMD.Lines.Text, GW_APP_NAME + ' - Read', OPERATIONS_READ);
-      end;
+       //Log parameter
+       if cbReadTplLogParam.Checked = true then
+         logDirFile := LogParameters;
 
-     // Output with Log
-     if cbReadTplLogOutput.Checked = true then
-       begin
-        if cbReadTplLogBoth.Checked = false then
+       if cbReadTplLogOutput.Checked = false then
+         ShowOperationsDialog(EdGWCMD.Lines.Text, GW_APP_NAME + ' - Read', OPERATIONS_READ);
+
+       // Output with Log
+       if cbReadTplLogOutput.Checked = true then
          begin
-          ShowOperationsDialog(EdGWCMD.Lines.Text + ' 2> "' + LogDir +
-            LogFileName + '_output.txt"', GW_APP_NAME + ' - Read', OPERATIONS_READ);
+          if cbReadTplLogBoth.Checked = false then
+           begin
+            ShowOperationsDialog(EdGWCMD.Lines.Text + ' 2> "' + logDirFile + '_output.txt"', GW_APP_NAME + ' - Read', OPERATIONS_READ);
+           end;
+          if cbReadTplLogBoth.Checked = true then
+           begin
+            ShowOperationsDialog(EdGWCMD.Lines.Text + ' 2>> "' + logDirFile + '"', GW_APP_NAME + ' - Read', OPERATIONS_READ);
+           end;
          end;
-        if cbReadTplLogBoth.Checked = true then
-         begin
-          ShowOperationsDialog(EdGWCMD.Lines.Text + ' 2>> "' + LogDir + LogFilename + '"',
-            GW_APP_NAME + ' - Read', OPERATIONS_READ);
-         end;
-       end;
 
-    If cbReadIncremental.Checked = true then
-     begin
-      if edReadDisk1.Value < edReadDisk2.Value then
-       begin
-        edReadDisk1.Value := edReadDisk1.Value +1;
-        btGO.SetFocus;
-       end;
-     end;
-  end;
-  // read end
+        If cbReadIncremental.Checked = true then
+         begin
+          if edReadDisk1.Value < edReadDisk2.Value then
+           begin
+            edReadDisk1.Value := edReadDisk1.Value +1;
+            btGO.SetFocus;
+           end;
+         end;
+     end; // GW_PROP_PAGE_READ
+    // read end
 
   // Write  ######################################################################
-   if pcActions.ActivePageIndex = GW_PROP_PAGE_WRITE then
+  GW_PROP_PAGE_WRITE:
      begin
       if edWriteFilename.Text = '' then
        begin
@@ -1218,10 +1266,10 @@ begin
        end;
       ShowOperationsDialog(EdGWCMD.Lines.Text, GW_APP_NAME + ' - Write',
         OPERATIONS_WRITE);
-     end;
+     end; // GW_PROP_PAGE_WRITE
 
    // Convert ####################################################################
-   if pcActions.ActivePageIndex = GW_PROP_PAGE_CONVERT then
+   GW_PROP_PAGE_CONVERT:
     begin
      if edConvFileSource.Text = '' then
       begin
@@ -1262,16 +1310,17 @@ begin
     end;
 
    //Tools ####################################################################
-   if pcActions.ActivePage.PageIndex = GW_PROP_PAGE_TOOLS then
+   GW_PROP_PAGE_TOOLS:
      begin
       ShowOperationsDialog(EdGWCMD.Lines.Text, GW_APP_NAME + ' - ' + btGo.Caption, OPERATIONS_OTHER);
      end;
 
    //Settings ####################################################################
-   if pcActions.ActivePage.PageIndex = GW_PROP_PAGE_SETTINGS then
+   GW_PROP_PAGE_SETTINGS:
      begin
       ShowOperationsDialog(EdGWCMD.Lines.Text, GW_APP_NAME + ' - ' + btGo.Caption, OPERATIONS_OTHER);
      end;
+ end;
 end;
 
 procedure TFrmMain.btConvExplorerClick(Sender: TObject);
@@ -1373,6 +1422,7 @@ begin
  edReadDigits.Value := 1;
  cbReadIncremental.Checked := false;
  cbReadNoOverwrite.Checked := false;
+ cbReadConvFormat.Text := '';
  cbReadFormatOption.Text := '';
  cbReadFormat.Text := '';
  cbReadFormatOption.Text := '';
@@ -1508,6 +1558,7 @@ begin
       WriteIniBoolIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_LOG_ONEFILE, cbReadTplLogBoth.Enabled, cbReadTplLogBoth.Checked);
 
       WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT, cbReadFormat.Text);
+      WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_CONV_FORMAT, cbReadConvFormat.Text);
       WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_OPTION, cbReadFormatOption.Text);
       WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_VER, cbReadFormatOptionHFEVer.Text);
       WriteIniStringIfNotEmpty(INIRead, INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_INT, cbReadFormatOptionHFEInt.Text);
@@ -1846,14 +1897,15 @@ end;
 procedure TFrmMain.Refresh_Templates_Read;
 var
   iniRefreshRead, iniFile: TiniFile;
-  tmplFolder: String;
+  initialDir, tmplFolder: String;
 begin
   //Read-Template
   iniFile := TiniFile.Create(sAppPath + GW_INI_FILE);
   tmplFolder := iniFile.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
   If tmplFolder = '' then exit;
-
+  initialDir := iniFile.ReadString(FLUX_INI_NAME, INI_FOLDER_READ_DEST,'');
   iniRefreshRead := TINIFile.Create(DirCheck(tmplFolder) + cbReadTplName.Text + GW_INI_READ_EXT);
+
   try
     // Read template section
     edReadTplDesc.Text := iniRefreshRead.ReadString(INI_SECTION_READ_TEMPLATE, INI_TEMPLATE_DESC, '');
@@ -1887,11 +1939,12 @@ begin
 
     // Update the combo boxes after format is determined
     UpdateReadFormatSelection;
+    cbReadConvFormat.Text    := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_CONV_FORMAT, '');
     cbReadFormatOption.Text        := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_OPTION, '');
     cbReadFormatOptionHFEVer.Text  := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_VER, '');
     cbReadFormatOptionHFEInt.Text  := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_INT, '');
     cbReadFormatOptionHFEEnc.Text  := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_FORMAT_OPTION_HFE_ENC, '');
-    edReadDirDest.Text            := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DIRECTORY, '');
+    edReadDirDest.Text            := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DIRECTORY, initialDir);
     cbSetDelaySelect.Text         := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_SELECT, cbSetDelaySelect.Text);
     cbSetDelayStep.Text           := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_STEP, cbSetDelayStep.Text);
     cbSetDelaySettle.Text         := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_SETTLE, cbSetDelaySettle.Text);
@@ -3340,6 +3393,51 @@ end;
 procedure TFrmMain.cbReadFormatOptionChange(Sender: TObject);
 begin
   Create_Filename;
+  CMD_Generate;
+end;
+
+function ExtractOptionValue(const OptionText: string): string;
+var
+  p: Integer;
+begin
+  p := Pos('=', OptionText);
+  if p > 0 then
+    Result := Copy(OptionText, p + 1, MaxInt)
+  else
+    Result := '';
+end;
+
+function GetHXCModuleForDiskType(const DiskType: string): string;
+var
+  i, j: Integer;
+  parts: TStringArray;
+begin
+  Result := '';
+  for i := 0 to High(HXCFormatModules) do
+  begin
+    // Extract various disk types from CSV string
+    parts := HXCFormatModules[i].DiskType.Split([',']);
+    for j := 0 to High(parts) do
+      if SameText(Trim(parts[j]), DiskType) then
+        exit(HXCFormatModules[i].ModuleId);
+  end;
+end;
+
+function GetHXCModuleForExtension(const Ext: string): string;
+var
+  i: Integer;
+begin
+  Result := '';
+  for i := 0 to High(HXCFormatModules) do
+  begin
+    if SameText(HXCFormatModules[i].Ext, Ext) then
+      exit(HXCFormatModules[i].ModuleId);
+  end;
+end;
+
+procedure TFrmMain.cbReadConvFormatChange(Sender: TObject);
+begin
+  Create_Filename;
 end;
 
 procedure TFrmMain.edReadFilenameChange(Sender: TObject);
@@ -3362,6 +3460,7 @@ begin
 
   // Disable all options by default
   cbReadFormatOption.Enabled := false;
+  cbReadConvFormat.Enabled := false;
   cbReadFormatOptionHFEInt.Enabled := false;
   cbReadFormatOptionHFEVer.Enabled := false;
   cbReadFormatOptionHFEEnc.Enabled := false;
@@ -3373,6 +3472,7 @@ begin
    cbReadFormatOption.ItemIndex := -1;
    cbReadFormatOption.Enabled:= hasReadFilename;
    cbReadFormatOption.Items.Add('');
+   cbReadConvFormat.Enabled := hasReadFilename;
 
    // DiskType
    for index := 0 to High(SCPFormatOptions.Value) do
@@ -3388,8 +3488,10 @@ begin
   begin
    cbReadFormatOption.Items.Clear;
    cbReadFormatOption.ItemIndex := -1;
-    cbReadFormatOption.Enabled:= hasReadFilename;
+   cbReadFormatOption.Enabled:= hasReadFilename;
    cbReadFormatOption.Items.Add('');
+   cbReadConvFormat.Enabled := hasReadFilename;
+
    // BitRate
    for index := 0 to High(HFEFormatOptions.BitRate.Value) do
    begin
@@ -3513,126 +3615,166 @@ begin
   Result := trim(leftStr(cbReadFormat.Text,3));
 end;
 
+function TFrmMain.UseReadHXCConversion: Boolean;
+begin
+  Result := (pcActions.ActivePageIndex = GW_PROP_PAGE_READ) and
+    (GetReadFormatSelection = COMBO_SELECTION_HFE) and
+    (cbReadFormat.Text <> '') and
+    (cbReadConvFormat.Text <> '');
+end;
+
+// Return the module for the currently selected disk type (if any)
+function TFrmMain.GetHFXModule: String;
+begin
+  Result := GetHXCModuleForDiskType(cbReadFormatOption.Text);
+end;
+
+function TFrmMain.BuildReadBaseFilename: String;
+var
+  filenameRead, lblOf: string;
+begin
+  filenameRead := edReadFilename.Text;
+  lblOf := edReadDiskOf.Text;
+
+  if edReadDisk1.Value > 0 then
+    filenameRead := edReadFilename.Text + Format('%.*d', [edReadDigits.Value, edReadDisk1.Value]);
+
+  if edReadDisk2.Value > 0 then
+    filenameRead := filenameRead + lblOf + Format('%.*d', [edReadDigits.Value, edReadDisk2.Value]);
+
+  Result := filenameRead;
+end;
+
+function TFrmMain.BuildReadTargetFilename(const BaseName, FormatText: string): string;
+var
+  formatCode: string;
+begin
+  formatCode := Trim(LeftStr(FormatText, 3));
+
+  case formatCode of
+    COMBO_SELECTION_EDS:
+      Result := BaseName + '.' + LowerCase(Trim(LeftStr(FormatText, 4)));
+    COMBO_SELECTION_HFE:
+      Result := BaseName + '.' + LowerCase(COMBO_SELECTION_HFE) + getHfeFormatOptions();
+    COMBO_SELECTION_SCP:
+      Result := BaseName + '00.0.' + LowerCase(COMBO_SELECTION_SCP) + getScpFormatOptions();
+    COMBO_SELECTION_RAW:
+      Result := BaseName + '00.0.' + LowerCase(COMBO_SELECTION_RAW);
+  else
+    if FormatText <> '' then
+      Result := BaseName + '.' + LowerCase(formatCode)
+    else
+      Result := BaseName;
+  end;
+end;
+
+function TFrmMain.getScpFormatOptions(): String;
+begin
+  Result :=
+    cbReadFormatOption.Text;
+end;
+
+function TFrmMain.getHfeFormatOptions(): String;
+begin
+  Result :=
+    cbReadFormatOption.Text +
+    cbReadFormatOptionHFEVer.Text +
+    cbReadFormatOptionHFEInt.Text +
+    cbReadFormatOptionHFEEnc.Text;
+end;
+
+
 function TFrmMain.GetConvFormatSelection(): String;
 begin
   Result := trim(leftStr(cbConvFileFormat.Text,3));
 end;
 
+procedure TFrmMain.setOptionsRead(optenabled: boolean);
+begin
+ btReadDiskReset.Enabled:=optenabled;
+ edReadDisk1.Enabled:=optenabled;
+ edReadDiskOf.Enabled:=optenabled;
+ edReadDisk2.Enabled:=optenabled;
+ edReadDigits.Enabled:=optenabled;
+ cbReadIncremental.Enabled:=optenabled;
+ cbReadNoOverwrite.Enabled := optenabled;
+ cbReadFormat.Enabled:=optenabled;
+ btGo.Default:=optenabled;
+ cbReadPreview.Text:='';
+end;
+
+procedure TFrmMain.setOptionsConvert(optenabled: boolean);
+begin
+ cbConvDisk1.Enabled:=optenabled;
+ edConvDiskOf.Enabled:=optenabled;
+ cbConvDisk2.Enabled:=optenabled;
+ cbConvDigits.Enabled:=optenabled;
+ cbConvIncrement.Enabled:=optenabled;
+ cbConvNoOverwrite.Enabled := optenabled;
+ btConvClear.Enabled:=optenabled;
+ cbConvFileFormat.Enabled:=optenabled;
+end;
+
 procedure TFrmMain.Create_Filename;
 var
-  filenameRead, lBlOf, filenameConvert: string;
+  filenameRead, lblOf, filenameConvert: string;
   disc1, disc2, digits : integer;
 begin
 
   // Read
-  if pcActions.ActivePageIndex = GW_PROP_PAGE_READ then
+  case pcActions.ActivePageIndex of
+   GW_PROP_PAGE_READ:
    begin
      if edReadFilename.Text = '' then
-     begin
-      btReadDiskReset.Enabled:=false;
-      edReadDisk1.Enabled:=false;
-      edReadDiskOf.Enabled:=false;
-      edReadDisk2.Enabled:=false;
-      edReadDigits.Enabled:=false;
-      cbReadIncremental.Enabled:=false;
-      cbReadNoOverwrite.Enabled := false;
-      cbReadFormat.Enabled:=false;
-      cbReadFormatOption.Enabled :=false;
-      cbReadFormatOptionHFEVer.Enabled :=false;
-      cbReadFormatOptionHFEInt.Enabled :=false;
-      cbReadFormatOptionHFEEnc.Enabled :=false;
-      cbReadPreview.Text:='';
-      btGo.Default := false;
-      exit;
-     end;
-     if edReadFilename.Text <> '' then
-     begin
-      btReadDiskReset.Enabled:=true;
-      edReadDisk1.Enabled:=true;
-      edReadDiskOf.Enabled:=true;
-      edReadDisk2.Enabled:=true;
-      edReadDigits.Enabled:=true;
-      cbReadIncremental.Enabled:=true;
-      cbReadNoOverwrite.Enabled:=true;
-      cbReadFormat.Enabled:=true;
-      cbReadPreview.Text:='';
-      btGo.Default := true;
-     end;
+      begin
+       setOptionsRead(false);
+       exit;
+      end;
 
-     filenameRead := edReadFilename.Text;
+     setOptionsRead(true);
+     filenameRead := BuildReadBaseFilename;
      disc1 := StrToInt(edReadDisk1.Text); // disc LHS
      disc2 := StrToInt(edReadDisk2.Text); // of disc RHS
      digits := StrToInt(edReadDigits.Text);
      lblOf := edReadDiskOf.Text;
 
+     // read file extension - FMFF 4.0
+     cbReadConvFormat.Enabled:=false;
+     cbReadFormatOption.Enabled :=false;
+     cbReadFormatOptionHFEVer.Enabled :=false;
+     cbReadFormatOptionHFEInt.Enabled :=false;
+     cbReadFormatOptionHFEEnc.Enabled :=false;
 
-     if disc1 > 0 then
-       filenameRead := edConvFilename.Text + Format('%.*d', [digits, disc1]);
-
-     if disc2 > 0 then
-       filenameRead := filenameRead + lblOf + Format('%.*d', [digits, disc2]);
-
-  // read file extension - FMFF 4.0
-   cbReadFormatOptionHFEVer.Enabled :=false;
-   cbReadFormatOptionHFEInt.Enabled :=false;
-   cbReadFormatOptionHFEEnc.Enabled :=false;
-   case GetReadFormatSelection of
-    COMBO_SELECTION_EDS: //EDSK
-      begin
-       cbReadPreview.Text := filenameRead + '.' + lowercase(trim(leftStr(cbReadFormat.Text,4)));
-      end;
-    COMBO_SELECTION_HFE:
-      begin
-       cbReadFormatOption.Enabled := true;
-       cbReadFormatOptionHFEVer.Enabled :=true;
-       cbReadFormatOptionHFEInt.Enabled :=true;
-       cbReadFormatOptionHFEEnc.Enabled :=true;
-       cbReadPreview.Text := filenameRead + '.' + lowercase(GetReadFormatSelection) + cbReadFormatoption.Text + cbReadFormatoptionHFEVer.Text + cbReadFormatoptionHFEInt.Text + cbReadFormatoptionHFEEnc.Text;
-      end;
-    COMBO_SELECTION_SCP:
-      begin
-        cbReadFormatOption.Enabled := true;
-        cbReadPreview.Text := filenameRead + '.' + lowercase(GetReadFormatSelection) + cbReadFormatoption.Text;
-        cbReadPreview.Text := filenameRead + '00.0.' + lowercase(GetReadFormatSelection);
-      end
-    else
-     if cbReadFormat.Text <> '' then cbReadPreview.Text := filenameRead + '.' + lowercase(trim(leftStr(cbReadFormat.Text,3)));
-     if cbReadFormat.Text = '' then cbReadPreview.Text := filenameRead;
-   end;
- end;
+     case GetReadFormatSelection of
+       COMBO_SELECTION_HFE:
+         begin
+           cbReadFormatOption.Enabled := true;
+           cbReadConvFormat.Enabled:=true;
+           cbReadFormatOptionHFEVer.Enabled :=true;
+           cbReadFormatOptionHFEInt.Enabled :=true;
+           cbReadFormatOptionHFEEnc.Enabled :=true;
+           //cbReadPreview.Text := BuildReadTargetFilename(filenameRead, cbReadFormat.Text);
+         end;
+       COMBO_SELECTION_SCP:
+         begin
+           cbReadFormatOption.Enabled := true;
+           cbReadConvFormat.Enabled:=true;
+           //cbReadPreview.Text := BuildReadTargetFilename(filenameRead, cbReadFormat.Text);
+         end
+     end; // case
+   end; // GW_PROP_PAGE_READ
 
   // Convert ####################################################################
-    if pcActions.ActivePageIndex = GW_PROP_PAGE_CONVERT then
+  GW_PROP_PAGE_CONVERT:
      begin
        if edConvFilename.Text = '' then
-       begin
-        cbConvDisk1.Enabled:=false;
-        edConvDiskOf.Enabled:=false;
-        cbConvDisk2.Enabled:=false;
-        cbConvDigits.Enabled:=false;
-        cbConvIncrement.Enabled:=false;
-        cbConvNoOverwrite.Enabled := false;
-        btConvClear.Enabled:=false;
-        cbConvFileFormat.Enabled:=false;
-        cbConvFormatOption.Enabled:=false;
-        cbConvFormatOptionHFEVer.Enabled :=false;
-        cbConvFormatOptionHFEInt.Enabled :=false;
-        cbConvFormatOptionHFEEnc.Enabled :=false;
-        edConvFileNamePreview.Text:='';
-        exit;
-       end;
-      if edConvFilename.Text <> '' then
-       begin
-        cbConvDisk1.Enabled:=true;
-        edConvDiskOf.Enabled:=true;
-        cbConvDisk2.Enabled:=true;
-        cbConvDigits.Enabled:=true;
-        cbConvIncrement.Enabled:=true;
-        cbConvNoOverwrite.Enabled := true;
-        btConvClear.Enabled:=true;
-        cbConvFileFormat.Enabled:=true;
+        begin
+         setOptionsConvert(false);
+         edConvFileNamePreview.Text:='';
+         exit;
        end;
 
+       setOptionsConvert(true);
        filenameConvert := edConvFilename.Text;
        disc1 := cbConvDisk1.Value; // Disc LHS
        disc2 := cbConvDisk2.Value; // of Disc RHS
@@ -3673,38 +3815,100 @@ begin
        begin
         edConvFilenamePreview.Text := FilenameConvert + '00.0.' + lowercase(GetConvFormatSelection);
        end;
-     else
-       if cbConvFileFormat.Text <> '' then edConvFilenamePreview.Text := FilenameConvert + '.' + lowercase(trim(leftStr(cbConvFileFormat.Text,3)));
-       if cbConvFileFormat.Text = '' then edConvFilenamePreview.Text := FilenameConvert;
-    end;
-   end;
+//     else
+//       begin
+//        if cbConvFileFormat.Text <> '' then
+//          edConvFilenamePreview.Text := FilenameConvert + '.' + lowercase(trim(leftStr(cbConvFileFormat.Text,3)));
+//        else
+//          edConvFilenamePreview.Text := FilenameConvert;
+//       end;
 
+    end; // case ConfFormatSelection
+
+
+   end; // GW_PROP_PAGE_CONVERT
+ end; // case
 end;
+
+
+
 procedure TFrmMain.CMD_Generate;
+begin
+ edGWCMD.Lines.Clear;
+ btGo.Default:=false;
+
+ if UseReadHXCConversion and (GetHFXModule <> '') then
+   Conv_CMD_Generate
+ else
+   GW_CMD_Generate;
+end;
+
+procedure TFrmMain.Conv_CMD_Generate;
+var
+  param : String = '';
+  hxcModule : String = '';
+  success: boolean = false;
+  AppPath: String;
+begin
+
+   AppPath := Trim(ReadIniString(INI, FLUX_INI_NAME, HXC_APP_NAME, ''));
+
+   if AppPath = '' then
+       edGWCMD.SelText := 'No HxC Floppy Image Converter application defined!'
+   else if FileExists(AppPath) = false then
+       edGWCMD.SelText := 'HxC Floppy Image Converter application not found!'
+   else
+     success := true;
+
+   if ((GetReadFormatSelection = COMBO_SELECTION_SCP) or
+       (GetReadFormatSelection = COMBO_SELECTION_HFE)) and
+       (cbReadFormatOption.Text <> '') then
+       hxcModule := GetHXCModuleForDiskType(ExtractOptionValue(cbReadFormatOption.Text));
+
+   if not success then
+    begin
+      edGWCMD.SelStart := edGWCMD.GetTextLen;
+      edGWCMD.SelLength := 0;
+      exit;
+    end;
+
+   if UseReadHXCConversion and (hxcModule <> '') then
+    begin
+     btGo.Default:=true;
+//     edGWCMD.SelStart := edGWCMD.GetTextLen;
+//     edGWCMD.SelLength := 0;
+
+     param :=
+       ' -finput:"' + DirCheck(edReadDirDest.Text) + BuildReadBaseFilename + '"' +
+       ' -conv:' + GetHFXModule +
+       ' -foutput:"' + DirCheck(edReadDirDest.Text) + BuildReadBaseFilename + '"';
+
+     edGWCMD.SelText := edGWCMD.Text + ' -conv=' + hxcModule;
+     performCmdAction(AppPath, param, false, false);
+    end; // if
+end;
+
+procedure TFrmMain.GW_CMD_Generate;
 var
   cmd : String = '';
   param : String = '';
   specifyDevice : boolean = false;
   specifyDrive : boolean = false;
+  success: boolean = false;
 begin
- edGWCMD.Lines.Clear;
 
- if edGWFile.Text = '' then
+  if edGWFile.Text = '' then
+     edGWCMD.SelText := 'No Greaseweazle application defined!'
+  else if fileexists(edGWFile.Text) = false then
+      edGWCMD.SelText := 'Greaseweazle application not found!'
+  else
+    success := true;
+
+ if not success then
   begin
     edGWCMD.SelStart := edGWCMD.GetTextLen;
     edGWCMD.SelLength := 0;
-    edGWCMD.SelText := 'No Greaseweazle application defined!';
     exit;
-  end
- else
-  begin
-   if fileexists(edGWFile.Text) = false then
-    begin
-     edGWCMD.SelStart := edGWCMD.GetTextLen;
-     edGWCMD.SelLength := 0;
-     edGWCMD.SelText := 'Greaseweazle application not found!';
-     exit;
-    end;
   end;
 
  // Generate the cmdline parameters
@@ -3714,17 +3918,128 @@ begin
  if cbSetGlobalActionsTime.Checked = true then
    cmd := cmd + ' --time';
 
- // Read options
- if pCActions.ActivePageIndex = GW_PROP_PAGE_READ then
-  begin
-  cmd := 'read';
-  specifyDevice := true;
-  specifyDrive := true;
-  if cbReadTplFormatSrc.Text <> FORMAT_SPEC_INTERNAL then
-    param := param + ' --diskdefs "' + dd + '"';
+ case pCActions.ActivePageIndex of
 
-  if cbReadTplFormat.Text <> '' then
-    param := param + ' --format ' + cbReadTplFormat.Text;
+  // Read options
+  GW_PROP_PAGE_READ:
+    begin
+      specifyDevice := true;
+      specifyDrive := true;
+
+      if cbReadPreview.text <> '' then
+       begin
+        param := GW_CMD_Read_Generate + ' "' + Dircheck(edReadDirDest.Text) + cbReadPreview.text + '"';
+        cmd := cmd + 'read' + param;
+        btGo.Default:=true;
+       end
+    end; // GW_PROP_PAGE_READ
+
+  // Write options
+  GW_PROP_PAGE_WRITE:
+   begin
+     specifyDevice := true;
+     specifyDrive := true;
+
+     if edWriteFileName.Text <> '' then
+      begin
+       param := GW_CMD_Write_Generate + ' "' + edWriteFileName.Text + '"';
+       cmd := cmd + 'write';
+       btGo.Default:=true;
+      end;
+
+   end; // GW_PROP_PAGE_WRITE
+
+  // Convert options
+  GW_PROP_PAGE_CONVERT:
+   begin
+     cmd := 'convert';
+
+     if edConvFileName.text <> '' then
+     begin
+       if cbSrcAsDesDir.Checked then
+         edConvDirDest.Directory:= DirCheck(ExtractfileDir(edConvFileSource.Text));
+       param := param + ' "' + Dircheck(edConvDirDest.Text) + edConvFilenamePreview.text + '"';
+     end;
+   end; // GW_PROP_PAGE_CONVERT
+
+  // Tools options
+  GW_PROP_PAGE_TOOLS:
+   begin
+    specifyDevice := true;
+    specifyDrive := true;
+
+     // Erase
+     if rbToolsErase.Checked then
+     begin
+       btGo.Caption:='Erase';
+       cmd := 'erase';
+       param := GW_CMD_Tools_Erase_Generate;
+     end;
+
+     // Seek
+     if rbToolsSeek.Checked then
+     begin
+       btGo.Caption:='Seek';
+       cmd := 'seek';
+       param := GW_CMD_Tools_Seek_Generate;
+     end;
+
+     // Clean
+     if rbToolsClean.Checked then
+     begin
+       btGo.Caption:='Clean';
+       cmd := 'clean';
+       param := GW_CMD_Tools_Clean_Generate;
+     end;
+
+     // RPM
+     if rbToolsRPM.Checked then
+     begin
+       btGo.Caption:='RPM';
+       cmd := ' rpm';
+       param := param + ' --nr=' + cbToolsRPMNumbIter.Text;
+     end;
+   end; // GW_PROP_PAGE_TOOLS
+
+   // Settings
+   GW_PROP_PAGE_SETTINGS:
+    begin
+      specifyDevice := true;
+
+       if rbSetDelays.Checked = true then
+       begin
+         cmd := 'delays';
+         param := GW_CMD_Settings_Delays_Generate;
+       end;
+
+       if rbSetGetPIN.Checked = true then
+       begin
+         // cmd specified inside function
+         cmd := GW_CMD_Settings_Pin_Generate;
+      end;
+
+      if rbSetFirmware.Checked = true then
+      begin
+        cmd := 'update';
+        param := GW_CMD_Settings_Firmware_Generate;
+      end;
+    end; // GW_PROP_PAGE_SETTINGS
+  end; // case
+
+ // Execute GW with cmd, param and where applicable device/drive
+ performCmdAction(cmd, param, specifyDevice, specifyDrive);
+
+end; // GW_CMD_Generate
+
+function TFrmMain.GW_CMD_Read_Generate: string;
+var
+  param : String = '';
+begin
+   if cbReadTplFormatSrc.Text <> FORMAT_SPEC_INTERNAL then
+     param := param + ' --diskdefs "' + dd + '"';
+
+   if cbReadTplFormat.Text <> '' then
+     param := param + ' --format ' + cbReadTplFormat.Text;
 
   // Use all arguments ?
   If mnuArguments.Checked = true then
@@ -3741,7 +4056,7 @@ begin
       if cbReadTplFlippyReverse.Enabled then
        begin
         if cbReadTplFlippyReverse.Checked = true then
-          cmd := cmd + ' --reverse';
+          param := param + ' --reverse';
        end;
      end
     else
@@ -3775,16 +4090,14 @@ begin
       param := param + ' --densel ' + cbReadTplDD.Text;
    end;
 
-   if cbReadPreview.text <> '' then
-     param := param + ' "' + Dircheck(edReadDirDest.Text) + cbReadPreview.text + '"';
-  end;
+   Result := param;
+end;
 
-  // Write options
-  if pcActions.ActivePageIndex = GW_PROP_PAGE_WRITE then
-  begin
-    cmd := 'write';
-    specifyDevice := true;
-    specifyDrive := true;
+function TFrmMain.GW_CMD_Write_Generate: string;
+var
+  param : String = '';
+begin
+
     if cbWriteTplFormatSrc.Text <> FORMAT_SPEC_INTERNAL then
       param := param + ' --diskdefs "' + dd + '"';
 
@@ -3845,19 +4158,14 @@ begin
        if cbWriteTplTplTP43Pin2.Checked then
          param := param + ' --gen-tg43';
     end;
-    btGo.Default:=false;
-    if edWriteFileName.Text <> '' then
-     begin
-      param := param + ' "' + edWriteFileName.Text + '"';
-      btGo.Default:=true;
-     end;
-  end;
+   Result := param;
+end;
 
+function TFrmMain.GW_CMD_Convert_Generate: string;
+var
+  param : String = '';
+begin
 
-   // Convert options
-  if pcActions.ActivePageIndex = GW_PROP_PAGE_CONVERT then
-   begin
-     cmd := 'convert';
      if cbConvDiskdefs.Text <> FORMAT_SPEC_INTERNAL then
        param := param + ' --diskdefs "' + dd +'"';
 
@@ -3891,139 +4199,117 @@ begin
          param := param + ' "' + edConvFileSource.Text + '"';
      end;
 
-     if edConvFileName.text <> '' then
-     begin
-       if cbSrcAsDesDir.Checked then
-         edConvDirDest.Directory:= DirCheck(ExtractfileDir(edConvFileSource.Text));
-       param := param + ' "' + Dircheck(edConvDirDest.Text) + edConvFilenamePreview.text + '"';
-     end;
-   end;
-
-   // Tools options
-   if pcActions.ActivePageIndex = GW_PROP_PAGE_TOOLS then
-   begin
-     // Erase
-     if rbToolsErase.Checked then
-     begin
-       btGo.Caption:='Erase';
-       cmd := 'erase';
-       specifyDevice := true;
-       specifyDrive := true;
-       if cbToolsEraseRevs.Text <> '' then
-         param := param + ' --revs=' + cbToolsEraseRevs.Text;
-       if cbToolsEraseCyl.Text <> '' then
-         param := param + Trackset(' --tracks=',cbToolsEraseCyl.Text,cbToolsEraseHeads.Text,cbToolsEraseSteps.Text,cbToolsEraseHSwap.Checked,cbToolsEraseFlippy.Text);
-       if lblToolsEraseHFreq.Checked = true then
-         param := param + ' --hfreq';
-       if cbToolsEraseFakeIndex.Text <> '' then
-         param := param + ' --fake-index=' + cbToolsEraseFakeIndex.Text;
-     end;
-
-     // Seek
-     if rbToolsSeek.Checked then
-     begin
-       btGo.Caption:='Seek';
-       cmd := 'seek';
-       specifyDevice := true;
-       specifyDrive := true;
-       if cbToolsSeekTrackForce.Checked then
-         param := param + ' --force';
-       if cbToolsSeekMotorOn.Checked then
-         param := param + ' --motor-on';
-       param := param + ' ' + cbToolsSeekTrack.Text;
-     end;
-
-     // Clean
-     if rbToolsClean.Checked then
-     begin
-       btGo.Caption:='Clean';
-       cmd := 'clean';
-       specifyDevice := true;
-       specifyDrive := true;
-       param := param + ' --cyls=' + cbToolsCleanCyl.Text;
-       param := param + ' --linger=' + cbToolsCleanLinger.Text;
-       param := param + ' --passes=' + cbToolsCleanPasses.Text;
-     end;
-
-     // RPM
-     if rbToolsRPM.Checked then
-     begin
-       btGo.Caption:='RPM';
-       cmd := ' rpm';
-       specifyDevice := true;
-       specifyDrive := true;
-       param := param + ' --nr=' + cbToolsRPMNumbIter.Text;
-     end;
-   end;
-
-   // Settings
-   if pcActions.ActivePageIndex = GW_PROP_PAGE_SETTINGS then
-   begin
-     if rbSetDelays.Checked = true then
-     begin
-       cmd := 'delays';
-       specifyDevice := true;
-       if cbSetDelaySelect.Text <>'' then
-         param := param + ' --select ' + cbSetDelaySelect.Text;
-       if cbSetDelayStep.Text <>'' then
-         param := param + ' --step ' + cbSetDelayStep.Text;
-       if cbSetDelaySettle.Text <>'' then
-         param := param + ' --settle ' + cbSetDelaySettle.Text;
-       if cbSetDelayMotor.Text <>'' then
-         param := param + ' --motor ' + cbSetDelayMotor.Text;
-       if cbSetDelayAutoOff.Text <>'' then
-         param := param + ' --watchdog ' + cbSetDelayAutoOff.Text;
-       if cbSetDelayPreWrite.Text <>'' then
-         param := param + ' --pre-write ' + cbSetDelayPreWrite.Text;
-       if cbSetDelayPostWrite.Text <>'' then
-         param := param + ' --post-write ' + cbSetDelayPostWrite.Text;
-       if cbSetDelayIndexMask.Text <>'' then
-        param := param + ' --index-mask ' + cbSetDelayIndexMask.Text;
-     end;
-
-     if rbSetGetPIN.Checked = true then
-     begin
-       specifyDevice := true;
-       // H = true, L = false
-       if rbGetPIN.Checked = true then
-       begin
-         cmd := 'pin get';
-         cbSetPINLevel.Text:='';
-         cbSetPINLevel.Enabled:=false;
-       end;
-       if rbSetPIN.Checked = true then
-       begin
-         cmd := 'pin set';
-         cbSetPINLevel.Enabled:=true;
-       end;
-       if cbSetPINNumber.Text <>'' then
-       begin
-         param := param + ' ' + cbSetPINNumber.Text;
-       end;
-       if cbSetPINLevel.Text <>'' then
-       begin
-         if cbSetPINLevel.Text = 'Low (0v)' then param := param + ' L';
-         if cbSetPINLevel.Text = 'High (5v)' then param := param + ' H';
-       end;
-    end;
-
-    if rbSetFirmware.Checked = true then
-    begin
-      cmd := 'update';
-      specifyDevice := true;
-      if cbSetFirmwareBootloader.Checked  = true then
-        param := param + ' --bootloader';
-      if opSetFWFile.Checked = true then
-        param := param + ' --force "' + edToolsFW.Text + '"';
-      if opSetFWTag.Checked = true then
-        param := param + ' --tag "' + edToolsFWtag.Text + '"';
-    end;
-  end;
-
-  // Execute GW with cmd, param and where applicable device/drive
-  performCmdAction(cmd, param, specifyDevice, specifyDrive);
-
+  Result := param;
 end;
+
+function TFrmMain.GW_CMD_Tools_Erase_Generate: string;
+var
+  param : String = '';
+begin
+   if cbToolsEraseRevs.Text <> '' then
+     param := param + ' --revs=' + cbToolsEraseRevs.Text;
+   if cbToolsEraseCyl.Text <> '' then
+     param := param + Trackset(' --tracks=',cbToolsEraseCyl.Text,cbToolsEraseHeads.Text,cbToolsEraseSteps.Text,cbToolsEraseHSwap.Checked,cbToolsEraseFlippy.Text);
+   if lblToolsEraseHFreq.Checked = true then
+     param := param + ' --hfreq';
+   if cbToolsEraseFakeIndex.Text <> '' then
+     param := param + ' --fake-index=' + cbToolsEraseFakeIndex.Text;
+
+   Result := param;
+end;
+
+function TFrmMain.GW_CMD_Tools_Seek_Generate: string;
+var
+  param : String = '';
+begin
+   if cbToolsSeekTrackForce.Checked then
+     param := param + ' --force';
+   if cbToolsSeekMotorOn.Checked then
+     param := param + ' --motor-on';
+
+   Result := param + ' ' + cbToolsSeekTrack.Text;
+end;
+
+function TFrmMain.GW_CMD_Tools_Clean_Generate: string;
+var
+  param : String = '';
+begin
+  param := param + ' --cyls=' + cbToolsCleanCyl.Text;
+  param := param + ' --linger=' + cbToolsCleanLinger.Text;
+  param := param + ' --passes=' + cbToolsCleanPasses.Text;
+  Result := param;
+end;
+
+function TFrmMain.GW_CMD_Settings_Delays_Generate: string;
+var
+  param : String = '';
+begin
+   if cbSetDelaySelect.Text <>'' then
+     param := param + ' --select ' + cbSetDelaySelect.Text;
+   if cbSetDelayStep.Text <>'' then
+     param := param + ' --step ' + cbSetDelayStep.Text;
+   if cbSetDelaySettle.Text <>'' then
+     param := param + ' --settle ' + cbSetDelaySettle.Text;
+   if cbSetDelayMotor.Text <>'' then
+     param := param + ' --motor ' + cbSetDelayMotor.Text;
+   if cbSetDelayAutoOff.Text <>'' then
+     param := param + ' --watchdog ' + cbSetDelayAutoOff.Text;
+   if cbSetDelayPreWrite.Text <>'' then
+     param := param + ' --pre-write ' + cbSetDelayPreWrite.Text;
+   if cbSetDelayPostWrite.Text <>'' then
+     param := param + ' --post-write ' + cbSetDelayPostWrite.Text;
+   if cbSetDelayIndexMask.Text <>'' then
+    param := param + ' --index-mask ' + cbSetDelayIndexMask.Text;
+
+   Result := param;
+end;
+
+function TFrmMain.GW_CMD_Settings_Pin_Generate: string;
+var
+  cmd : String = '';
+  param : String = '';
+begin
+   if rbGetPIN.Checked = true then
+   begin
+     cmd := 'pin get';
+     cbSetPINLevel.Text:='';
+     cbSetPINLevel.Enabled:=false;
+   end;
+   if rbSetPIN.Checked = true then
+   begin
+     cmd := 'pin set';
+     cbSetPINLevel.Enabled:=true;
+
+     if cbSetPINNumber.Text <>'' then
+       param := param + ' ' + cbSetPINNumber.Text;
+
+     // H = true, L = false
+     if cbSetPINLevel.Text <>'' then
+     begin
+       if cbSetPINLevel.Text = 'Low (0v)' then
+         param := param + ' L';
+       if cbSetPINLevel.Text = 'High (5v)' then
+         param := param + ' H';
+     end
+   end;
+   Result := cmd + ' ' + param;
+end;
+
+
+function TFrmMain.GW_CMD_Settings_Firmware_Generate: string;
+var
+  param : String = '';
+begin
+   if cbSetFirmwareBootloader.Checked  = true then
+     param := param + ' --bootloader';
+   if opSetFWFile.Checked = true then
+     param := param + ' --force "' + edToolsFW.Text + '"';
+   if opSetFWTag.Checked = true then
+     param := param + ' --tag "' + edToolsFWtag.Text + '"';
+
+   Result := param;
+end;
+
 
 // Other commands are in the Command Line window with parameters
 procedure TFrmMain.performCmdAction(const cmd: string;
@@ -4144,13 +4430,13 @@ end;
 procedure TFrmMain.LoadXML(const FileName: string);
 var
   Doc: TXMLDocument;
-  Node, Child: TDOMNode;
+  Node, Child, HXCNode: TDOMNode;
   Spec, Ext, Desc: string;
   FormatDesc: string;
-  CanRead, CanWrite, CanConvert, CanSave: Boolean;
+  CanRead, CanWrite, CanConvert, CanHfeConvert, CanSave: Boolean;
   WriteFilterAll, WriteFilterList: string;
   ConvFilterAll, ConvFilterList: string;
-  i, j: Integer;
+  i, j, HXCCount: Integer;
   OptionNode: TDOMNode;
 begin
   ReadXMLFile(Doc, FileName);
@@ -4162,6 +4448,8 @@ begin
   // Create StringLists Read/Conv Destination fileextension
   FormatDest_Ext := TStringList.Create;
   FormatDest_Ext.Add('');
+  FormstDestConv_Ext := TStringList.Create;
+  FormstDestConv_Ext.Add('');
   FormatSpecs_Read := TStringList.Create;
   FormatSpecs_Read.Add('');
   FormatSpecs_Write := TStringList.Create;
@@ -4211,13 +4499,19 @@ begin
       if Child is TDOMElement then
       begin
 
-        Ext := TDOMElement(Child).GetAttribute('ext');
-        Desc := TDOMElement(Child).GetAttribute('desc');
-        CanSave := TDOMElement(Child).GetAttribute('save')='true';
-        CanConvert := TDOMElement(Child).GetAttribute('convert')='true';
+        Ext := TDOMElement(Child).GetAttribute(HFE_CONV_EXT);
+        Desc := TDOMElement(Child).GetAttribute(HFE_CONV_DESC);
+        CanSave := TDOMElement(Child).GetAttribute(XML_OPTION_SAVE)='true';
+        CanConvert := TDOMElement(Child).GetAttribute(XML_OPTION_CONVERT)='true';
+        CanHfeConvert := TDOMElement(Child).GetAttribute(XML_OPTION_HFE_CONVERT)='true';
+
         { Add format EXT (Description) }
         FormatDesc := ext + ' (' + Desc + ')';
         FormatDest_Ext.Add(FormatDesc);
+
+        { Add format EXT (Description) to HFE conversion }
+        if CanHfeConvert then
+          FormstDestConv_Ext.Add(FormatDesc);
 
         { Write file filter *.EXT|descrption }
         if CanSave then
@@ -4233,7 +4527,7 @@ begin
         end;
 
         { SuperCardPro options }
-        if Ext = 'SCP' then
+        if Ext = COMBO_SELECTION_SCP then
         begin
           for i := 0 to TDOMElement(Child).ChildNodes.Count - 1 do
           begin
@@ -4242,7 +4536,7 @@ begin
               LoadOption(OptionNode, SCPFormatOptions);
           end;
         end
-        else if Ext = 'HFE' then
+        else if Ext = COMBO_SELECTION_HFE then
         begin
           for j := 0 to TDOMElement(Child).ChildNodes.Count - 1 do
           begin
@@ -4265,6 +4559,27 @@ begin
       Child := Child.NextSibling;
     end;
   end;
+
+  Node := Doc.DocumentElement.FindNode('hxcformats');
+  if Assigned(Node) then
+  begin
+    HXCCount := 0;
+    HXCNode := Node.FirstChild;
+    while Assigned(HXCNode) do
+    begin
+      if (HXCNode is TDOMElement) and (HXCNode.NodeName = 'format') then
+      begin
+        SetLength(HXCFormatModules, HXCCount + 1);
+        HXCFormatModules[HXCCount].ModuleId := TDOMElement(HXCNode).GetAttribute(HFE_CONV_MODULE_ID);
+        HXCFormatModules[HXCCount].Ext := TDOMElement(HXCNode).GetAttribute(HFE_CONV_EXT);
+        HXCFormatModules[HXCCount].Desc := TDOMElement(HXCNode).GetAttribute(HFE_CONV_DESC);
+        HXCFormatModules[HXCCount].DiskType := TDOMElement(HXCNode).GetAttribute(HFE_CONV_DISKTYPE);
+        Inc(HXCCount);
+      end;
+      HXCNode := HXCNode.NextSibling;
+    end;
+  end;
+
   Doc.Free;
 
   edWriteFileName.Filter := WriteFilterAll + '|' + WriteFilterList;
