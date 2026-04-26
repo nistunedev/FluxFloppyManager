@@ -8,9 +8,9 @@
       <Unit>
         <Filename Value="FluxFloppyManager.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="3"/>
-        <CursorPos X="57" Y="25"/>
-        <UsageCount Value="49"/>
+        <EditorIndex Value="5"/>
+        <CursorPos Y="27"/>
+        <UsageCount Value="70"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -19,10 +19,13 @@
         <ComponentName Value="FrmMain"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="MainForm"/>
-        <CursorPos X="6" Y="23"/>
-        <UsageCount Value="49"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="961"/>
+        <CursorPos Y="977"/>
+        <UsageCount Value="70"/>
         <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="AboutDialog.pas"/>
@@ -30,11 +33,10 @@
         <ComponentName Value="FrmAbout"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="AboutDialog"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="3"/>
         <TopLine Value="63"/>
         <CursorPos X="3" Y="79"/>
-        <UsageCount Value="49"/>
+        <UsageCount Value="70"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -44,57 +46,55 @@
         <ComponentName Value="FrmOptions"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UnitName Value="OptionsDialog"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="47"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="17"/>
         <CursorPos X="3" Y="63"/>
-        <UsageCount Value="49"/>
+        <UsageCount Value="70"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="OperationsDialog.pas"/>
+        <IsPartOfProject Value="True"/>
         <ComponentName Value="FrmOperations"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <IsVisibleTab Value="True"/>
-        <UnitName Value="OperationsDialog"/>
-        <EditorIndex Value="4"/>
-        <TopLine Value="192"/>
-        <CursorPos Y="207"/>
-        <UsageCount Value="49"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="11"/>
+        <CursorPos X="58" Y="21"/>
+        <UsageCount Value="70"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
-      </Unit>      
+      </Unit>
       <Unit>
         <Filename Value="commonconsts.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="CommonConsts"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="118"/>
-        <CursorPos X="66" Y="139"/>
-        <UsageCount Value="42"/>
+        <TopLine Value="148"/>
+        <CursorPos X="22" Y="168"/>
+        <UsageCount Value="63"/>
+        <Loaded Value="True"/>
       </Unit>
-
       <Unit>
         <Filename Value="TermVT.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="88"/>
         <CursorPos X="30" Y="106"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="7"/>
       </Unit>
       <Unit>
         <Filename Value="UnTerminal.pas"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="670"/>
-        <CursorPos X="24" Y="688"/>
-        <UsageCount Value="9"/>
+        <EditorIndex Value="6"/>
+        <TopLine Value="386"/>
+        <CursorPos X="46" Y="407"/>
+        <UsageCount Value="19"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unit1.lfm"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="12"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="7"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit>
       <Unit>
@@ -103,64 +103,154 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="215"/>
         <CursorPos X="14" Y="238"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="10"/>
       </Unit>
       <Unit>
         <Filename Value="C:\data\lazarus\lcl\include\control.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="3595"/>
         <CursorPos Y="3613"/>
-        <UsageCount Value="12"/>
+        <UsageCount Value="10"/>
       </Unit>
       <Unit>
         <Filename Value="C:\data\lazarus\fpc\3.2.2\source\rtl\objpas\sysutils\diskh.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="10" Y="21"/>
-        <UsageCount Value="11"/>
+        <UsageCount Value="9"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\data\lazarus\lcl\dialogs.pp"/>
+        <UnitName Value="Dialogs"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="877"/>
+        <CursorPos X="69" Y="891"/>
+        <UsageCount Value="13"/>
+        <Loaded Value="True"/>
       </Unit>
     </Units>
     <Debugger>
       <Backend Value="{A42B180D-03FC-4AC0-93C0-D6651ED94713}"/>
     </Debugger>
-    <JumpHistory HistoryIndex="9">
+    <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="1352" Column="3" TopLine="1324"/>
-      </Position>
-      <Position>
-        <Filename Value="MainForm.pas"/>
-        <Caret Line="23" Column="14"/>
+        <Caret Line="2231" Column="20" TopLine="2203"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="3" Column="10" TopLine="22"/>
+        <Caret Line="2236" Column="21" TopLine="2208"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="23" Column="14"/>
+        <Caret Line="2237" Column="21" TopLine="2209"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
+        <Caret Line="2238" Column="21" TopLine="2210"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="23" Column="14"/>
-      </Position>
-      <Position>
-        <Filename Value="FluxFloppyManager.lpr"/>
-        <Caret Line="13" Column="10"/>
+        <Caret Line="2239" Column="21" TopLine="2211"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="23" Column="6"/>
+        <Caret Line="2261" Column="23" TopLine="2234"/>
       </Position>
       <Position>
-        <Filename Value="AboutDialog.pas"/>
-        <Caret Line="79" Column="3" TopLine="63"/>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="2263" Column="21" TopLine="2235"/>
       </Position>
       <Position>
-        <Filename Value="FluxFloppyManager.lpr"/>
-        <Caret Line="25" Column="57"/>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="93" Column="21" TopLine="77"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="451" Column="31" TopLine="423"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="971" Column="19" TopLine="943"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="1405" Column="18" TopLine="1377"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="1541" Column="105" TopLine="1513"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="1922" Column="21" TopLine="1894"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="3265" Column="36" TopLine="3237"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="3282" Column="53" TopLine="3264"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="3317" Column="20" TopLine="3305"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="3335" Column="20" TopLine="3307"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="3465" Column="22" TopLine="3452"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="3591" Column="28" TopLine="3567"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="3599" Column="61" TopLine="3584"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="3637" Column="143" TopLine="3611"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="3645" Column="122" TopLine="3629"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="586" TopLine="563"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="579" Column="40" TopLine="562"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="572" Column="62" TopLine="562"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="575" Column="58" TopLine="562"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="579" Column="40" TopLine="562"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="2890" Column="58" TopLine="2879"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="2866" Column="20" TopLine="2849"/>
+      </Position>
+      <Position>
+        <Filename Value="MainForm.pas"/>
+        <Caret Line="3667" Column="64" TopLine="3645"/>
       </Position>
     </JumpHistory>
     <RunParams>

@@ -574,6 +574,16 @@ type
     function GW_CMD_Settings_Pin_Generate: string;
     function GW_CMD_Settings_Firmware_Generate: string;
     function LogParameters: string;
+    procedure setHfeReadEnabled(hfeEnabled: boolean);
+    procedure setHfeConvEnabled(hfeEnabled: boolean);
+    procedure setPinEnabled(ctrlEnabled: boolean);
+    procedure setDelaysEnabled(ctrlEnabled: boolean);
+    procedure setFirmwareEnabled(ctrlEnabled: boolean);
+    procedure setEraseEnable(ctrlEnabled: boolean);
+    procedure setSeekEnable(ctrlEnabled: boolean);
+    procedure setRPMEnable(ctrlEnabled: boolean);
+    procedure setCleanEnable(ctrlEnabled: boolean);
+
 
     procedure performCmdAction(const cmd: string;
                                const param: string;
@@ -964,8 +974,6 @@ begin
   Refresh_Diskdefs_DropDown;
 
   // Create StringList Read Diskdefs
-  // TODO: Read these from a configuration file
-
   cbReadTplFormat.items.Text := FormatSpecs_Read.Text;
   cbReadFormat.Items.Text := FormatDest_Ext.Text;        // bspw. .msa
   cbReadConvFormat.Items.Text := FormstDestConv_Ext.Text;
@@ -1171,14 +1179,8 @@ begin
     end;
 
    if (Fileexists(edGWFile.Text) = false) then
-    begin
-     answer := MessageDlg(GW_APP_NAME + ' (' + GW_APP + ') not found!',mtWarning, [mbCancel], 0);
-     if answer = mrCancel then
-      begin
-       edGWFile.SetFocus;
+     if ConfirmAbort(GW_APP_NAME + ' (' + GW_APP + ') not found!',edGWFile) then
        exit;
-      end;
-    end;
 
    // Read  ######################################################################
    case pcActions.ActivePageIndex of
@@ -1255,57 +1257,43 @@ begin
   GW_PROP_PAGE_WRITE:
      begin
       if edWriteFilename.Text = '' then
-       begin
-        answer := MessageDlg('No source file selected!',mtWarning, [mbOK], 0);
-        if answer = mrOk then exit;
-       end;
+       if ConfirmAbort('No source file selected!') then
+        exit;
       if fileexists(edWriteFilename.Text) = false then
-       begin
-        answer := MessageDlg('Source file not found!',mtWarning, [mbOK], 0);
-        if answer = mrOk then exit;
-       end;
-      ShowOperationsDialog(EdGWCMD.Lines.Text, GW_APP_NAME + ' - Write',
-        OPERATIONS_WRITE);
+        if ConfirmAbort('Source file not found!') then
+         exit;
+
+      ShowOperationsDialog(EdGWCMD.Lines.Text, GW_APP_NAME + ' - Write', OPERATIONS_WRITE);
      end; // GW_PROP_PAGE_WRITE
 
    // Convert ####################################################################
    GW_PROP_PAGE_CONVERT:
     begin
      if edConvFileSource.Text = '' then
-      begin
-       answer := MessageDlg('No source file selected!',mtWarning, [mbOK], 0);
-       if answer = mrOk then exit;
-      end;
+       if ConfirmAbort('No source file selected!') then
+       exit;
+
      if fileexists(edConvFileSource.Text) = false then
+      if ConfirmAbort('Source file not found!') then
+        exit;
+
+     if Directoryexists(Dircheck(edConvDirDest.Text)) = false then
       begin
-       answer := MessageDlg('Source file not found!',mtWarning, [mbOK], 0);
-       if answer = mrOk then exit;
-      end;
-    if Directoryexists(Dircheck(edConvDirDest.Text)) = false then
-      begin
-       answer := MessageDlg('Destination directory not found! Create directory?',mtWarning, [mbYes,mbCancel], 0);
+       answer := ConfirmYesNoAbort('Destination directory not found! Create directory?',edConvFileSource);
        if answer = mrCancel then
-        begin
-         edConvFileSource.SetFocus;
          exit;
-        end;
        if answer = mrYes then
-        begin
          Forcedirectories(dircheck(edConvDirDest.Text));
-        end;
-       end;
+      end;
 
      if cbConvFileFormat.Text = '' then
-      begin
-       answer := MessageDlg('Destination fileformat settings incomplete!',mtWarning, [mbOK], 0);
-       if answer = mrOk then exit;
-      end;
+      if ConfirmAbort('Destination fileformat settings incomplete!') then
+       exit;
 
      if edConvFilenamePreview.Text = '' then
-      begin
-       answer := MessageDlg('Destination filename settings incomplete!',mtWarning, [mbOK], 0);
-       if answer = mrOk then exit;
-      end;
+       if ConfirmAbort('Destination filename settings incomplete!') then
+        exit;
+
      ShowOperationsDialog(EdGWCMD.Lines.Text, GW_APP_NAME + ' - Convert', OPERATIONS_CONVERT);
     end;
 
@@ -2135,29 +2123,19 @@ begin
 end;
 
 procedure TFrmMain.cbToolsEraseCylChange(Sender: TObject);
+var
+  eraseEnabled : boolean;
 begin
-  if cbToolsEraseCyl.Text <> '' then
-   begin
-     lblToolsEraseHeads.Enabled := true;
-     cbToolsEraseHeads.Enabled := true;
-     lblToolsEraseSteps.Enabled := true;
-     cbToolsEraseSteps.Enabled := true;
-     lblToolsEraseHSwap.Enabled := true;
-     cbToolsEraseHSwap.Enabled := true;
-     lblToolsEraseFlippy.Enabled := true;
-     cbToolsEraseFlippy.Enabled := true;
-   end
-   else
-   begin
-     lblToolsEraseHeads.Enabled := false;
-     cbToolsEraseHeads.Enabled := false;
-     lblToolsEraseSteps.Enabled := false;
-     cbToolsEraseSteps.Enabled := false;
-     lblToolsEraseHSwap.Enabled := false;
-     cbToolsEraseHSwap.Enabled := false;
-     lblToolsEraseFlippy.Enabled := false;
-     cbToolsEraseFlippy.Enabled := false;
-   end;
+  eraseEnabled := cbToolsEraseCyl.Text <> '';
+   lblToolsEraseHeads.Enabled := eraseEnabled;
+   cbToolsEraseHeads.Enabled := eraseEnabled;
+   lblToolsEraseSteps.Enabled := eraseEnabled;
+   cbToolsEraseSteps.Enabled := eraseEnabled;
+   lblToolsEraseHSwap.Enabled := eraseEnabled;
+   cbToolsEraseHSwap.Enabled := eraseEnabled;
+   lblToolsEraseFlippy.Enabled := eraseEnabled;
+   cbToolsEraseFlippy.Enabled := eraseEnabled;
+
    if cbToolsEraseCyl.Focused then CMD_Generate;
 end;
 
@@ -2350,23 +2328,15 @@ begin
 end;
 
 procedure TFrmMain.cbConvOutTracksetCylsChange(Sender: TObject);
+var
+  convOutEnabled: boolean;
 begin
- if cbConvOutTracksetCyls.Text <> '' then
- begin
-   cbConvOutTracksetHeads.Enabled := true;
-   cbConvOutTracksetSteps.Enabled := true;
-   cbConvOutTracksetHSwap.Enabled := true;
-   cbConvOutTracksetFlippy.Enabled := true;
-   cbConvTplFlippyReverse.Enabled := true;
- end
- else
- begin
-   cbConvOutTracksetHeads.Enabled := false;
-   cbConvOutTracksetSteps.Enabled := false;
-   cbConvOutTracksetHSwap.Enabled := false;
-   cbConvOutTracksetFlippy.Enabled := false;
-   cbConvTplFlippyReverse.Enabled := false;
- end;
+ convOutEnabled := cbConvOutTracksetCyls.Text <> '';
+ cbConvOutTracksetHeads.Enabled := convOutEnabled;
+ cbConvOutTracksetSteps.Enabled := convOutEnabled;
+ cbConvOutTracksetHSwap.Enabled := convOutEnabled;
+ cbConvOutTracksetFlippy.Enabled := convOutEnabled;
+ cbConvTplFlippyReverse.Enabled := convOutEnabled;
  CMD_Generate;
 end;
 
@@ -2396,21 +2366,14 @@ begin
 end;
 
 procedure TFrmMain.cbConvTracksetCylsChange(Sender: TObject);
+var
+  trackSetEnabled : boolean;
 begin
-  if cbConvTracksetCyls.Text <> '' then
- begin
-   cbConvTracksetHeads.Enabled := true;
-   cbConvTracksetSteps.Enabled := true;
-   cbConvTracksetHSwap.Enabled := true;
-   cbConvTracksetFlippy.Enabled := true;
- end
- else
- begin
-   cbConvTracksetHeads.Enabled := false;
-   cbConvTracksetSteps.Enabled := false;
-   cbConvTracksetHSwap.Enabled := false;
-   cbConvTracksetFlippy.Enabled := false;
- end;
+  trackSetEnabled := cbConvTracksetCyls.Text <> '';
+   cbConvTracksetHeads.Enabled := trackSetEnabled;
+   cbConvTracksetSteps.Enabled := trackSetEnabled;
+   cbConvTracksetHSwap.Enabled := trackSetEnabled;
+   cbConvTracksetFlippy.Enabled := trackSetEnabled;
  if cbConvTracksetCyls.Focused then CMD_Generate;
 end;
 
@@ -2734,7 +2697,8 @@ procedure TFrmMain.pcActionsChange(Sender: TObject);
 begin
   Set_View;
   btGo.Default:=false;
-  if pcActions.ActivePageIndex = GW_PROP_PAGE_READ then
+  case pcActions.ActivePageIndex of
+  GW_PROP_PAGE_READ:
    begin
     btGo.Caption:='Read';
     checkUpdateReadTemplateButtons;
@@ -2742,7 +2706,8 @@ begin
     cbReadTplLogOutput.Visible:=true;
     cbReadTplLogBoth.Visible:=true;
    end;
-  if pcActions.ActivePageIndex = GW_PROP_PAGE_WRITE then
+
+   GW_PROP_PAGE_WRITE:
    begin
     checkUpdateWriteTemplateButtons;
     btGo.Caption:='Write';
@@ -2750,7 +2715,8 @@ begin
     cbReadTplLogOutput.Visible:=false;
     cbReadTplLogBoth.Visible:=false;
    end;
-  if pcActions.ActivePageIndex = GW_PROP_PAGE_CONVERT then
+
+   GW_PROP_PAGE_CONVERT:
    begin
     btGo.Caption:='Convert';
     pcActions.ActivePage.Height:=20;
@@ -2758,7 +2724,8 @@ begin
     cbReadTplLogOutput.Visible:=false;
     cbReadTplLogBoth.Visible:=false;
    end;
-  if pcActions.ActivePageIndex = GW_PROP_PAGE_TOOLS then
+
+   GW_PROP_PAGE_TOOLS:
    begin
     if rbToolsErase.Checked then btGo.Caption:='Erase';
     if rbToolsSeek.Checked then btGo.Caption:='Seek';
@@ -2768,7 +2735,8 @@ begin
     cbReadTplLogOutput.Visible:=false;
     cbReadTplLogBoth.Visible:=false;
    end;
-  if pcActions.ActivePageIndex = GW_PROP_PAGE_SETTINGS then
+
+   GW_PROP_PAGE_SETTINGS:
    begin
     if rbSetDelays.Checked then btGo.Caption:='Set delays';
     cbReadTplLogParam.Visible:=false;
@@ -2780,8 +2748,9 @@ begin
       if rbSetPIN.Checked then btGo.Caption:='Set PIN';
      end;
    end;
+  end; // case
   CMD_Generate;
- end;
+end;
 
 procedure TFrmMain.rbGetPINClick(Sender: TObject);
 begin
@@ -2797,45 +2766,58 @@ begin
   CMD_Generate;
 end;
 
+procedure TFrmMain.setPinEnabled(ctrlEnabled: boolean);
+begin
+  rbSetGetPIN.Checked:=ctrlEnabled;
+  lblSetPINNumber.Enabled:=ctrlEnabled;
+  cbSetPINnumber.Enabled:=ctrlEnabled;
+  rbGetPin.Enabled:=ctrlEnabled;
+  rbSetPin.Enabled:=ctrlEnabled;
+  cbSetPINlevel.Enabled:=ctrlEnabled;
+
+end;
+
+procedure TFrmMain.setDelaysEnabled(ctrlEnabled: boolean);
+begin
+ rbSetDelays.Checked:=ctrlEnabled;
+ btSetDelaysInfo.Enabled:=ctrlEnabled;
+ btSetDelaysDefault.Enabled:=ctrlEnabled;
+ lblSetDelaySelect.Enabled:=ctrlEnabled;
+ lblSetDelayStep.Enabled:=ctrlEnabled;
+ lblSetDelayMotor.Enabled:=ctrlEnabled;
+ lblSetDelaySettle.Enabled:=ctrlEnabled;
+ lblSetDelayAutoOff.Enabled:=ctrlEnabled;
+ lblSetDelaySelect.Enabled:=ctrlEnabled;
+ cbSetDelaySelect.Enabled:=ctrlEnabled;
+ cbSetDelayStep.Enabled:=ctrlEnabled;
+ cbSetDelayMotor.Enabled:=ctrlEnabled;
+ cbSetDelaySettle.Enabled:=ctrlEnabled;
+ cbSetDelayAutoOff.Enabled:=ctrlEnabled;
+end;
+
+procedure TFrmMain.setFirmwareEnabled(ctrlEnabled: boolean);
+begin
+ rbSetFirmware.Checked:=ctrlEnabled;
+ lblSetFirmwareHint.Enabled:=ctrlEnabled;
+ cbSetFirmwareBootloader.Enabled:=ctrlEnabled;
+ opSetFWOnline.Enabled:=ctrlEnabled;
+ opSetFWFile.Enabled:=ctrlEnabled;
+ edToolsFW.Enabled:=ctrlEnabled;
+ opSetFWTag.Enabled:=ctrlEnabled;
+ edToolsFWTag.Enabled:=ctrlEnabled;
+
+end;
+
 procedure TFrmMain.rbSetDelaysClick(Sender: TObject);
 begin
    if FInClick then Exit;
    FInClick := true;
-
-   rbSetDelays.Checked:=true;
-   rbSetGetPIN.Checked:=false;
-   rbSetFirmware.Checked:=false;
+   BtGo.Caption:= 'Set delays';
+   setDelaysEnabled(true);
+   setPinEnabled(false);
+   setFirmwareEnabled(false);
    FInClick := false;
 
-   lblSetPINNumber.Enabled:=false;
-   cbSetPINnumber.Enabled:=false;
-   rbGetPin.Enabled:=false;
-   rbSetPin.Enabled:=false;
-   cbSetPINlevel.Enabled:=false;
-
-   btSetDelaysInfo.Enabled:=true;
-   btSetDelaysDefault.Enabled:=true;
-   lblSetDelaySelect.Enabled:=true;
-   lblSetDelayStep.Enabled:=true;
-   lblSetDelayMotor.Enabled:=true;
-   lblSetDelaySettle.Enabled:=true;
-   lblSetDelayAutoOff.Enabled:=true;
-   lblSetDelaySelect.Enabled:=true;
-   cbSetDelaySelect.Enabled:=true;
-   cbSetDelayStep.Enabled:=true;
-   cbSetDelayMotor.Enabled:=true;
-   cbSetDelaySettle.Enabled:=true;
-   cbSetDelayAutoOff.Enabled:=true;
-
-   lblSetFirmwareHint.Enabled:=false;
-   opSetFWOnline.Enabled:=false;
-   opSetFWFile.Enabled:=false;
-   edToolsFW.Enabled:=false;
-   opSetFWTag.Enabled:=false;
-   edToolsFWTag.Enabled:=false;
-   cbSetFirmwareBootloader.Enabled:=false;
-
-   BtGo.Caption:= 'Set delays';
    CMD_Generate;
 end;
 
@@ -2843,41 +2825,12 @@ procedure TFrmMain.rbSetFirmwareClick(Sender: TObject);
 begin
   if FInClick then Exit;
   FInClick := true;
-
-  rbSetFirmware.Enabled:=true;
-  rbSetDelays.Checked:=false;
-  rbSetGetPIN.Checked:=false;
+  BtGo.Caption:= 'Firmware';
+  setFirmwareEnabled(true);
+  setDelaysEnabled(false);
+  setPinEnabled(false);
   FInClick := false;
 
-  lblSetPINNumber.Enabled:=false;
-  cbSetPINnumber.Enabled:=false;
-  rbGetPin.Enabled:=false;
-  rbSetPin.Enabled:=false;
-  cbSetPINlevel.Enabled:=false;
-
-  btSetDelaysInfo.Enabled:=false;
-  btSetDelaysDefault.Enabled:=false;
-  lblSetDelaySelect.Enabled:=false;
-  lblSetDelayStep.Enabled:=false;
-  lblSetDelayMotor.Enabled:=false;
-  lblSetDelaySettle.Enabled:=false;
-  lblSetDelayAutoOff.Enabled:=false;
-  lblSetDelaySelect.Enabled:=false;
-  cbSetDelaySelect.Enabled:=false;
-  cbSetDelayStep.Enabled:=false;
-  cbSetDelayMotor.Enabled:=false;
-  cbSetDelaySettle.Enabled:=false;
-  cbSetDelayAutoOff.Enabled:=false;
-
-  lblSetFirmwareHint.Enabled:=true;
-  opSetFWOnline.Enabled:=true;
-  opSetFWFile.Enabled:=true;
-  edToolsFW.Enabled:=true;
-  opSetFWTag.Enabled:=true;
-  edToolsFWTag.Enabled:=true;
-  cbSetFirmwareBootloader.Enabled:=true;
-
-  BtGo.Caption:= 'Firmware';
   CMD_Generate;
 end;
 
@@ -2885,84 +2838,84 @@ procedure TFrmMain.rbSetGetPINClick(Sender: TObject);
 begin
   if FInClick then Exit;
   FInClick := true;
-
-  rbSetGetPIN.Checked:=true;
-  rbSetDelays.Checked:=false;
-  rbSetFirmware.Checked:=false;
-  rbSetGetPIN.Enabled:=true;
-
-  FInClick := false;
-
-  lblSetPINNumber.Enabled:=true;
-  cbSetPINnumber.Enabled:=true;
-  rbGetPin.Enabled:=true;
-  rbSetPin.Enabled:=true;
-  cbSetPINlevel.Enabled:=true;
-
-  btSetDelaysInfo.Enabled:=false;
-  btSetDelaysDefault.Enabled:=false;
-  lblSetDelaySelect.Enabled:=false;
-  lblSetDelayStep.Enabled:=false;
-  lblSetDelayMotor.Enabled:=false;
-  lblSetDelaySettle.Enabled:=false;
-  lblSetDelayAutoOff.Enabled:=false;
-  lblSetDelaySelect.Enabled:=false;
-  cbSetDelaySelect.Enabled:=false;
-  cbSetDelayStep.Enabled:=false;
-  cbSetDelayMotor.Enabled:=false;
-  cbSetDelaySettle.Enabled:=false;
-  cbSetDelayAutoOff.Enabled:=false;
-
-  lblSetFirmwareHint.Enabled:=false;
-  opSetFWOnline.Enabled:=false;
-  opSetFWFile.Enabled:=false;
-  edToolsFW.Enabled:=false;
-  opSetFWTag.Enabled:=false;
-  edToolsFWTag.Enabled:=false;
-  cbSetFirmwareBootloader.Enabled:=false;
-
   if rbGetPIN.Checked = true then BtGo.Caption:= 'Get PIN';
   if rbSetPIN.Checked = true then BtGo.Caption:= 'Set PIN';
+  setPinEnabled(true);
+  setFirmwareEnabled(false);
+  setDelaysEnabled(false);
+  FInClick := false;
 
   CMD_Generate;
 end;
+
+procedure TFrmMain.setEraseEnable(ctrlEnabled: boolean);
+var
+  eraseEnabled : boolean;
+begin
+  rbToolsErase.Checked:=ctrlEnabled;
+  lblToolsEraseCyl.Enabled:=ctrlEnabled;
+  cbToolsEraseCyl.Enabled:=ctrlEnabled;
+  lblToolsEraseHeads.Enabled:=ctrlEnabled;
+  cbToolsEraseHeads.Enabled:=ctrlEnabled;
+  lblToolsEraseFakeIndex.Enabled:=ctrlEnabled;
+  cbToolsEraseFakeIndex.Enabled:=ctrlEnabled;
+  lblToolsEraseHFreq.Enabled:=ctrlEnabled;
+
+  eraseEnabled := (ctrlEnabled) and (cbToolsEraseCyl.Text <> '');
+
+  lblToolsEraseHeads.Enabled:=eraseEnabled;
+  cbToolsEraseHeads.Enabled:=eraseEnabled;
+  lblToolsEraseSteps.Enabled:=eraseEnabled;
+  cbToolsEraseSteps.Enabled:=eraseEnabled;
+  lblToolsEraseHSwap.Enabled:=eraseEnabled;
+  cbToolsEraseHSwap.Enabled:=eraseEnabled;
+  lblToolsEraseFlippy.Enabled:=eraseEnabled;
+  cbToolsEraseFlippy.Enabled:=eraseEnabled;
+
+end;
+
+procedure TFrmMain.setSeekEnable(ctrlEnabled: boolean);
+begin
+ rbToolsSeek.Checked:=ctrlEnabled;
+ lblToolsSeek.Enabled:=ctrlEnabled;
+ cbToolsSeekTrack.Enabled:=ctrlEnabled;
+ cbToolsSeekTrackForce.Enabled:=ctrlEnabled;
+ cbToolsSeekMotorOn.Enabled:=ctrlEnabled;
+
+end;
+
+
+procedure TFrmMain.setRPMEnable(ctrlEnabled: boolean);
+begin
+ rbToolsRPM.Checked:=ctrlEnabled;
+ lblToolsRPMNumbIter.Enabled:=ctrlEnabled;
+ cbToolsRPMNumbIter.Enabled:=ctrlEnabled;
+
+end;
+
+
+procedure TFrmMain.setCleanEnable(ctrlEnabled: boolean);
+begin
+ rbToolsClean.Checked:=ctrlEnabled;
+ lblToolsCleanCyl.Enabled:=ctrlEnabled;
+ cbToolsCleanCyl.Enabled:=ctrlEnabled;
+ lblToolsCleanLinger.Enabled:=ctrlEnabled;
+ cbToolsCleanLinger.Enabled:=ctrlEnabled;
+ lblToolsCleanPasses.Enabled:=ctrlEnabled;
+ cbToolsCleanPasses.Enabled:=ctrlEnabled;
+
+end;
+
 
 procedure TFrmMain.rbToolsCleanClick(Sender: TObject);
 begin
   if FInClick then Exit;
   FInClick := true;
-
-  rbToolsErase.Checked:=false;
-  rbToolsSeek.Checked:=false;
-  rbToolsRPM.Checked:=false;
-  rbToolsClean.Checked:=true;
+  setCleanEnable(true);
+  setEraseEnable(false);
+  setSeekEnable(false);
+  setRPMEnable(false);
   FInClick := false;
-
-  rbToolsClean.Enabled:=true;
-
-  lblToolsEraseCyl.Enabled:=false;
-  cbToolsEraseCyl.Enabled:=false;
-  lblToolsEraseHeads.Enabled:=false;
-  cbToolsEraseHeads.Enabled:=false;
-  lblToolsEraseFakeIndex.Enabled:=false;
-  cbToolsEraseFakeIndex.Enabled:=false;
-  lblToolsEraseHFreq.Enabled:=false;
-
-  lblToolsCleanCyl.Enabled:=true;
-  cbToolsCleanCyl.Enabled:=true;
-  lblToolsCleanLinger.Enabled:=true;
-  cbToolsCleanLinger.Enabled:=true;
-  lblToolsCleanPasses.Enabled:=true;
-  cbToolsCleanPasses.Enabled:=true;
-
-  lblToolsSeek.Enabled:=false;
-  cbToolsSeekTrack.Enabled:=false;
-  cbToolsSeekTrackForce.Enabled:=false;
-  cbToolsSeekMotorOn.Enabled:=false;
-
-  lblToolsRPMNumbIter.Enabled:=false;
-  cbToolsRPMNumbIter.Enabled:=false;
-
   CMD_Generate;
 end;
 
@@ -2970,57 +2923,11 @@ procedure TFrmMain.rbToolsEraseClick(Sender: TObject);
 begin
   if FInClick then Exit;
   FInClick := true;
-
-  rbToolsSeek.Checked:=false;
-  rbToolsClean.Checked:=false;
-  rbToolsRPM.Checked:=false;
-  rbToolsErase.Checked:=true;
+  setEraseEnable(true);
+  setCleanEnable(false);
+  setSeekEnable(false);
+  setRPMEnable(false);
   FInClick := false;
-
-  rbToolsErase.Enabled:=true;
-  lblToolsEraseCyl.Enabled:=true;
-  cbToolsEraseCyl.Enabled:=true;
-  lblToolsEraseFakeIndex.Enabled:=true;
-  cbToolsEraseFakeIndex.Enabled:=true;
-  lblToolsEraseHFreq.Enabled:=true;
-
- if cbToolsEraseCyl.Text <> '' then
- begin
-  lblToolsEraseHeads.Enabled:=true;
-  cbToolsEraseHeads.Enabled:=true;
-  lblToolsEraseSteps.Enabled:=true;
-  cbToolsEraseSteps.Enabled:=true;
-  lblToolsEraseHSwap.Enabled:=true;
-  cbToolsEraseHSwap.Enabled:=true;
-  lblToolsEraseFlippy.Enabled:=true;
-  cbToolsEraseFlippy.Enabled:=true;
- end
- else
- begin
-  lblToolsEraseHeads.Enabled:=false;
-  cbToolsEraseHeads.Enabled:=false;
-  lblToolsEraseSteps.Enabled:=false;
-  cbToolsEraseSteps.Enabled:=false;
-  lblToolsEraseHSwap.Enabled:=false;
-  cbToolsEraseHSwap.Enabled:=false;
-  lblToolsEraseFlippy.Enabled:=false;
-  cbToolsEraseFlippy.Enabled:=false;
- end;
-
-  lblToolsCleanCyl.Enabled:=false;
-  cbToolsCleanCyl.Enabled:=false;
-  lblToolsCleanLinger.Enabled:=false;
-  cbToolsCleanLinger.Enabled:=false;
-  lblToolsCleanPasses.Enabled:=false;
-  cbToolsCleanPasses.Enabled:=false;
-
-  lblToolsSeek.Enabled:=false;
-  cbToolsSeekTrack.Enabled:=false;
-  cbToolsSeekTrackForce.Enabled:=false;
-  cbToolsSeekMotorOn.Enabled:=false;
-
-  lblToolsRPMNumbIter.Enabled:=false;
-  cbToolsRPMNumbIter.Enabled:=false;
 
   CMD_Generate;
 end;
@@ -3029,44 +2936,10 @@ procedure TFrmMain.rbToolsRPMClick(Sender: TObject);
 begin
   if FInClick then Exit;
   FInClick := true;
-
-  rbToolsErase.Checked:=false;
-  rbToolsSeek.Checked:=false;
-  rbToolsClean.Checked:=false;
-  rbToolsRPM.Checked:=true;
-  FInClick := false;
-
-  rbToolsRPM.Enabled:=true;
-
-  lblToolsEraseCyl.Enabled:=false;
-  cbToolsEraseCyl.Enabled:=false;
-  lblToolsEraseHeads.Enabled:=false;
-  cbToolsEraseHeads.Enabled:=false;
-  lblToolsEraseSteps.Enabled:=false;
-  cbToolsEraseSteps.Enabled:=false;
-  lblToolsEraseHSwap.Enabled:=false;
-  cbToolsEraseHSwap.Enabled:=false;
-  lblToolsEraseFlippy.Enabled:=false;
-  cbToolsEraseFlippy.Enabled:=false;
-  lblToolsEraseFakeIndex.Enabled:=false;
-  cbToolsEraseFakeIndex.Enabled:=false;
-  lblToolsEraseHFreq.Enabled:=false;
-
-  lblToolsCleanCyl.Enabled:=false;
-  cbToolsCleanCyl.Enabled:=false;
-  lblToolsCleanLinger.Enabled:=false;
-  cbToolsCleanLinger.Enabled:=false;
-  lblToolsCleanPasses.Enabled:=false;
-  cbToolsCleanPasses.Enabled:=false;
-
-  lblToolsSeek.Enabled:=false;
-  cbToolsSeekTrack.Enabled:=false;
-  cbToolsSeekTrackForce.Enabled:=false;
-  cbToolsSeekMotorOn.Enabled:=false;
-
-  lblToolsRPMNumbIter.Enabled:=true;
-  cbToolsRPMNumbIter.Enabled:=true;
-
+  setRPMEnable(true);
+  setEraseEnable(false);
+  setCleanEnable(false);
+  setSeekEnable(false);
   CMD_Generate;
 end;
 
@@ -3075,41 +2948,11 @@ begin
 
   if FInClick then Exit;
   FInClick := true;
-  rbToolsErase.Checked:=false;
-  rbToolsClean.Checked:=false;
-  rbToolsRPM.Checked:=false;
-  rbToolsSeek.Checked:=true;
+  setSeekEnable(true);
+  setRPMEnable(false);
+  setEraseEnable(false);
+  setCleanEnable(false);
   FInClick := false;
-
-  lblToolsEraseCyl.Enabled:=false;
-  cbToolsEraseCyl.Enabled:=false;
-  lblToolsEraseHeads.Enabled:=false;
-  cbToolsEraseHeads.Enabled:=false;
-  lblToolsEraseSteps.Enabled:=false;
-  cbToolsEraseSteps.Enabled:=false;
-  lblToolsEraseHSwap.Enabled:=false;
-  cbToolsEraseHSwap.Enabled:=false;
-  lblToolsEraseFlippy.Enabled:=false;
-  cbToolsEraseFlippy.Enabled:=false;
-  lblToolsEraseFakeIndex.Enabled:=false;
-  cbToolsEraseFakeIndex.Enabled:=false;
-  lblToolsEraseHFreq.Enabled:=false;
-
-  lblToolsCleanCyl.Enabled:=false;
-  cbToolsCleanCyl.Enabled:=false;
-  lblToolsCleanLinger.Enabled:=false;
-  cbToolsCleanLinger.Enabled:=false;
-  lblToolsCleanPasses.Enabled:=false;
-  cbToolsCleanPasses.Enabled:=false;
-
-  lblToolsSeek.Enabled:=true;
-  cbToolsSeekTrack.Enabled:=true;
-  cbToolsSeekTrackForce.Enabled:=true;
-  cbToolsSeekMotorOn.Enabled:=true;
-
-  lblToolsRPMNumbIter.Enabled:=false;
-  cbToolsRPMNumbIter.Enabled:=false;
-
   CMD_Generate;
 end;
 
@@ -3204,23 +3047,15 @@ begin
 end;
 
 procedure TFrmMain.cbWriteTplCylsChange(Sender: TObject);
+var
+  writeTplEnable : boolean;
 begin
- if cbWriteTplCyls.Text <> '' then
-  begin
-    cbWriteTplHeads.Enabled := true;
-    cbWriteTplSteps.Enabled := true;
-    cbWriteTplHSwap.Enabled := true;
-    cbWriteTplFlippy.Enabled := true;
-    cbWriteTplFlippyReverse.Enabled := true;
-  end
-  else
-  begin
-    cbWriteTplHeads.Enabled := false;
-    cbWriteTplSteps.Enabled := false;
-    cbWriteTplHSwap.Enabled := false;
-    cbWriteTplFlippy.Enabled := false;
-    cbWriteTplFlippyReverse.Enabled := false;
-  end;
+  writeTplEnable := cbWriteTplCyls.Text <> '';
+  cbWriteTplHeads.Enabled := writeTplEnable;
+  cbWriteTplSteps.Enabled := writeTplEnable;
+  cbWriteTplHSwap.Enabled := writeTplEnable;
+  cbWriteTplFlippy.Enabled := writeTplEnable;
+  cbWriteTplFlippyReverse.Enabled := writeTplEnable;
   CMD_Generate;
 end;
 
@@ -3445,6 +3280,25 @@ begin
   Create_Filename;
 end;
 
+procedure TFrmMain.setHfeReadEnabled(hfeEnabled: boolean);
+begin
+ cbReadFormatOptionHFEInt.Enabled := hfeEnabled;
+ cbReadFormatOptionHFEVer.Enabled := hfeEnabled;
+ cbReadFormatOptionHFEEnc.Enabled := hfeEnabled;
+ cbReadConvFormat.Enabled:=hfeEnabled;
+ cbReadFormatOption.Enabled :=hfeEnabled;
+
+end;
+
+procedure TFrmMain.setHfeConvEnabled(hfeEnabled: boolean);
+begin
+ cbConvFormatOptionHFEInt.Enabled := hfeEnabled;
+ cbConvFormatOptionHFEVer.Enabled := hfeEnabled;
+ cbConvFormatOptionHFEEnc.Enabled := hfeEnabled;
+ cbConvFormatOption.Enabled := hfeEnabled;
+end;
+
+
 // This need to be called when template selected or initial update
 procedure TFrmMain.UpdateReadFormatSelection;
 var
@@ -3459,11 +3313,7 @@ begin
   cbReadFormatOption.Enabled:= false;
 
   // Disable all options by default
-  cbReadFormatOption.Enabled := false;
-  cbReadConvFormat.Enabled := false;
-  cbReadFormatOptionHFEInt.Enabled := false;
-  cbReadFormatOptionHFEVer.Enabled := false;
-  cbReadFormatOptionHFEEnc.Enabled := false;
+  setHfeReadEnabled(false);
 
   // SCP Options
   if GetReadFormatSelection = COMBO_SELECTION_SCP then
@@ -3739,20 +3589,14 @@ begin
      lblOf := edReadDiskOf.Text;
 
      // read file extension - FMFF 4.0
-     cbReadConvFormat.Enabled:=false;
-     cbReadFormatOption.Enabled :=false;
-     cbReadFormatOptionHFEVer.Enabled :=false;
-     cbReadFormatOptionHFEInt.Enabled :=false;
-     cbReadFormatOptionHFEEnc.Enabled :=false;
+     setHfeReadEnabled(false);
 
      case GetReadFormatSelection of
        COMBO_SELECTION_HFE:
          begin
+           setHfeReadEnabled(true);
            cbReadFormatOption.Enabled := true;
            cbReadConvFormat.Enabled:=true;
-           cbReadFormatOptionHFEVer.Enabled :=true;
-           cbReadFormatOptionHFEInt.Enabled :=true;
-           cbReadFormatOptionHFEEnc.Enabled :=true;
            //cbReadPreview.Text := BuildReadTargetFilename(filenameRead, cbReadFormat.Text);
          end;
        COMBO_SELECTION_SCP:
@@ -3788,10 +3632,7 @@ begin
         filenameConvert := filenameConvert + lblOf + Format('%.*d', [digits, disc2]);
 
     // conv file extension - FMFF 4.0
-    cbConvFormatOption.Enabled := false;
-    cbConvFormatOptionHFEVer.Enabled :=false;
-    cbConvFormatOptionHFEInt.Enabled :=false;
-    cbConvFormatOptionHFEEnc.Enabled :=false;
+    setHfeConvEnabled(false);
 
     case GetConvFormatSelection of
      COMBO_SELECTION_EDS: //EDSK
@@ -3800,10 +3641,7 @@ begin
        end;
      COMBO_SELECTION_HFE:
        begin
-        cbConvFormatOption.Enabled := true;
-        cbConvFormatOptionHFEVer.Enabled :=true;
-        cbConvFormatOptionHFEInt.Enabled :=true;
-        cbConvFormatOptionHFEEnc.Enabled :=true;
+        setHfeConvEnabled(true);
         edConvFilenamePreview.Text := FilenameConvert + '.' + Lowercase(GetConvFormatSelection) + cbConvFormatOption.Text + cbConvFormatOptionHFEVer.Text + cbConvFormatOptionHFEInt.Text + cbConvFormatOptionHFEEnc.Text;
        end;
      COMBO_SELECTION_SCP:
@@ -3815,13 +3653,13 @@ begin
        begin
         edConvFilenamePreview.Text := FilenameConvert + '00.0.' + lowercase(GetConvFormatSelection);
        end;
-//     else
-//       begin
-//        if cbConvFileFormat.Text <> '' then
-//          edConvFilenamePreview.Text := FilenameConvert + '.' + lowercase(trim(leftStr(cbConvFileFormat.Text,3)));
-//        else
-//          edConvFilenamePreview.Text := FilenameConvert;
-//       end;
+     else
+       begin
+        if cbConvFileFormat.Text <> '' then
+          edConvFilenamePreview.Text := FilenameConvert + '.' + lowercase(trim(leftStr(cbConvFileFormat.Text,3)))
+        else
+          edConvFilenamePreview.Text := FilenameConvert;
+       end;
 
     end; // case ConfFormatSelection
 
