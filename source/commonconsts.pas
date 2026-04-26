@@ -33,6 +33,7 @@ const
   GW_INI_FILE = 'FluxFloppyManager.ini';
   GW_APP_NAME = 'Greaseweazle';
   SAMDISK_APP_NAME = 'Samdisk';
+  HXC_APP_NAME = 'HxCFloppyImageConverter';
   GW_DISKDEF_FOLDER = 'Diskdefs';
   GW_TEMPLATE_FOLDER = 'Templates';
   GW_APP_FILE = 'Greaseweazle';

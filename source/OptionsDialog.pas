@@ -38,12 +38,14 @@ type
     cbSaveGWDevCom: TCheckBox;
     cbSaveGWDrive: TCheckBox;
     cbCodepageCMD: TCheckBox;
+    edHXCFile: TFileNameEdit;
     edSamdiskFile: TFileNameEdit;
     folderTemplates: TDirectoryEdit;
     fileDiskdefs: TDirectoryEdit;
     gbLocations: TGroupBox;
     gbStart: TGroupBox;
     GroupBox1: TGroupBox;
+    lblHXC: TLabel;
     lblDiskdefs: TLabel;
     lblSamdisk: TLabel;
     lblTemplates: TLabel;
@@ -81,6 +83,7 @@ begin
  fileDiskdefs.Text := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_DISKDEFS, '');
  folderTemplates.Directory := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
  edSamdiskFile.Text := INI.ReadString(FLUX_INI_NAME, SAMDISK_APP_NAME, '');
+ edHXCFile.Text := INI.ReadString(FLUX_INI_NAME, HXC_APP_NAME, '');
 end;
 
 procedure TFrmOptions.OKClick(Sender: TObject);
@@ -91,6 +94,7 @@ begin
  INI.WriteString(FLUX_INI_NAME, INI_FOLDER_DISKDEFS, fileDiskdefs.Text);
  INI.WriteString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, folderTemplates.Directory);
  INI.WriteString(FLUX_INI_NAME, SAMDISK_APP_NAME, edSamdiskFile.Text);
+ INI.WriteString(FLUX_INI_NAME, HXC_APP_NAME, edHXCFile.Text);
  INI.UpdateFile;
  if fileDiskdefs.Text <> '' then
   begin

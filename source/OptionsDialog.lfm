@@ -1,11 +1,11 @@
 object FrmOptions: TFrmOptions
   Left = 1553
-  Height = 730
+  Height = 812
   Top = 720
   Width = 1362
   BorderStyle = bsDialog
   Caption = 'Options'
-  ClientHeight = 730
+  ClientHeight = 812
   ClientWidth = 1362
   DesignTimePPI = 120
   Position = poMainFormCenter
@@ -14,7 +14,7 @@ object FrmOptions: TFrmOptions
   object Cancel: TButton
     Left = 18
     Height = 55
-    Top = 648
+    Top = 730
     Width = 164
     Caption = 'Cancel'
     TabOrder = 0
@@ -23,7 +23,7 @@ object FrmOptions: TFrmOptions
   object OK: TButton
     Left = 1184
     Height = 55
-    Top = 648
+    Top = 730
     Width = 164
     Caption = 'OK'
     TabOrder = 1
@@ -31,11 +31,11 @@ object FrmOptions: TFrmOptions
   end
   object gbLocations: TGroupBox
     Left = 18
-    Height = 356
+    Height = 438
     Top = 280
     Width = 1330
     Caption = 'Locations:'
-    ClientHeight = 321
+    ClientHeight = 403
     ClientWidth = 1326
     TabOrder = 2
     object lblDiskdefs: TLabel
@@ -95,6 +95,26 @@ object FrmOptions: TFrmOptions
       NumGlyphs = 1
       MaxLength = 0
       TabOrder = 2
+    end
+    object lblHXC: TLabel
+      Left = 35
+      Height = 30
+      Top = 270
+      Width = 272
+      Caption = 'HxC Floppy Image Converter (location):'
+      ParentColor = False
+    end
+    object edHXCFile: TFileNameEdit
+      Left = 52
+      Height = 38
+      Top = 304
+      Width = 1248
+      FilterIndex = 0
+      HideDirectories = False
+      ButtonWidth = 50
+      NumGlyphs = 1
+      MaxLength = 0
+      TabOrder = 3
     end
   end
   object gbStart: TGroupBox
