@@ -1900,6 +1900,7 @@ begin
     cbSetDelayPreWrite.Text       := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_PREWRITE, cbSetDelayPreWrite.Text);
     cbSetDelayPostWrite.Text      := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_POSTWRITE, cbSetDelayPostWrite.Text);
     cbSetDelayIndexMask.Text      := iniRefreshRead.ReadString(INI_SECTION_SETTINGS, INI_TEMPLATE_DELAY_INDEXMASK, cbSetDelayIndexMask.Text);
+    Create_Filename;
 
     if cbReadTplName.Text <> '' then
     begin
