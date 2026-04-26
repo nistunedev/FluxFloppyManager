@@ -1,11 +1,11 @@
 object FrmOperations: TFrmOperations
   Left = -220
-  Height = 848
+  Height = 690
   Top = 273
-  Width = 1325
+  Width = 1260
   Caption = 'Greaseweazle'
-  ClientHeight = 848
-  ClientWidth = 1325
+  ClientHeight = 690
+  ClientWidth = 1260
   DesignTimePPI = 120
   Position = poMainFormCenter
   LCLVersion = '4.4.0.0'
@@ -13,13 +13,13 @@ object FrmOperations: TFrmOperations
   OnShow = FormShow
   object pnSides: TPanel
     Left = 0
-    Height = 848
+    Height = 690
     Top = 0
-    Width = 495
+    Width = 500
     Align = alLeft
     BevelOuter = bvNone
-    ClientHeight = 848
-    ClientWidth = 495
+    ClientHeight = 690
+    ClientWidth = 500
     TabOrder = 0
     Visible = False
     object Label1: TLabel
@@ -31,12 +31,11 @@ object FrmOperations: TFrmOperations
       ParentColor = False
     end
     object StrGrid_s0: TStringGrid
-      Left = 32
-      Height = 352
+      Left = 18
+      Height = 304
       Top = 52
-      Width = 438
+      Width = 446
       AlternateColor = clNone
-      AutoFillColumns = True
       ColCount = 11
       Columns = <      
         item
@@ -104,6 +103,7 @@ object FrmOperations: TFrmOperations
       HeaderHotZones = [gzFixedCols, gzFixedRows]
       ParentFont = False
       RowCount = 10
+      ScrollBars = ssNone
       TabOrder = 0
       ColWidths = (
         40
@@ -122,18 +122,17 @@ object FrmOperations: TFrmOperations
     object Label2: TLabel
       Left = 18
       Height = 20
-      Top = 430
+      Top = 396
       Width = 44
       Caption = 'Side 1:'
       ParentColor = False
     end
     object StrGrid_s1: TStringGrid
-      Left = 28
-      Height = 350
-      Top = 470
-      Width = 442
+      Left = 18
+      Height = 310
+      Top = 368
+      Width = 446
       AlternateColor = clNone
-      AutoFillColumns = True
       ColCount = 11
       Columns = <      
         item
@@ -201,6 +200,7 @@ object FrmOperations: TFrmOperations
       HeaderHotZones = [gzFixedCols, gzFixedRows]
       ParentFont = False
       RowCount = 10
+      ScrollBars = ssNone
       TabOrder = 1
       ColWidths = (
         40
@@ -218,21 +218,21 @@ object FrmOperations: TFrmOperations
     end
   end
   object Panel2: TPanel
-    Left = 495
-    Height = 848
+    Left = 500
+    Height = 690
     Top = 0
-    Width = 830
+    Width = 760
     Align = alClient
     BevelOuter = bvNone
     Caption = 'Panel2'
-    ClientHeight = 848
-    ClientWidth = 830
+    ClientHeight = 690
+    ClientWidth = 760
     TabOrder = 1
     object Memo1: TMemo
       Left = 35
-      Height = 724
+      Height = 588
       Top = 52
-      Width = 777
+      Width = 707
       Anchors = [akTop, akLeft, akRight, akBottom]
       Font.CharSet = ANSI_CHARSET
       Font.Height = -15
@@ -254,9 +254,9 @@ object FrmOperations: TFrmOperations
       ParentColor = False
     end
     object Button1: TButton
-      Left = 651
+      Left = 578
       Height = 35
-      Top = 785
+      Top = 648
       Width = 164
       Anchors = [akRight, akBottom]
       Caption = '&Close'
