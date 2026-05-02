@@ -98,7 +98,7 @@ type
     cbReadFormatOptionHFEVer: TComboBox;
     cbReadIncremental: TCheckBox;
     cbReadNoOverwrite: TCheckBox;
-    cbReadPreview: TEdit;
+    cbReadPreview: TEdit; // Preview version of the destination filename
     cbReadTplAdjustSpeed: TComboBox;
     cbReadTplCyls: TComboBox;
     cbReadTplDD: TComboBox;
@@ -558,6 +558,7 @@ type
     function GetReadFormatSelection : String;
     function GetConvFormatSelection : String;
     function UseReadHXCConversion: Boolean;
+    function checkGwExecutable: boolean;
     procedure setOptionsRead(optenabled: boolean);
     procedure setOptionsConvert(optenabled: boolean);
     function GetHFXModule: String;
@@ -583,6 +584,9 @@ type
     procedure setSeekEnable(ctrlEnabled: boolean);
     procedure setRPMEnable(ctrlEnabled: boolean);
     procedure setCleanEnable(ctrlEnabled: boolean);
+    procedure setupGwExecutable;
+    function createNewIniFile: TIniFile;
+
 
 
     procedure performCmdAction(const cmd: string;
@@ -633,11 +637,12 @@ var
   FormatDest_Ext, FormstDestConv_Ext : TStringList;
   sAppName, sAppPath, sAppVersion, sAppDate, AboutGW, sAppVersion_ReadTmpl, sAppVersion_WriteTmpl : String;
   dd : String; // Diskdefs.cfg
-  aLine : String; // GreaseWeazle (frmGW)
+  adjustedCmdLine : String; // GreaseWeazle (frmGW)
 
   SCPFormatOptions: TFormatOption;
   HFEFormatOptions: THfeFormatEntry;
   HXCFormatModules: array of THXCFormatModule;
+  FormDisplayed : Boolean = false;
 
 implementation
 uses
@@ -833,7 +838,6 @@ end;
 
 procedure TFrmMain.FormShow(Sender: TObject);
 var
-  gw :string;
   xmlFile: String;
   selTemplate: String;
 begin
@@ -866,31 +870,7 @@ begin
 
   // No INI
   if FileExists(sAppPath + GW_INI_FILE) = False then
-    try
-     INI := TINIFile.Create(sAppPath + GW_INI_FILE);
-     WriteIniString(INI,FLUX_INI_NAME, INI_VERSION, sAppVersion);
-     WriteIniInteger(INI, FLUX_INI_NAME, INI_VERSION_INI, INI_VERSION_DEFAULT);
-     WriteIniInteger(INI, FLUX_INI_NAME, INI_HEIGHT, INITIAL_HEIGHT);
-     WriteIniInteger(INI, FLUX_INI_NAME, INI_WIDTH, INITIAL_WIDTH);
-     WriteIniBool(INI, FLUX_INI_NAME, INI_SHOWARG, true);
-     WriteIniString(INI, FLUX_INI_NAME, INI_GW, '');
-     WriteIniBool(INI, FLUX_INI_NAME, INI_SAVE_DEVICE_FLAG, true);
-     WriteIniString(INI, FLUX_INI_NAME, INI_SAVE_DEVICE, '');
-     WriteIniBool(INI, FLUX_INI_NAME, INI_SAVE_DRIVE_FLAG, true);
-     WriteIniString(INI, FLUX_INI_NAME, INI_SAVE_DRIVE, '');
-     WriteIniBool(INI, FLUX_INI_NAME, INI_CODE_PAGE_CMD, true);
-     WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_DISKDEFS, sAppPath + GW_DISKDEF_FOLDER + PATH_SPECIFIER);
-     WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_TEMPLATES, sAppPath + GW_TEMPLATE_FOLDER + PATH_SPECIFIER);
-     WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_READ_DEST, AppendPathDelim(GetUserDir + GW_DOCUMENTS_FOLDER));
-     WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_WRITE_SRC, AppendPathDelim(GetUserDir + GW_DOCUMENTS_FOLDER));
-     WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_CONVERT_SRC, sAppPath);
-     WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST, sAppPath);
-     WriteIniBool(INI, FLUX_INI_NAME, INI_TIME, cbSetGlobalActionsTime.Checked);
-     WriteIniBool(INI, FLUX_INI_NAME, INI_BACKTRACE, cbSetGlobalActionsBacktrace.Checked);
-    finally
-     ; // end if
-    end;
-
+    INI := createNewIniFile;
 
   INI := TINIFile.Create(sAppPath + GW_INI_FILE);
   If INI.ReadInteger(FLUX_INI_NAME, INI_VERSION_INI, 00) < INI_VERSION_DEFAULT then
@@ -902,6 +882,7 @@ begin
     begin
      WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_DISKDEFS, sAppPath + GW_DISKDEF_FOLDER + PATH_SPECIFIER);
     end;
+
   EdGWFile.Text := ReadIniString(INI, FLUX_INI_NAME, GW_APP_NAME,'');
   mnuArguments.Checked := ReadIniBool(INI, FLUX_INI_NAME, INI_SHOWARG, true);
   edReadDirDest.Directory := ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_READ_DEST,'');
@@ -918,39 +899,7 @@ begin
   FrmMain.Top:=(( Screen.Height-Height)div 2);
   FrmMain.Left:=((Screen.Width-Width)div 2);
 
-  // Where is gw.exe ?
-  gw := ReadIniString(INI, FLUX_INI_NAME, GW_APP_NAME, '');
-  If gw <> '' then
-    begin
-     if FileExists(gw) = true then
-      begin
-       edGWfile.Text := gw;
-      end;
-     if FileExists(gw) = False then
-      begin
-       edGWfile.Text := Selectfile('Select Greaseweazle (' + GW_APP + ')',sAppPath, GW_EXECUTABLE);
-       if edGWfile.Text <> '' then
-        begin
-         WriteIniString(INI,FLUX_INI_NAME, GW_APP_NAME, edGWfile.Text);
-        end;
-      end;
-    end;
-  If gw = '' then
-    begin
-     if FileExists(sAppPath + GW_APP) = true then
-      begin
-       edGWfile.Text := sAppPath + GW_APP;
-       WriteIniString(INI,FLUX_INI_NAME, GW_APP_NAME, sAppPath + GW_EXECUTABLE);
-      end;
-     if FileExists(sAppPath + GW_EXECUTABLE) = False then
-      begin
-       edGWfile.Text := Selectfile('Select Greaseweazle (' + GW_APP + ')',sAppPath, GW_EXECUTABLE);
-       if edGWfile.Text <> '' then
-        begin
-         WriteIniString(INI,FLUX_INI_NAME, GW_APP_NAME, edGWfile.Text);
-        end;
-      end;
-    end;
+  setupGwExecutable;
 
   // Get possible Greaseweazle Device/COM ports
 
@@ -958,7 +907,7 @@ begin
     Get_DeviceCOM;
 {$ELSE}
     Get_DeviceCOMLinux;
-  {$ENDIF}
+{$ENDIF}
 
   If ReadIniBool(INI, FLUX_INI_NAME, INI_SAVE_DEVICE_FLAG, false) = true then
    begin
@@ -1001,7 +950,80 @@ begin
   else
     btWriteTplNew.Click;
 
+  FormDisplayed := true;
   CMD_Generate;
+end;
+
+function TFrmMain.createNewIniFile: TIniFile;
+var
+  INI: TIniFile;
+begin
+ try
+  INI := TINIFile.Create(sAppPath + GW_INI_FILE);
+  WriteIniString(INI,FLUX_INI_NAME, INI_VERSION, sAppVersion);
+  WriteIniInteger(INI, FLUX_INI_NAME, INI_VERSION_INI, INI_VERSION_DEFAULT);
+  WriteIniInteger(INI, FLUX_INI_NAME, INI_HEIGHT, INITIAL_HEIGHT);
+  WriteIniInteger(INI, FLUX_INI_NAME, INI_WIDTH, INITIAL_WIDTH);
+  WriteIniBool(INI, FLUX_INI_NAME, INI_SHOWARG, true);
+  WriteIniString(INI, FLUX_INI_NAME, INI_GW, '');
+  WriteIniBool(INI, FLUX_INI_NAME, INI_SAVE_DEVICE_FLAG, true);
+  WriteIniString(INI, FLUX_INI_NAME, INI_SAVE_DEVICE, '');
+  WriteIniBool(INI, FLUX_INI_NAME, INI_SAVE_DRIVE_FLAG, true);
+  WriteIniString(INI, FLUX_INI_NAME, INI_SAVE_DRIVE, '');
+  WriteIniBool(INI, FLUX_INI_NAME, INI_CODE_PAGE_CMD, true);
+  WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_DISKDEFS, sAppPath + GW_DISKDEF_FOLDER + PATH_SPECIFIER);
+  WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_TEMPLATES, sAppPath + GW_TEMPLATE_FOLDER + PATH_SPECIFIER);
+  WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_READ_DEST, AppendPathDelim(GetUserDir + GW_DOCUMENTS_FOLDER));
+  WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_WRITE_SRC, AppendPathDelim(GetUserDir + GW_DOCUMENTS_FOLDER));
+  WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_CONVERT_SRC, sAppPath);
+  WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_CONVERT_DEST, sAppPath);
+  WriteIniBool(INI, FLUX_INI_NAME, INI_TIME, cbSetGlobalActionsTime.Checked);
+  WriteIniBool(INI, FLUX_INI_NAME, INI_BACKTRACE, cbSetGlobalActionsBacktrace.Checked);
+ finally
+  ; // end if
+  Result := INI;
+ end;
+end;
+
+procedure TFrmMain.setupGwExecutable;
+var
+  gw: string;
+begin
+  // Where is gw.exe ?
+  gw := ReadIniString(INI, FLUX_INI_NAME, GW_APP_NAME, '');
+  If gw <> '' then
+    begin
+     if FileExists(gw) = true then
+      begin
+       edGWfile.Text := gw;
+      end
+     else
+      begin
+       gw := Selectfile('Select Greaseweazle (' + GW_APP + ')',sAppPath, GW_EXECUTABLE);
+       if gw <> '' then
+        begin
+         WriteIniString(INI,FLUX_INI_NAME, GW_APP_NAME, edGWfile.Text);
+         edGWfile.Text := gw;
+        end;
+      end;
+    end
+  else
+    begin
+     if FileExists(sAppPath + GW_APP) = true then
+      begin
+       edGWfile.Text := sAppPath + GW_APP;
+       WriteIniString(INI,FLUX_INI_NAME, GW_APP_NAME, sAppPath + GW_EXECUTABLE);
+      end;
+     if FileExists(sAppPath + GW_EXECUTABLE) = False then
+      begin
+       gw := Selectfile('Select Greaseweazle (' + GW_APP + ')',sAppPath, GW_EXECUTABLE);
+       if gw <> '' then
+        begin
+         WriteIniString(INI,FLUX_INI_NAME, GW_APP_NAME, edGWfile.Text);
+         edGWfile.Text := gw;
+        end;
+      end;
+    end;
 end;
 
 procedure TFrmMain.FormCreate(Sender: TObject);
@@ -1159,7 +1181,7 @@ end;
 // which are not displayed on the command line
 
 // In: EdGWCMD.Lines - Displayed GW command line
-// Out: aLine - Final GW command line
+// Out: adjustedCmdLine - Final GW command line
 // Out: Caption - GW Modal window title bar
 
 procedure TFrmMain.btGoClick(Sender: TObject);
@@ -1168,19 +1190,6 @@ var
     logDirFile : string = '';
 begin
 
-   if edGWFile.Text = '' then
-    begin
-      answer := MessageDlg('Please define location of Greaseweazle (' + GW_APP + ')!',mtWarning, [mbOK], 0);
-      if answer = mrOk then
-       begin
-        edGWFile.SetFocus;
-        exit;
-       end;
-    end;
-
-   if (Fileexists(edGWFile.Text) = false) then
-     if ConfirmAbort(GW_APP_NAME + ' (' + GW_APP + ') not found!',edGWFile) then
-       exit;
 
    // Read  ######################################################################
    case pcActions.ActivePageIndex of
@@ -1590,15 +1599,8 @@ procedure TFrmMain.btSetDelaysInfoClick(Sender: TObject);
 var
  answer : Integer;
 begin
-  if fileexists(edGWFile.Text) = true then
-  begin
+  if checkGwExecutable then
    performModalCmdAction('delays');
-  end
-  else
-  begin
-   answer := MessageDlg('Invalid filename or file (' + GW_APP + ') not found!',mtWarning, [mbOK], 0);
-   if answer = mrOk then exit;
-  end;
 end;
 
 procedure TFrmMain.BtWriteTplDelClick(Sender: TObject);
@@ -3597,15 +3599,16 @@ begin
            setHfeReadEnabled(true);
            cbReadFormatOption.Enabled := true;
            cbReadConvFormat.Enabled:=true;
-           //cbReadPreview.Text := BuildReadTargetFilename(filenameRead, cbReadFormat.Text);
          end;
        COMBO_SELECTION_SCP:
          begin
            cbReadFormatOption.Enabled := true;
            cbReadConvFormat.Enabled:=true;
-           //cbReadPreview.Text := BuildReadTargetFilename(filenameRead, cbReadFormat.Text);
          end
      end; // case
+
+     cbReadPreview.Text := BuildReadTargetFilename(filenameRead, cbReadFormat.Text);
+
    end; // GW_PROP_PAGE_READ
 
   // Convert ####################################################################
@@ -3669,16 +3672,20 @@ begin
 end;
 
 
-
+// Called by most updates to parameters via GUI to update the command line
 procedure TFrmMain.CMD_Generate;
 begin
- edGWCMD.Lines.Clear;
- btGo.Default:=false;
 
- if UseReadHXCConversion and (GetHFXModule <> '') then
-   Conv_CMD_Generate
- else
-   GW_CMD_Generate;
+ if FormDisplayed then
+  begin
+    edGWCMD.Lines.Clear;
+    btGo.Default:=false;
+
+    if UseReadHXCConversion and (GetHFXModule <> '') then
+      Conv_CMD_Generate
+    else
+      GW_CMD_Generate;
+  end;
 end;
 
 procedure TFrmMain.Conv_CMD_Generate;
@@ -3735,14 +3742,7 @@ var
   success: boolean = false;
 begin
 
-  if edGWFile.Text = '' then
-     edGWCMD.SelText := 'No Greaseweazle application defined!'
-  else if fileexists(edGWFile.Text) = false then
-      edGWCMD.SelText := 'Greaseweazle application not found!'
-  else
-    success := true;
-
- if not success then
+ if not checkGwExecutable then
   begin
     edGWCMD.SelStart := edGWCMD.GetTextLen;
     edGWCMD.SelLength := 0;
@@ -3767,7 +3767,7 @@ begin
       if cbReadPreview.text <> '' then
        begin
         param := GW_CMD_Read_Generate + ' "' + Dircheck(edReadDirDest.Text) + cbReadPreview.text + '"';
-        cmd := cmd + 'read' + param;
+        cmd := cmd + 'read';
         btGo.Default:=true;
        end
     end; // GW_PROP_PAGE_READ
@@ -3781,7 +3781,7 @@ begin
      if edWriteFileName.Text <> '' then
       begin
        param := GW_CMD_Write_Generate + ' "' + edWriteFileName.Text + '"';
-       cmd := cmd + 'write';
+       cmd := 'write';
        btGo.Default:=true;
       end;
 
@@ -3790,12 +3790,13 @@ begin
   // Convert options
   GW_PROP_PAGE_CONVERT:
    begin
-     cmd := 'convert';
 
      if edConvFileName.text <> '' then
      begin
        if cbSrcAsDesDir.Checked then
          edConvDirDest.Directory:= DirCheck(ExtractfileDir(edConvFileSource.Text));
+       btGo.Caption:='Convert';
+       cmd := 'convert';
        param := param + ' "' + Dircheck(edConvDirDest.Text) + edConvFilenamePreview.text + '"';
      end;
    end; // GW_PROP_PAGE_CONVERT
@@ -4187,33 +4188,47 @@ end;
 
 // Modal commands only have a single GW command with no parameters
 procedure TFrmMain.performModalCmdAction(const command: string);
+var
+  cmdParams: String;
 begin
   if cbGWDevCOM.Text <> '' then
-  begin
-    if fileexists(edGWFile.Text) = true then
-    begin
-        ShowOperationsDialog('"' + edGWFile.Text + '" ' + command + ' --device ' +
-          cbGWDevCOM.Text, GW_APP_NAME + ' - "' + edGWFile.Text + '" ' + command +
-          ' --device ' + cbGWDevCOM.Text, OPERATIONS_OTHER);
-    end
-    else
-    begin
-      MessageDlg('Invalid filename or file (' + GW_APP + ') not found!',mtWarning, [mbOK], 0);
-    end;
-  end
+   begin
+     if checkGwExecutable then
+      begin
+        cmdParams := command + ' --device ' + cbGWDevCOM.Text;
+        // Command line, Title, Display Mode
+        ShowOperationsDialog('"' + edGWFile.Text + '" ' + cmdParams,
+                             GW_APP_NAME + ' - "' + edGWFile.Text + '" ' + cmdParams,
+                             OPERATIONS_OTHER);
+      end
+   end
   else
     begin
       MessageDlg('Greaseweazle port not selected!', mtWarning, [mbOK], 0);
     end;
 end;
 
+function TFrmMain.checkGwExecutable: boolean;
+begin
+
+  if edGWFile.Text = '' then
+     if MessageDlg('Please define location of Greaseweazle (' + GW_APP + ')',mtWarning, [mbOK], 0) = mrOk then
+      edGWFile.SetFocus;
+
+  if (Fileexists(edGWFile.Text) = true) then
+    Result := true
+  else
+    if ConfirmAbort(GW_APP_NAME + ' (' + GW_APP + ') not found!',edGWFile) then
+      exit;
+end;
+
 procedure TFrmMain.ShowOperationsDialog(const CommandLine, Title: string;
   const DisplayMode: TOperationDisplayMode);
 begin
-  aLine := CommandLine;
-  FrmOperations.DisplayMode := TOperationDisplayMode(DisplayMode);
+  adjustedCmdLine := CommandLine;
   FrmOperations.Caption := Title;
   FrmOperations.ShowModal;
+  FrmOperations.DisplayMode := TOperationDisplayMode(DisplayMode);
 end;
 
 procedure CmdDir(aGW: string; aParam: string);

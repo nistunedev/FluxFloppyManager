@@ -105,8 +105,9 @@ var
   ExecPath, Params: string;
   TerminalWidth: Integer;
 begin
+  // If the CodepageCMD is set then adjust command line for UTF8
   if INI.ReadBool('FluxMyFluffyFloppy', 'CodepageCMD', false) then
-    aLine := ConvertEncoding(aLine, 'utf8', GetConsoleTextEncoding);
+    adjustedCmdLine := ConvertEncoding(adjustedCmdLine, 'utf8', GetConsoleTextEncoding);
 
   proc := TConsoleProc.Create(nil);
   proc.OnInitScreen    := @procInitScreen;
@@ -116,24 +117,24 @@ begin
 
   // The embedded VT100 terminal defaults to 120 columns, which causes
   // long echoed command lines to hard-wrap and look truncated.
-  TerminalWidth := Length(aLine) + 32;
+  TerminalWidth := Length(adjustedCmdLine) + 32;
   if TerminalWidth < 120 then
     TerminalWidth := 120;
   proc.TerminalWidth := TerminalWidth;
 
   Memo1.Lines.Clear;
-  Memo1.Lines.Add(aLine);
+  Memo1.Lines.Add(adjustedCmdLine);
   StrGrid_s0.Clean;
   StrGrid_s1.Clean;
 
   // Run the requested executable directly so the output window shows the
   // program output itself rather than a shell prompt echoing the command.
-  SplitCommandLine(aLine, ExecPath, Params);
+  SplitCommandLine(adjustedCmdLine, ExecPath, Params);
   proc.Open(ExecPath, Params);
 end;
 
 
-
+// Called from FormShow
 procedure TFrmOperations.SplitCommandLine(const CmdLine: string; out ExecPath, Params: string);
 var
   s: string;
@@ -142,30 +143,30 @@ begin
   s := Trim(CmdLine);
 
   if (s <> '') and (s[1] = '"') then
-  begin
-    // quoted executable
-    p := Pos('"', s, 2);
-    if p = 0 then
-      raise Exception.Create('Malformed command line');
+   begin
+     // quoted executable
+     p := Pos('"', s, 2);
+     if p = 0 then
+       raise Exception.Create('Malformed command line');
 
-    ExecPath := Copy(s, 2, p - 2);        // strip quotes ONLY here
-    Params   := Trim(Copy(s, p + 1, MaxInt)); // params untouched
-  end
+     ExecPath := Copy(s, 2, p - 2);        // strip quotes ONLY here
+     Params   := Trim(Copy(s, p + 1, MaxInt)); // params untouched
+   end
   else
-  begin
-    // unquoted executable
-    p := Pos(' ', s);
-    if p > 0 then
-    begin
-      ExecPath := Copy(s, 1, p - 1);
-      Params   := Trim(Copy(s, p + 1, MaxInt));
-    end
-    else
-    begin
-      ExecPath := s;
-      Params   := '';
-    end;
-  end;
+   begin
+     // unquoted executable
+     p := Pos(' ', s);
+     if p > 0 then
+      begin
+        ExecPath := Copy(s, 1, p - 1);
+        Params   := Trim(Copy(s, p + 1, MaxInt));
+      end
+     else
+     begin
+       ExecPath := s;
+       Params   := '';
+     end;
+   end;
 end;
 
 

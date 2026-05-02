@@ -8,9 +8,9 @@
       <Unit>
         <Filename Value="FluxFloppyManager.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="6"/>
         <CursorPos Y="27"/>
-        <UsageCount Value="70"/>
+        <UsageCount Value="76"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -21,9 +21,9 @@
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="961"/>
-        <CursorPos Y="977"/>
-        <UsageCount Value="70"/>
+        <TopLine Value="4190"/>
+        <CursorPos X="66" Y="4202"/>
+        <UsageCount Value="76"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -33,10 +33,10 @@
         <ComponentName Value="FrmAbout"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="4"/>
         <TopLine Value="63"/>
         <CursorPos X="3" Y="79"/>
-        <UsageCount Value="70"/>
+        <UsageCount Value="76"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -46,10 +46,10 @@
         <ComponentName Value="FrmOptions"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="4"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="17"/>
         <CursorPos X="3" Y="63"/>
-        <UsageCount Value="70"/>
+        <UsageCount Value="76"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -59,10 +59,10 @@
         <ComponentName Value="FrmOperations"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="7"/>
-        <TopLine Value="11"/>
-        <CursorPos X="58" Y="21"/>
-        <UsageCount Value="70"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="99"/>
+        <CursorPos Y="132"/>
+        <UsageCount Value="76"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -72,7 +72,7 @@
         <UnitName Value="CommonConsts"/>
         <TopLine Value="148"/>
         <CursorPos X="22" Y="168"/>
-        <UsageCount Value="63"/>
+        <UsageCount Value="69"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -80,21 +80,21 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="88"/>
         <CursorPos X="30" Y="106"/>
-        <UsageCount Value="7"/>
+        <UsageCount Value="6"/>
       </Unit>
       <Unit>
         <Filename Value="UnTerminal.pas"/>
-        <EditorIndex Value="6"/>
-        <TopLine Value="386"/>
-        <CursorPos X="46" Y="407"/>
-        <UsageCount Value="19"/>
+        <EditorIndex Value="7"/>
+        <TopLine Value="363"/>
+        <CursorPos X="39" Y="386"/>
+        <UsageCount Value="22"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unit1.lfm"/>
         <EditorIndex Value="-1"/>
         <CursorPos Y="12"/>
-        <UsageCount Value="7"/>
+        <UsageCount Value="6"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit>
       <Unit>
@@ -103,28 +103,36 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="215"/>
         <CursorPos X="14" Y="238"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="C:\data\lazarus\lcl\include\control.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="3595"/>
         <CursorPos Y="3613"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="9"/>
       </Unit>
       <Unit>
         <Filename Value="C:\data\lazarus\fpc\3.2.2\source\rtl\objpas\sysutils\diskh.inc"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="10" Y="21"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="8"/>
       </Unit>
       <Unit>
         <Filename Value="C:\data\lazarus\lcl\dialogs.pp"/>
         <UnitName Value="Dialogs"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="3"/>
         <TopLine Value="877"/>
         <CursorPos X="69" Y="891"/>
-        <UsageCount Value="13"/>
+        <UsageCount Value="16"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="C:\data\lazarus\lcl\include\customform.inc"/>
+        <EditorIndex Value="8"/>
+        <TopLine Value="364"/>
+        <CursorPos Y="387"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
@@ -134,123 +142,118 @@
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="2231" Column="20" TopLine="2203"/>
+        <Caret Line="902" Column="20" TopLine="881"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="2236" Column="21" TopLine="2208"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="2237" Column="21" TopLine="2209"/>
+        <Caret Line="902" Column="20" TopLine="866"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="2238" Column="21" TopLine="2210"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="2239" Column="21" TopLine="2211"/>
+        <Caret Line="902" Column="20" TopLine="866"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="2261" Column="23" TopLine="2234"/>
+        <Caret Line="883" Column="58" TopLine="866"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="2263" Column="21" TopLine="2235"/>
+        <Caret Line="587" Column="42" TopLine="573"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="93" Column="21" TopLine="77"/>
+        <Caret Line="901" Column="36" TopLine="866"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="451" Column="31" TopLine="423"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="971" Column="19" TopLine="943"/>
+        <Caret Line="587" Column="22" TopLine="551"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="1405" Column="18" TopLine="1377"/>
+        <Caret Line="902" Column="10" TopLine="866"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="1541" Column="105" TopLine="1513"/>
+        <Caret Line="988" Column="37" TopLine="951"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="1922" Column="21" TopLine="1894"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="3265" Column="36" TopLine="3237"/>
+        <Caret Line="587" Column="32" TopLine="551"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="3282" Column="53" TopLine="3264"/>
+        <Caret Line="902" Column="20" TopLine="866"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="3317" Column="20" TopLine="3305"/>
+        <Caret Line="988" Column="44" TopLine="951"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="3335" Column="20" TopLine="3307"/>
+        <Caret Line="4208" TopLine="4186"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="3465" Column="22" TopLine="3452"/>
+        <Caret Line="3676" Column="80" TopLine="3662"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="3591" Column="28" TopLine="3567"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="3599" Column="61" TopLine="3584"/>
+        <Caret Line="507" Column="21" TopLine="471"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="3637" Column="143" TopLine="3611"/>
+        <Caret Line="951" Column="32" TopLine="927"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="3645" Column="122" TopLine="3629"/>
+        <Caret Line="953" Column="16" TopLine="927"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="586" TopLine="563"/>
+        <Caret Line="3662" Column="41" TopLine="3662"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="579" Column="40" TopLine="562"/>
+        <Caret Line="4212" TopLine="4189"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="572" Column="62" TopLine="562"/>
+        <Caret Line="3687" TopLine="3665"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="575" Column="58" TopLine="562"/>
+        <Caret Line="954" TopLine="933"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="579" Column="40" TopLine="562"/>
+        <Caret Line="3687" TopLine="3664"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="2890" Column="58" TopLine="2879"/>
+        <Caret Line="3744" Column="37" TopLine="3723"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="2866" Column="20" TopLine="2849"/>
+        <Caret Line="4212" TopLine="4190"/>
       </Position>
       <Position>
         <Filename Value="MainForm.pas"/>
-        <Caret Line="3667" Column="64" TopLine="3645"/>
+        <Caret Line="4203" Column="30" TopLine="4190"/>
       </Position>
     </JumpHistory>
     <RunParams>
@@ -270,8 +273,16 @@
         <WatchScope Value="wpsLocal"/>
         <WatchKind Value="wpkWrite"/>
         <Source Value="OperationsDialog.pas"/>
-        <Line Value="235"/>
+        <Line Value="132"/>
       </Item>
     </BreakPoints>
+    <Watches>
+      <Item>
+        <Expression Value="cbReadPreview.Name"/>
+      </Item>
+      <Item>
+        <Expression Value="cbReadPreview"/>
+      </Item>
+    </Watches>
   </Debugging>
 </CONFIG>
