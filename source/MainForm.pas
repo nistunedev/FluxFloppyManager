@@ -558,12 +558,15 @@ type
     function GetReadFormatSelection : String;
     function GetConvFormatSelection : String;
     function UseReadHXCConversion: Boolean;
+    function UseReadSCPConversion: Boolean;
     function checkGwExecutable: boolean;
     procedure setOptionsRead(optenabled: boolean);
     procedure setOptionsConvert(optenabled: boolean);
     function GetHFXModule: String;
+    function GetSCPModule: String;
     procedure UpdateReadFormatSelection;
-    procedure Conv_CMD_Generate;
+    procedure Conv_SCP_CMD_Generate;
+    procedure Conv_HXC_CMD_Generate;
     procedure GW_CMD_Generate;
     function GW_CMD_Read_Generate: string;
     function GW_CMD_Write_Generate: string;
@@ -586,6 +589,7 @@ type
     procedure setCleanEnable(ctrlEnabled: boolean);
     procedure setupGwExecutable;
     function createNewIniFile: TIniFile;
+    function getHXCApplication: String;
 
 
 
@@ -1103,23 +1107,27 @@ begin
 end;
 
 
+function TFrmMain.getHXCApplication: String;
+var
+  hxcFile: String;
+begin
+
+  hxcFile := ReadIniString(INI, FLUX_INI_NAME, HXC_APP_NAME, '');
+  if hxcFile = '' then
+     ConfirmAbort('Please define location of HxC Floppy Image Converter!')
+  else if FileExists(hxcFile) = false then
+   ConfirmAbort('HxC Floppy Image Converter not found!');
+
+  Result := hxcFile;
+end;
+
 procedure TFrmMain.btGoHXCClick(Sender: TObject);
 var
   hxcFile, hxcInputFile: String;
 begin
-  if UseReadHXCConversion then
+  hxcFile := getHXCApplication;
+  if UseReadHXCConversion and (hxcFile <> '') then
   begin
-     hxcFile := ReadIniString(INI, FLUX_INI_NAME, HXC_APP_NAME, '');
-     if hxcFile = '' then
-     begin
-       ConfirmAbort('Please define location of HxC Floppy Image Converter!');
-       exit;
-     end;
-
-     if FileExists(hxcFile) = false then
-       if ConfirmAbort('HxC Floppy Image Converter not found!') then
-         exit;
-
      hxcInputFile := DirCheck(edReadDirDest.Text) +
        BuildReadTargetFilename(BuildReadBaseFilename, cbReadFormat.Text);
 
@@ -3244,7 +3252,25 @@ begin
     Result := '';
 end;
 
+// This wont work. HXC doesn't have disktype selection
 function GetHXCModuleForDiskType(const DiskType: string): string;
+var
+  i, j: Integer;
+  parts: TStringArray;
+begin
+  Result := '';
+  for i := 0 to High(HXCFormatModules) do
+  begin
+    // Extract various disk types from CSV string
+    parts := HXCFormatModules[i].DiskType.Split([',']);
+    for j := 0 to High(parts) do
+      if SameText(Trim(parts[j]), DiskType) then
+        exit(HXCFormatModules[i].ModuleId);
+  end;
+end;
+
+// SCP has ::disktype=amstrad-cpc
+function GetSCPModuleForDiskType(const DiskType: string): string;
 var
   i, j: Integer;
   parts: TStringArray;
@@ -3475,11 +3501,26 @@ begin
     (cbReadConvFormat.Text <> '');
 end;
 
+function TFrmMain.UseReadSCPConversion: Boolean;
+begin
+ Result := (pcActions.ActivePageIndex = GW_PROP_PAGE_READ) and
+   (GetReadFormatSelection = COMBO_SELECTION_SCP) and
+   (cbReadFormat.Text <> '') and
+   (cbReadConvFormat.Text <> '');
+end;
+
 // Return the module for the currently selected disk type (if any)
 function TFrmMain.GetHFXModule: String;
 begin
   Result := GetHXCModuleForDiskType(cbReadFormatOption.Text);
 end;
+
+// Return the module for the currently selected disk type (if any)
+function TFrmMain.GetSCPModule: String;
+begin
+  Result := GetSCPModuleForDiskType(cbReadFormatOption.Text);
+end;
+
 
 function TFrmMain.BuildReadBaseFilename: String;
 var
@@ -3681,47 +3722,35 @@ begin
     edGWCMD.Lines.Clear;
     btGo.Default:=false;
 
+    if UseReadSCPConversion and (GetSCPModule <> '') then
+      Conv_SCP_CMD_Generate;
     if UseReadHXCConversion and (GetHFXModule <> '') then
-      Conv_CMD_Generate
+      Conv_HXC_CMD_Generate
     else
       GW_CMD_Generate;
   end;
 end;
 
-procedure TFrmMain.Conv_CMD_Generate;
+procedure TFrmMain.Conv_HXC_CMD_Generate;
 var
   param : String = '';
+  app: String;
   hxcModule : String = '';
   success: boolean = false;
-  AppPath: String;
 begin
 
-   AppPath := Trim(ReadIniString(INI, FLUX_INI_NAME, HXC_APP_NAME, ''));
+ app := getHXCApplication;
 
-   if AppPath = '' then
-       edGWCMD.SelText := 'No HxC Floppy Image Converter application defined!'
-   else if FileExists(AppPath) = false then
-       edGWCMD.SelText := 'HxC Floppy Image Converter application not found!'
-   else
-     success := true;
+  if app = '' then
+   exit;
 
-   if ((GetReadFormatSelection = COMBO_SELECTION_SCP) or
-       (GetReadFormatSelection = COMBO_SELECTION_HFE)) and
-       (cbReadFormatOption.Text <> '') then
-       hxcModule := GetHXCModuleForDiskType(ExtractOptionValue(cbReadFormatOption.Text));
+//  if (GetReadFormatSelection = COMBO_SELECTION_HFE and
+//      cbReadConvFormat.Text <> '') then
+   hxcModule := GetHXCModuleForDiskType(cbReadConvFormat.Text);
 
-   if not success then
-    begin
-      edGWCMD.SelStart := edGWCMD.GetTextLen;
-      edGWCMD.SelLength := 0;
-      exit;
-    end;
-
-   if UseReadHXCConversion and (hxcModule <> '') then
+   if hxcModule <> '' then
     begin
      btGo.Default:=true;
-//     edGWCMD.SelStart := edGWCMD.GetTextLen;
-//     edGWCMD.SelLength := 0;
 
      param :=
        ' -finput:"' + DirCheck(edReadDirDest.Text) + BuildReadBaseFilename + '"' +
@@ -3729,9 +3758,45 @@ begin
        ' -foutput:"' + DirCheck(edReadDirDest.Text) + BuildReadBaseFilename + '"';
 
      edGWCMD.SelText := edGWCMD.Text + ' -conv=' + hxcModule;
-     performCmdAction(AppPath, param, false, false);
+     edGWCMD.SelStart := edGWCMD.GetTextLen;
+     edGWCMD.SelLength := 0;
+     performCmdAction(app, param, false, false);
     end; // if
 end;
+
+procedure TFrmMain.Conv_SCP_CMD_Generate;
+var
+  app: String;
+  param : String = '';
+  hxcModule : String = '';
+  success: boolean = false;
+  AppPath: String;
+begin
+
+   app := getHXCApplication;
+
+   if app = '' then
+    exit;
+
+   if cbReadFormatOption.Text <> '' then
+     hxcModule := GetHXCModuleForDiskType(ExtractOptionValue(cbReadFormatOption.Text));
+
+   if hxcModule <> '' then
+    begin
+     btGo.Default:=true;
+
+     param :=
+       ' -finput:"' + DirCheck(edReadDirDest.Text) + BuildReadBaseFilename + '"' +
+       ' -conv:' + GetHFXModule +
+       ' -foutput:"' + DirCheck(edReadDirDest.Text) + BuildReadBaseFilename + '"';
+
+     edGWCMD.SelText := edGWCMD.Text + ' -conv=' + hxcModule;
+     edGWCMD.SelStart := edGWCMD.GetTextLen;
+     edGWCMD.SelLength := 0;
+     performCmdAction(app, param, false, false);
+    end; // if
+end;
+
 
 procedure TFrmMain.GW_CMD_Generate;
 var
