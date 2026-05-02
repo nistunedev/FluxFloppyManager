@@ -622,6 +622,7 @@ type
     ModuleId: string;
     Ext: string;
     Desc: string;
+    HFEInterface: string;
     DiskType: string; // Comma separated list
   end;
 
@@ -1604,8 +1605,6 @@ begin
 end;
 
 procedure TFrmMain.btSetDelaysInfoClick(Sender: TObject);
-var
- answer : Integer;
 begin
   if checkGwExecutable then
    performModalCmdAction('delays');
@@ -3252,20 +3251,16 @@ begin
     Result := '';
 end;
 
-// This wont work. HXC doesn't have disktype selection
-function GetHXCModuleForDiskType(const DiskType: string): string;
+// HXC using Interface
+function GetHXCModuleForInterface(const SelInterface: string): string;
 var
-  i, j: Integer;
-  parts: TStringArray;
+  i: Integer;
 begin
   Result := '';
   for i := 0 to High(HXCFormatModules) do
   begin
-    // Extract various disk types from CSV string
-    parts := HXCFormatModules[i].DiskType.Split([',']);
-    for j := 0 to High(parts) do
-      if SameText(Trim(parts[j]), DiskType) then
-        exit(HXCFormatModules[i].ModuleId);
+    if SameText(HXCFormatModules[i].HFEInterface, SelInterface) then
+      exit(HXCFormatModules[i].ModuleId);
   end;
 end;
 
@@ -3276,14 +3271,16 @@ var
   parts: TStringArray;
 begin
   Result := '';
-  for i := 0 to High(HXCFormatModules) do
-  begin
-    // Extract various disk types from CSV string
-    parts := HXCFormatModules[i].DiskType.Split([',']);
-    for j := 0 to High(parts) do
-      if SameText(Trim(parts[j]), DiskType) then
-        exit(HXCFormatModules[i].ModuleId);
-  end;
+
+  if (DiskType <> '') then
+    for i := 0 to High(HXCFormatModules) do
+    begin
+      // Extract various disk types from CSV string
+      parts := HXCFormatModules[i].DiskType.Split([',']);
+      for j := 0 to High(parts) do
+        if SameText(Trim(parts[j]), DiskType) then
+          exit(HXCFormatModules[i].ModuleId);
+    end;
 end;
 
 function GetHXCModuleForExtension(const Ext: string): string;
@@ -3512,13 +3509,15 @@ end;
 // Return the module for the currently selected disk type (if any)
 function TFrmMain.GetHFXModule: String;
 begin
-  Result := GetHXCModuleForDiskType(cbReadFormatOption.Text);
+  Result := GetHXCModuleForInterface(cbReadFormatOptionHFEInt.Text);
 end;
 
 // Return the module for the currently selected disk type (if any)
 function TFrmMain.GetSCPModule: String;
 begin
-  Result := GetSCPModuleForDiskType(cbReadFormatOption.Text);
+  // Strip the prefix before calling
+  Result := GetSCPModuleForDiskType
+    (StringReplace(cbReadFormatOption.Text, '::disktype=', '', []));
 end;
 
 
@@ -3736,7 +3735,6 @@ var
   param : String = '';
   app: String;
   hxcModule : String = '';
-  success: boolean = false;
 begin
 
  app := getHXCApplication;
@@ -3746,7 +3744,7 @@ begin
 
 //  if (GetReadFormatSelection = COMBO_SELECTION_HFE and
 //      cbReadConvFormat.Text <> '') then
-   hxcModule := GetHXCModuleForDiskType(cbReadConvFormat.Text);
+   hxcModule := GetHFXModule;
 
    if hxcModule <> '' then
     begin
@@ -3754,10 +3752,10 @@ begin
 
      param :=
        ' -finput:"' + DirCheck(edReadDirDest.Text) + BuildReadBaseFilename + '"' +
-       ' -conv:' + GetHFXModule +
+       ' -conv:' + hxcModule +
        ' -foutput:"' + DirCheck(edReadDirDest.Text) + BuildReadBaseFilename + '"';
 
-     edGWCMD.SelText := edGWCMD.Text + ' -conv=' + hxcModule;
+     edGWCMD.SelText := edGWCMD.Text + param;
      edGWCMD.SelStart := edGWCMD.GetTextLen;
      edGWCMD.SelLength := 0;
      performCmdAction(app, param, false, false);
@@ -3769,8 +3767,6 @@ var
   app: String;
   param : String = '';
   hxcModule : String = '';
-  success: boolean = false;
-  AppPath: String;
 begin
 
    app := getHXCApplication;
@@ -3779,7 +3775,7 @@ begin
     exit;
 
    if cbReadFormatOption.Text <> '' then
-     hxcModule := GetHXCModuleForDiskType(ExtractOptionValue(cbReadFormatOption.Text));
+     hxcModule := GetSCPModule;
 
    if hxcModule <> '' then
     begin
@@ -3804,7 +3800,6 @@ var
   param : String = '';
   specifyDevice : boolean = false;
   specifyDrive : boolean = false;
-  success: boolean = false;
 begin
 
  if not checkGwExecutable then
@@ -4492,6 +4487,7 @@ begin
         HXCFormatModules[HXCCount].Ext := TDOMElement(HXCNode).GetAttribute(HFE_CONV_EXT);
         HXCFormatModules[HXCCount].Desc := TDOMElement(HXCNode).GetAttribute(HFE_CONV_DESC);
         HXCFormatModules[HXCCount].DiskType := TDOMElement(HXCNode).GetAttribute(HFE_CONV_DISKTYPE);
+        HXCFormatModules[HXCCount].HFEInterface := TDOMElement(HXCNode).GetAttribute(HFE_CONV_INTERFACE);
         Inc(HXCCount);
       end;
       HXCNode := HXCNode.NextSibling;

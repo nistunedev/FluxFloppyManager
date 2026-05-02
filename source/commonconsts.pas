@@ -160,6 +160,7 @@ const
   HFE_CONV_EXT = 'ext';
   HFE_CONV_DESC = 'desc';
   HFE_CONV_DISKTYPE = 'disktype';
+  HFE_CONV_INTERFACE = 'interface';
 
 //  COMBO_SELECTION_SCP = 'SCP (SuperCardPro)';
 //  COMBO_SELECTION_HFE = 'HFE (HxC Floppy Emulator)';

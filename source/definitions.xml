@@ -288,7 +288,7 @@
         <format moduleid="AMIGA_ADF" ext="adf" desc="AMIGA ADF Loader" disktype="amiga"/>
         <format moduleid="BBC_ADL" ext="adl" desc="BBC ADL floppy image loader" disktype=""/>
         <format moduleid="ACORN_ADF" ext="adf" desc="ACORN ADF Loader" disktype=""/>
-        <format moduleid="AMSTRADCPC_DSK" ext="dsk" desc="Amstrad CPC DSK Loader" disktype="amstrad-cpc"/>
+        <format moduleid="AMSTRADCPC_DSK" ext="dsk" desc="Amstrad CPC DSK Loader" disktype="amstrad-cpc" interface="CPC_DD"/>
         <format moduleid="ATARIST_DIM" ext="dim" desc="ATARI ST DIM Loader" disktype=""/>
         <format moduleid="ATARIST_STX" ext="stx" desc="Atari ST STX/Pasti Loader" disktype=""/>
         <format moduleid="ATARIST_STT" ext="stt" desc="ATARI ST STT Loader" disktype=""/>
