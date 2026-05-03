@@ -173,7 +173,6 @@ type
     edConvFilenamePreview: TEdit;
     edConvFileSource: TFileNameEdit;
     edCmdLinePreview: TMemo;
-    EdGWFile: TFileNameEdit;
     edReadDigits: TSpinEdit;
     edReadDirDest: TDirectoryEdit;
     edWriteDirDest: TDirectoryEdit;
@@ -232,7 +231,6 @@ type
     lblConvTracksetHeads: TLabel;
     lblConvTracksetHSwap: TLabel;
     lblConvTracksetSteps: TLabel;
-    lblGW: TLabel;
     lblGWDevice: TLabel;
     lblGWDrive: TLabel;
     lblGWHW: TLabel;
@@ -490,7 +488,6 @@ type
     procedure edConvFilenameChange(Sender: TObject);
     procedure edConvFileSourceAcceptFileName(Sender: TObject; var Value: String);
     procedure edConvFileSourceChange(Sender: TObject);
-    procedure EdGWFileChange(Sender: TObject);
     procedure edReadDigitsChange(Sender: TObject);
     procedure edReadDirDestChange(Sender: TObject);
     procedure edWriteDirDestChange(Sender: TObject);
@@ -606,6 +603,7 @@ type
 
   private
     FInClick: Boolean;
+    function GetGwExecutablePath: string;
   public
 
   end;
@@ -893,7 +891,6 @@ begin
      WriteIniString(INI,FLUX_INI_NAME, INI_FOLDER_DISKDEFS, sAppPath + GW_DISKDEF_FOLDER + PATH_SPECIFIER);
     end;
 
-  EdGWFile.Text := ReadIniString(INI, FLUX_INI_NAME, GW_APP_NAME,'');
   mnuArguments.Checked := ReadIniBool(INI, FLUX_INI_NAME, INI_SHOWARG, true);
   edReadDirDest.Directory := ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_READ_DEST,'');
   edWriteFilename.InitialDir := ReadIniString(INI, FLUX_INI_NAME, INI_FOLDER_WRITE_SRC,'');
@@ -995,45 +992,30 @@ begin
  end;
 end;
 
+function TFrmMain.GetGwExecutablePath: string;
+begin
+  Result := INI.ReadString(FLUX_INI_NAME, INI_GW, '');
+end;
+
 procedure TFrmMain.setupGwExecutable;
 var
   gw: string;
+  stored: string;
 begin
   // Where is gw.exe ?
-  gw := ReadIniString(INI, FLUX_INI_NAME, GW_APP_NAME, '');
-  If gw <> '' then
-    begin
-     if FileExists(gw) = true then
-      begin
-       edGWfile.Text := gw;
-      end
-     else
-      begin
-       gw := Selectfile('Select Greaseweazle (' + GW_APP + ')',sAppPath, GW_EXECUTABLE);
-       if gw <> '' then
-        begin
-         WriteIniString(INI,FLUX_INI_NAME, GW_APP_NAME, edGWfile.Text);
-         edGWfile.Text := gw;
-        end;
-      end;
-    end
-  else
-    begin
-     if FileExists(sAppPath + GW_APP) = true then
-      begin
-       edGWfile.Text := sAppPath + GW_APP;
-       WriteIniString(INI,FLUX_INI_NAME, GW_APP_NAME, sAppPath + GW_EXECUTABLE);
-      end;
-     if FileExists(sAppPath + GW_EXECUTABLE) = False then
-      begin
-       gw := Selectfile('Select Greaseweazle (' + GW_APP + ')',sAppPath, GW_EXECUTABLE);
-       if gw <> '' then
-        begin
-         WriteIniString(INI,FLUX_INI_NAME, GW_APP_NAME, edGWfile.Text);
-         edGWfile.Text := gw;
-        end;
-      end;
-    end;
+  stored := ReadIniString(INI, FLUX_INI_NAME, INI_GW, '');
+  if (stored <> '') and FileExists(stored) then
+    exit;
+
+  if FileExists(sAppPath + GW_EXECUTABLE) then
+  begin
+    WriteIniString(INI, FLUX_INI_NAME, INI_GW, sAppPath + GW_EXECUTABLE);
+    exit;
+  end;
+
+  gw := Selectfile('Select Greaseweazle (' + GW_APP + ')', sAppPath, GW_EXECUTABLE);
+  if gw <> '' then
+    WriteIniString(INI, FLUX_INI_NAME, INI_GW, gw);
 end;
 
 procedure TFrmMain.FormCreate(Sender: TObject);
@@ -1405,23 +1387,25 @@ end;
 procedure TFrmMain.btGWCMDDirClick(Sender: TObject);
 var
   Dir: string;
+  gwPath: string;
 begin
-  if FileExists(edGWFile.Text) then
+  gwPath := GetGwExecutablePath;
+  if FileExists(gwPath) then
   begin
-    Dir := ExtractFileDir(edGWFile.Text);
+    Dir := ExtractFileDir(gwPath);
 
     // Set working directory for future process runs
     SetCurrentDir(Dir);
 {$IFDEF WINDOWS}
     CmdDir('/k "', 'cd ' + DirCheck(Dir) + '"');
 {$ELSE}
-    CmdDir('-c "', 'cd "' + DirCheck(ExtractFileDir(edGWFile.Text)) + '" ; exec bash"');
+    CmdDir('-c "', 'cd "' + DirCheck(ExtractFileDir(gwPath)) + '" ; exec bash"');
 {$ENDIF}
     MessageDlg('Working directory set to:' + LineEnding + Dir,
       mtInformation, [mbOK], 0);
   end
   else
-    MessageDlg('Directory not found!', mtWarning, [mbOK], 0);
+    MessageDlg('Greaseweazle location not found (set it in Options).', mtWarning, [mbOK], 0);
 end;
 
 procedure TFrmMain.btGWInfoClick(Sender: TObject);
@@ -3236,11 +3220,6 @@ begin
   end;
 end;
 
-procedure TFrmMain.EdGWFileChange(Sender: TObject);
-begin
-  CMD_Generate;
-end;
-
 procedure TFrmMain.edReadDigitsChange(Sender: TObject);
 begin
   Create_Filename;
@@ -3486,7 +3465,6 @@ begin
  WriteIniInteger(INI, FLUX_INI_NAME, INI_HEIGHT, FrmMain.Height);
  WriteIniInteger(INI, FLUX_INI_NAME, INI_WIDTH, FrmMain.Width);
  WriteIniBool(INI, FLUX_INI_NAME, INI_SHOWARG, mnuArguments.Checked);
- WriteIniString(INI,FLUX_INI_NAME, INI_GW, EdGWFile.Text);
  If ReadIniBool(INI, FLUX_INI_NAME, INI_SAVE_DEVICE_FLAG, false) = true then
   begin
    WriteIniString(INI,FLUX_INI_NAME, INI_SAVE_DEVICE, cbGWDevCOM.Text);
@@ -4305,10 +4283,12 @@ procedure TFrmMain.updateGwCmdAction(const cmd: string;
                                   const specifyDrive: boolean);
 var
   execCmdLine : String;
+  gwExe: string;
 begin
 
   // Get GW executable
-  execCmdLine := '"' + edGWFile.Text + '"';
+  gwExe := GetGwExecutablePath;
+  execCmdLine := '"' + gwExe + '"';
 
   // Append specific user parameters
   execCmdLine := execCmdLine + ' ' + cmd + ' '  + param;
@@ -4343,15 +4323,17 @@ end;
 procedure TFrmMain.performModalCmdAction(const command: string);
 var
   cmdParams: String;
+  gwExe: string;
 begin
   if cbGWDevCOM.Text <> '' then
    begin
      if checkGwExecutable then
       begin
+        gwExe := GetGwExecutablePath;
         cmdParams := command + ' --device ' + cbGWDevCOM.Text;
         // Command line, Title, Display Mode
-        ShowOperationsDialog('"' + edGWFile.Text + '" ' + cmdParams,
-                             GW_APP_NAME + ' - "' + edGWFile.Text + '" ' + cmdParams,
+        ShowOperationsDialog('"' + gwExe + '" ' + cmdParams,
+                             GW_APP_NAME + ' - "' + gwExe + '" ' + cmdParams,
                              OPERATIONS_OTHER);
       end
    end
@@ -4362,17 +4344,24 @@ begin
 end;
 
 function TFrmMain.checkGwExecutable: boolean;
+var
+  gwExe: string;
 begin
+  gwExe := GetGwExecutablePath;
 
-  if edGWFile.Text = '' then
-     if MessageDlg('Please define location of Greaseweazle (' + GW_APP + ')',mtWarning, [mbOK], 0) = mrOk then
-      edGWFile.SetFocus;
+  if gwExe = '' then
+  begin
+    if MessageDlg('Please define location of Greaseweazle (' + GW_APP + ') in Options.', mtWarning, [mbOK], 0) = mrOk then
+      mnuOptionsClick(nil);
+    exit(false);
+  end;
 
-  if (Fileexists(edGWFile.Text) = true) then
-    Result := true
-  else
-    if ConfirmAbort(GW_APP_NAME + ' (' + GW_APP + ') not found!',edGWFile) then
-      exit;
+  if Fileexists(gwExe) then
+    exit(true);
+
+  MessageDlg(GW_APP_NAME + ' (' + GW_APP + ') not found! Define it in Options.', mtWarning, [mbOK], 0);
+  mnuOptionsClick(nil);
+  Result := false;
 end;
 
 procedure TFrmMain.ShowOperationsDialog(const CommandLine, Title: string;
