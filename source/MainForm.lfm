@@ -36,7 +36,7 @@ object FrmMain: TFrmMain
       ClientHeight = 124
       ClientWidth = 1491
       TabOrder = 0
-      object EdGWCmd: TMemo
+      object edCmdLinePreview: TMemo
         Left = 8
         Height = 55
         Top = 8

@@ -172,7 +172,7 @@ type
     edConvFilename: TEdit;
     edConvFilenamePreview: TEdit;
     edConvFileSource: TFileNameEdit;
-    EdGWCmd: TMemo;
+    edCmdLinePreview: TMemo;
     EdGWFile: TFileNameEdit;
     edReadDigits: TSpinEdit;
     edReadDirDest: TDirectoryEdit;
@@ -364,6 +364,7 @@ type
     procedure btConvExplorerClick(Sender: TObject);
     procedure btGoClick(Sender: TObject);
     procedure btGoHXCClick(Sender: TObject);
+    procedure btGoSamdiskClick(Sender: TObject);
     procedure btGWBandwidthClick(Sender: TObject);
     procedure btGWCMDDirClick(Sender: TObject);
     procedure btGWInfoClick(Sender: TObject);
@@ -557,16 +558,16 @@ type
     function BuildReadTargetFilename(const BaseName, FormatText: string): String;
     function GetReadFormatSelection : String;
     function GetConvFormatSelection : String;
-    function UseReadHXCConversion: Boolean;
+    function UseReadHFEConversion: Boolean;
     function UseReadSCPConversion: Boolean;
     function checkGwExecutable: boolean;
     procedure setOptionsRead(optenabled: boolean);
     procedure setOptionsConvert(optenabled: boolean);
-    function GetHFXModule: String;
-    function GetSCPModule: String;
+    function GetHXC_HFE_Module: String;
+    function GetHXC_SCP_Module: String;
     procedure UpdateReadFormatSelection;
     procedure Conv_SCP_CMD_Generate;
-    procedure Conv_HXC_CMD_Generate;
+    procedure Conv_HXC_CMD_Generate(hxcModule: String);
     procedure GW_CMD_Generate;
     function GW_CMD_Read_Generate: string;
     function GW_CMD_Write_Generate: string;
@@ -590,13 +591,15 @@ type
     procedure setupGwExecutable;
     function createNewIniFile: TIniFile;
     function getHXCApplication: String;
+    function getSamdiskApplication: String;
 
+    procedure updateGwCmdAction(const cmd: string;
+                                const param: string;
+                                const specifyDevice: boolean;
+                                const specifyDrive: boolean);
 
+    procedure updateCmdPreview(const cmdPreview: string);
 
-    procedure performCmdAction(const cmd: string;
-                               const param: string;
-                               const specifyDevice: boolean;
-                               const specifyDrive: boolean);
     procedure ShowOperationsDialog(const CommandLine, Title: string;
       const DisplayMode: OperationsDialog.TOperationDisplayMode);
 
@@ -611,6 +614,7 @@ function DirCheck(const dir:string; add_if_length_is_zero:boolean=false):string;
 function ExtractFileName_WithoutExt(const AFilename: string): string;
 function Trackset(aCommand: string;aCyl: string; aHeads: string; aSteps: string; aHSwap: boolean; aFlippy: string):string;
 function SelectFile(title, defaultDir, Filter: String): String;
+function getFormatExtension(const formatText: string): String;
 
 type
   TFormatOption = record
@@ -1122,21 +1126,54 @@ begin
   Result := hxcFile;
 end;
 
+function TFrmMain.getSamdiskApplication: String;
+var
+  sdDiskfile: String;
+begin
+  sdDiskfile := ReadIniString(INI, FLUX_INI_NAME, SAMDISK_APP_NAME, '');
+  if sdDiskfile = '' then
+     ConfirmAbort('Please define location of Samdisk Converter!')
+  else if FileExists(sdDiskfile) = false then
+   ConfirmAbort('Samdisk Converter not found!');
+
+  Result := sdDiskfile;
+end;
+
+
+
 procedure TFrmMain.btGoHXCClick(Sender: TObject);
 var
   hxcFile, hxcInputFile: String;
 begin
   hxcFile := getHXCApplication;
-  if UseReadHXCConversion and (hxcFile <> '') then
+  if UseReadHFEConversion and (hxcFile <> '') then
   begin
-     hxcInputFile := DirCheck(edReadDirDest.Text) +
-       BuildReadTargetFilename(BuildReadBaseFilename, cbReadFormat.Text);
+     hxcInputFile := DirCheck(edReadDirDest.Text) + GetReadFormatSelection;
 
      if FileExists(hxcInputFile) = false then
        if ConfirmAbort('HxC input file not found!' + chr(10) + hxcInputFile) then
          exit;
 
-     ShowOperationsDialog(EdGWCMD.Lines.Text, 'HxC Floppy Image Converter - Convert', OPERATIONS_OTHER);
+     ShowOperationsDialog(edCmdLinePreview.Lines.Text, 'HxC Floppy Image Converter - Convert', OPERATIONS_OTHER);
+     exit;
+   end;
+
+end;
+
+procedure TFrmMain.btGoSamdiskClick(Sender: TObject);
+var
+  sdFile, sdInputFile: String;
+begin
+  sdFile := getSamdiskApplication;
+  if UseReadSCPConversion and (sdFile <> '') then
+  begin
+     sdInputFile := DirCheck(edReadDirDest.Text) + GetReadFormatSelection;
+
+     if FileExists(sdInputFile) = false then
+       if ConfirmAbort('Samdisk input file not found!' + chr(10) + sdInputFile) then
+         exit;
+
+     ShowOperationsDialog(edCmdLinePreview.Lines.Text, 'SamDisk Converter - Convert', OPERATIONS_OTHER);
      exit;
    end;
 
@@ -1185,11 +1222,11 @@ end;
 // btGoClick()
 
 // This procedure does preliminary checks and brings up the GW modal window
-// EdGWCMD.Lines.Text already contains the constructed command line
+// edCmdLinePreview.Lines.Text already contains the constructed command line
 // Some parts of this sneakily add other parameters such as logging parameters
 // which are not displayed on the command line
 
-// In: EdGWCMD.Lines - Displayed GW command line
+// In: edCmdLinePreview.Lines - Displayed GW command line
 // Out: adjustedCmdLine - Final GW command line
 // Out: Caption - GW Modal window title bar
 
@@ -1230,7 +1267,7 @@ begin
             exit;
 
        // HFE bitrate
-       if (UseReadHXCConversion = false) and (cbReadFormat.Text = 'HFE (HxC Floppy Emulator)') then
+       if (UseReadHFEConversion = false) and (cbReadFormat.Text = 'HFE (HxC Floppy Emulator)') then
          if cbReadFormatoption.Text = '' then
           if ConfirmAbort('HFE: Requires bitrate to be specified (eg. filename.hfe::bitrate=500)',cbReadFormatoption) then
             exit;
@@ -1245,18 +1282,18 @@ begin
          logDirFile := LogParameters;
 
        if cbReadTplLogOutput.Checked = false then
-         ShowOperationsDialog(EdGWCMD.Lines.Text, GW_APP_NAME + ' - Read', OPERATIONS_READ);
+         ShowOperationsDialog(edCmdLinePreview.Lines.Text, GW_APP_NAME + ' - Read', OPERATIONS_READ);
 
        // Output with Log
        if cbReadTplLogOutput.Checked = true then
          begin
           if cbReadTplLogBoth.Checked = false then
            begin
-            ShowOperationsDialog(EdGWCMD.Lines.Text + ' 2> "' + logDirFile + '_output.txt"', GW_APP_NAME + ' - Read', OPERATIONS_READ);
+            ShowOperationsDialog(edCmdLinePreview.Lines.Text + ' 2> "' + logDirFile + '_output.txt"', GW_APP_NAME + ' - Read', OPERATIONS_READ);
            end;
           if cbReadTplLogBoth.Checked = true then
            begin
-            ShowOperationsDialog(EdGWCMD.Lines.Text + ' 2>> "' + logDirFile + '"', GW_APP_NAME + ' - Read', OPERATIONS_READ);
+            ShowOperationsDialog(edCmdLinePreview.Lines.Text + ' 2>> "' + logDirFile + '"', GW_APP_NAME + ' - Read', OPERATIONS_READ);
            end;
          end;
 
@@ -1281,7 +1318,7 @@ begin
         if ConfirmAbort('Source file not found!') then
          exit;
 
-      ShowOperationsDialog(EdGWCMD.Lines.Text, GW_APP_NAME + ' - Write', OPERATIONS_WRITE);
+      ShowOperationsDialog(edCmdLinePreview.Lines.Text, GW_APP_NAME + ' - Write', OPERATIONS_WRITE);
      end; // GW_PROP_PAGE_WRITE
 
    // Convert ####################################################################
@@ -1312,19 +1349,19 @@ begin
        if ConfirmAbort('Destination filename settings incomplete!') then
         exit;
 
-     ShowOperationsDialog(EdGWCMD.Lines.Text, GW_APP_NAME + ' - Convert', OPERATIONS_CONVERT);
+     ShowOperationsDialog(edCmdLinePreview.Lines.Text, GW_APP_NAME + ' - Convert', OPERATIONS_CONVERT);
     end;
 
    //Tools ####################################################################
    GW_PROP_PAGE_TOOLS:
      begin
-      ShowOperationsDialog(EdGWCMD.Lines.Text, GW_APP_NAME + ' - ' + btGo.Caption, OPERATIONS_OTHER);
+      ShowOperationsDialog(edCmdLinePreview.Lines.Text, GW_APP_NAME + ' - ' + btGo.Caption, OPERATIONS_OTHER);
      end;
 
    //Settings ####################################################################
    GW_PROP_PAGE_SETTINGS:
      begin
-      ShowOperationsDialog(EdGWCMD.Lines.Text, GW_APP_NAME + ' - ' + btGo.Caption, OPERATIONS_OTHER);
+      ShowOperationsDialog(edCmdLinePreview.Lines.Text, GW_APP_NAME + ' - ' + btGo.Caption, OPERATIONS_OTHER);
      end;
  end;
 end;
@@ -1429,7 +1466,6 @@ begin
  cbReadIncremental.Checked := false;
  cbReadNoOverwrite.Checked := false;
  cbReadConvFormat.Text := '';
- cbReadFormatOption.Text := '';
  cbReadFormat.Text := '';
  cbReadFormatOption.Text := '';
  cbReadFormatOptionHFEVer.Text:='';
@@ -3485,12 +3521,13 @@ begin
   close;
 end;
 
+// Get extension of format combo box
 function TFrmMain.GetReadFormatSelection(): String;
 begin
   Result := trim(leftStr(cbReadFormat.Text,3));
 end;
 
-function TFrmMain.UseReadHXCConversion: Boolean;
+function TFrmMain.UseReadHFEConversion: Boolean;
 begin
   Result := (pcActions.ActivePageIndex = GW_PROP_PAGE_READ) and
     (GetReadFormatSelection = COMBO_SELECTION_HFE) and
@@ -3507,13 +3544,14 @@ begin
 end;
 
 // Return the module for the currently selected disk type (if any)
-function TFrmMain.GetHFXModule: String;
+function TFrmMain.GetHXC_HFE_Module: String;
 begin
-  Result := GetHXCModuleForInterface(cbReadFormatOptionHFEInt.Text);
+  Result := GetHXCModuleForInterface
+  (StringReplace(cbReadFormatOptionHFEInt.Text, '::interface=','', []));
 end;
 
 // Return the module for the currently selected disk type (if any)
-function TFrmMain.GetSCPModule: String;
+function TFrmMain.GetHXC_SCP_Module: String;
 begin
   // Strip the prefix before calling
   Result := GetSCPModuleForDiskType
@@ -3537,21 +3575,29 @@ begin
   Result := filenameRead;
 end;
 
-function TFrmMain.BuildReadTargetFilename(const BaseName, FormatText: string): string;
+function getFormatExtension(const formatText: string): String;
+begin
+  Result := trim(leftStr(formatText,3));
+end;
+
+// Adds additional formatting to file formats (HFE, SCP for example)
+// Adds prefixes for RAW and SCP formats
+function TFrmMain.BuildReadTargetFilename(const BaseName, formatText: string): string;
 var
   formatCode: string;
 begin
-  formatCode := Trim(LeftStr(FormatText, 3));
+  formatCode := getFormatExtension(formatText);
+
 
   case formatCode of
     COMBO_SELECTION_EDS:
       Result := BaseName + '.' + LowerCase(Trim(LeftStr(FormatText, 4)));
     COMBO_SELECTION_HFE:
-      Result := BaseName + '.' + LowerCase(COMBO_SELECTION_HFE) + getHfeFormatOptions();
+      Result := BaseName + '.' + LowerCase(formatCode) + getHfeFormatOptions();
     COMBO_SELECTION_SCP:
-      Result := BaseName + '00.0.' + LowerCase(COMBO_SELECTION_SCP) + getScpFormatOptions();
+      Result := BaseName + '00.0.' + LowerCase(formatCode) + getScpFormatOptions();
     COMBO_SELECTION_RAW:
-      Result := BaseName + '00.0.' + LowerCase(COMBO_SELECTION_RAW);
+      Result := BaseName + '00.0.' + LowerCase(formatCode);
   else
     if FormatText <> '' then
       Result := BaseName + '.' + LowerCase(formatCode)
@@ -3560,10 +3606,16 @@ begin
   end;
 end;
 
+
+
+function TFrmMain.GetConvFormatSelection: String;
+begin
+  Result := getFormatExtension(cbConvFileFormat.Text);
+end;
+
 function TFrmMain.getScpFormatOptions(): String;
 begin
-  Result :=
-    cbReadFormatOption.Text;
+  Result := cbReadFormatOption.Text;
 end;
 
 function TFrmMain.getHfeFormatOptions(): String;
@@ -3573,12 +3625,6 @@ begin
     cbReadFormatOptionHFEVer.Text +
     cbReadFormatOptionHFEInt.Text +
     cbReadFormatOptionHFEEnc.Text;
-end;
-
-
-function TFrmMain.GetConvFormatSelection(): String;
-begin
-  Result := trim(leftStr(cbConvFileFormat.Text,3));
 end;
 
 procedure TFrmMain.setOptionsRead(optenabled: boolean);
@@ -3718,48 +3764,45 @@ begin
 
  if FormDisplayed then
   begin
-    edGWCMD.Lines.Clear;
     btGo.Default:=false;
 
-    if UseReadSCPConversion and (GetSCPModule <> '') then
-      Conv_SCP_CMD_Generate;
-    if UseReadHXCConversion and (GetHFXModule <> '') then
-      Conv_HXC_CMD_Generate
+    if UseReadSCPConversion and (GetHXC_SCP_Module <> '') then
+      Conv_HXC_CMD_Generate(GetHXC_SCP_Module);
+    if UseReadHFEConversion and (GetHXC_HFE_Module <> '') then
+      Conv_HXC_CMD_Generate(GetHXC_HFE_Module)
     else
       GW_CMD_Generate;
   end;
 end;
 
-procedure TFrmMain.Conv_HXC_CMD_Generate;
+// This shoudl work for HXC inputs SCP or HFE to DSK
+procedure TFrmMain.Conv_HXC_CMD_Generate(hxcModule: String);
 var
+  sourceFile, targetFile : String;
   param : String = '';
   app: String;
-  hxcModule : String = '';
 begin
 
- app := getHXCApplication;
+  app := getHXCApplication;
 
   if app = '' then
-   exit;
+    exit;
 
-//  if (GetReadFormatSelection = COMBO_SELECTION_HFE and
-//      cbReadConvFormat.Text <> '') then
-   hxcModule := GetHFXModule;
+  if hxcModule <> '' then
+   begin
+    btGo.Default:=true;
 
-   if hxcModule <> '' then
-    begin
-     btGo.Default:=true;
+    sourceFile := BuildReadBaseFilename + '.' + LowerCase(getFormatExtension(cbReadFormat.Text));
+    targetFile := BuildReadBaseFilename + '.' + LowerCase(getFormatExtension(cbReadConvFormat.Text));
 
-     param :=
-       ' -finput:"' + DirCheck(edReadDirDest.Text) + BuildReadBaseFilename + '"' +
-       ' -conv:' + hxcModule +
-       ' -foutput:"' + DirCheck(edReadDirDest.Text) + BuildReadBaseFilename + '"';
+    param :=
+      ' -finput:"' + DirCheck(edReadDirDest.Text) + sourceFile + '"' +
+      ' -conv:' + hxcModule +
+      ' -foutput:"' + DirCheck(edReadDirDest.Text) + targetFile + '"';
 
-     edGWCMD.SelText := edGWCMD.Text + param;
-     edGWCMD.SelStart := edGWCMD.GetTextLen;
-     edGWCMD.SelLength := 0;
-     performCmdAction(app, param, false, false);
-    end; // if
+    updateCmdPreview(app + param);
+
+   end; // if
 end;
 
 procedure TFrmMain.Conv_SCP_CMD_Generate;
@@ -3774,8 +3817,9 @@ begin
    if app = '' then
     exit;
 
-   if cbReadFormatOption.Text <> '' then
-     hxcModule := GetSCPModule;
+   //TODO
+//   if cbReadFormatOption.Text <> '' then
+//     hxcModule := GetHXC_SCPModule;
 
    if hxcModule <> '' then
     begin
@@ -3783,13 +3827,11 @@ begin
 
      param :=
        ' -finput:"' + DirCheck(edReadDirDest.Text) + BuildReadBaseFilename + '"' +
-       ' -conv:' + GetHFXModule +
+//       ' -conv:' + GetHXC_SCPModule +
        ' -foutput:"' + DirCheck(edReadDirDest.Text) + BuildReadBaseFilename + '"';
 
-     edGWCMD.SelText := edGWCMD.Text + ' -conv=' + hxcModule;
-     edGWCMD.SelStart := edGWCMD.GetTextLen;
-     edGWCMD.SelLength := 0;
-     performCmdAction(app, param, false, false);
+//TODO updateCmdPreview
+
     end; // if
 end;
 
@@ -3804,8 +3846,7 @@ begin
 
  if not checkGwExecutable then
   begin
-    edGWCMD.SelStart := edGWCMD.GetTextLen;
-    edGWCMD.SelLength := 0;
+    edCmdLinePreview.clear;
     exit;
   end;
 
@@ -3925,8 +3966,8 @@ begin
     end; // GW_PROP_PAGE_SETTINGS
   end; // case
 
- // Execute GW with cmd, param and where applicable device/drive
- performCmdAction(cmd, param, specifyDevice, specifyDrive);
+ // Update command preview with cmd, param and where applicable device/drive
+ updateGwCmdAction(cmd, param, specifyDevice, specifyDrive);
 
 end; // GW_CMD_Generate
 
@@ -4211,7 +4252,7 @@ end;
 
 
 // Other commands are in the Command Line window with parameters
-procedure TFrmMain.performCmdAction(const cmd: string;
+procedure TFrmMain.updateGwCmdAction(const cmd: string;
                                   const param: string;
                                   const specifyDevice: boolean;
                                   const specifyDrive: boolean);
@@ -4219,32 +4260,37 @@ var
   execCmdLine : String;
 begin
 
- // Get executable
- execCmdLine := '"' + edGWFile.Text + '"';
+  // Get GW executable
+  execCmdLine := '"' + edGWFile.Text + '"';
 
   // Append specific user parameters
- execCmdLine := execCmdLine + ' ' + cmd + ' '  + param;
+  execCmdLine := execCmdLine + ' ' + cmd + ' '  + param;
 
- // Append device and drive fields from form
- if (cbGWDevCOM.Text <> '') and (specifyDevice) then
- begin
-   // Adafruit doesn't use equals
-   if cbGWHW.Text = 'Adafruit RP2040' then
-     execCmdLine := execCmdLine + ' --device ' + cbGWDevCOM.Text
-   else
-     execCmdLine := execCmdLine + ' --device=' + cbGWDevCOM.Text;
- end;
+  // Append device and drive fields from form
+  if (cbGWDevCOM.Text <> '') and (specifyDevice) then
+  begin
+    // Adafruit doesn't use equals
+    if cbGWHW.Text = 'Adafruit RP2040' then
+      execCmdLine := execCmdLine + ' --device ' + cbGWDevCOM.Text
+    else
+      execCmdLine := execCmdLine + ' --device=' + cbGWDevCOM.Text;
+  end;
 
- if (cbGWDrive.Text <> '') and (specifyDrive) then
- begin
-   execCmdLine := execCmdLine + ' --drive=' + cbGWDrive.Text;
- end;
+  if (cbGWDrive.Text <> '') and (specifyDrive) then
+  begin
+    execCmdLine := execCmdLine + ' --drive=' + cbGWDrive.Text;
+  end;
 
- edGWCMD.SelStart := edGWCMD.GetTextLen;
- edGWCMD.SelLength := 0;
- edGWCMD.SelText := execCmdLine;
+  updateCmdPreview(execCmdLine);
 
 end;
+
+procedure TFrmMain.updateCmdPreview(const cmdPreview: string);
+begin
+  edCmdLinePreview.Text := cmdPreview;
+  edCmdLinePreview.SelStart := Length(cmdPreview);
+end;
+
 
 // Modal commands only have a single GW command with no parameters
 procedure TFrmMain.performModalCmdAction(const command: string);
