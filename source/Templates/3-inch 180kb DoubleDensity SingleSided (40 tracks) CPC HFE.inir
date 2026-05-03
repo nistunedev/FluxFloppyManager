@@ -14,7 +14,7 @@ Format=HFE (HxC Floppy Emulator)
 FormatOption=::bitrate=250
 FormatOptionHFEVer=::version=3
 FormatOptionHFEInt=::interface=CPC_DD
-FormatOptionHFEEnc=::encoding=ISOIBM_MFM
+Directory=D:\CPC
 DelaySelect=10
 DelayStep=12000
 DelaySettle=30

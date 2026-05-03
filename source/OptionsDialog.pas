@@ -38,6 +38,7 @@ type
     cbSaveGWDevCom: TCheckBox;
     cbSaveGWDrive: TCheckBox;
     cbCodepageCMD: TCheckBox;
+    edGWFile: TFileNameEdit;
     edHXCFile: TFileNameEdit;
     edSamdiskFile: TFileNameEdit;
     folderTemplates: TDirectoryEdit;
@@ -47,6 +48,7 @@ type
     GroupBox1: TGroupBox;
     lblHXC: TLabel;
     lblDiskdefs: TLabel;
+    lblGW: TLabel;
     lblSamdisk: TLabel;
     lblTemplates: TLabel;
     OK: TButton;
@@ -82,6 +84,7 @@ begin
  cbCodepageCMD.Checked := INI.ReadBool(FLUX_INI_NAME, INI_CODE_PAGE_CMD, true);
  fileDiskdefs.Text := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_DISKDEFS, '');
  folderTemplates.Directory := INI.ReadString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, '');
+ edGWFile.Text := INI.ReadString(FLUX_INI_NAME, INI_GW, '');
  edSamdiskFile.Text := INI.ReadString(FLUX_INI_NAME, SAMDISK_APP_NAME, '');
  edHXCFile.Text := INI.ReadString(FLUX_INI_NAME, HXC_APP_NAME, '');
 end;
@@ -93,6 +96,7 @@ begin
  INI.WriteBool(FLUX_INI_NAME, INI_CODE_PAGE_CMD, cbCodepageCMD.Checked);
  INI.WriteString(FLUX_INI_NAME, INI_FOLDER_DISKDEFS, fileDiskdefs.Text);
  INI.WriteString(FLUX_INI_NAME, INI_FOLDER_TEMPLATES, folderTemplates.Directory);
+ INI.WriteString(FLUX_INI_NAME, INI_GW, edGWFile.Text);
  INI.WriteString(FLUX_INI_NAME, SAMDISK_APP_NAME, edSamdiskFile.Text);
  INI.WriteString(FLUX_INI_NAME, HXC_APP_NAME, edHXCFile.Text);
  INI.UpdateFile;
