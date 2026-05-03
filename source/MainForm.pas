@@ -566,7 +566,7 @@ type
     function GetHXC_HFE_Module: String;
     function GetHXC_SCP_Module: String;
     procedure UpdateReadFormatSelection;
-    procedure Conv_SCP_CMD_Generate;
+    procedure Conv_Samdisk_CMD_Generate(options: String);
     procedure Conv_HXC_CMD_Generate(hxcModule: String);
     procedure GW_CMD_Generate;
     function GW_CMD_Read_Generate: string;
@@ -592,6 +592,7 @@ type
     function createNewIniFile: TIniFile;
     function getHXCApplication: String;
     function getSamdiskApplication: String;
+    function getSamdiskOptions: String;
 
     procedure updateGwCmdAction(const cmd: string;
                                 const param: string;
@@ -3292,7 +3293,9 @@ function GetHXCModuleForInterface(const SelInterface: string): string;
 var
   i: Integer;
 begin
-  Result := '';
+  if SelInterface = '' then
+    exit('');
+
   for i := 0 to High(HXCFormatModules) do
   begin
     if SameText(HXCFormatModules[i].HFEInterface, SelInterface) then
@@ -3767,13 +3770,60 @@ begin
     btGo.Default:=false;
 
     if UseReadSCPConversion and (GetHXC_SCP_Module <> '') then
-      Conv_HXC_CMD_Generate(GetHXC_SCP_Module);
-    if UseReadHFEConversion and (GetHXC_HFE_Module <> '') then
+      Conv_HXC_CMD_Generate(GetHXC_SCP_Module)
+    else if UseReadHFEConversion and (GetHXC_HFE_Module <> '') then
       Conv_HXC_CMD_Generate(GetHXC_HFE_Module)
+    else if UseReadHFEConversion then
+      Conv_Samdisk_CMD_Generate(GetSamdiskOptions)
     else
       GW_CMD_Generate;
   end;
 end;
+
+function GetRightPart(const s: string): string;
+var
+  p: Integer;
+begin
+  p := Pos('-', s);
+  if p > 0 then
+    Result := Copy(s, p + 1, MaxInt)
+  else
+    Result := s;
+end;
+
+
+// Pull the samdisk options from the Read form
+function TFrmMain.GetSamdiskOptions: string;
+var
+  options: string;
+begin
+
+  options := '';
+   // Cylinders -c<N> or range <A-B>
+  if cbReadTplCyls.text <> '' then
+    options := options + '-c' + cbReadTplCyls.text + ' ';
+
+  // Head -h<N=0 or 1>
+  if cbReadTplHeads.text <> '' then
+    options := options + '-h' + GetRightPart(cbReadTplHeads.text) + ' ';
+
+  // Double step  -d(only handles extra step)
+  if cbReadTplSteps.text = '2' then
+     options := options + '-d ';
+
+  // Retries -r<N>
+  if cbReadTplRetries.text <> '' then
+     options := options + '-r' + cbReadTplRetries.text + ' ';
+
+  // Seek rescans -R<N>
+  // cbReadTplSeekRetries.text
+  if cbReadTplRevs.text <> '' then
+     options := options + '-R' + cbReadTplRevs.text + ' ';
+
+  Result := options;
+
+end;
+
 
 // This shoudl work for HXC inputs SCP or HFE to DSK
 procedure TFrmMain.Conv_HXC_CMD_Generate(hxcModule: String);
@@ -3805,34 +3855,31 @@ begin
    end; // if
 end;
 
-procedure TFrmMain.Conv_SCP_CMD_Generate;
+procedure TFrmMain.Conv_Samdisk_CMD_Generate(options: String);
 var
+  sourceFile, targetFile : String;
   app: String;
   param : String = '';
-  hxcModule : String = '';
 begin
 
-   app := getHXCApplication;
+   app := getSamdiskApplication;
 
    if app = '' then
     exit;
 
-   //TODO
-//   if cbReadFormatOption.Text <> '' then
-//     hxcModule := GetHXC_SCPModule;
+   btGo.Default:=true;
 
-   if hxcModule <> '' then
-    begin
-     btGo.Default:=true;
+   sourceFile := BuildReadBaseFilename + '.' + LowerCase(getFormatExtension(cbReadFormat.Text));
+   targetFile := BuildReadBaseFilename + '.' + LowerCase(getFormatExtension(cbReadConvFormat.Text));
 
-     param :=
-       ' -finput:"' + DirCheck(edReadDirDest.Text) + BuildReadBaseFilename + '"' +
-//       ' -conv:' + GetHXC_SCPModule +
-       ' -foutput:"' + DirCheck(edReadDirDest.Text) + BuildReadBaseFilename + '"';
+   param :=
+        'copy ' +
+        ' "' + DirCheck(edReadDirDest.Text) + sourceFile + '"' +
+        ' "' + DirCheck(edReadDirDest.Text) + targetFile + '"' +
+        ' ' + options;
 
-//TODO updateCmdPreview
+   updateCmdPreview(app + param)
 
-    end; // if
 end;
 
 
