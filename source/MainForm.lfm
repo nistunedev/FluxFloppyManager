@@ -1,10 +1,10 @@
 object FrmMain: TFrmMain
   Left = 950
-  Height = 1138
+  Height = 853
   Top = 84
   Width = 1504
   Caption = 'Flux Floppy Manager'
-  ClientHeight = 1138
+  ClientHeight = 853
   ClientWidth = 1504
   DesignTimePPI = 120
   Font.Height = -16
@@ -18,7 +18,7 @@ object FrmMain: TFrmMain
   object pnCmd: TPanel
     Left = 0
     Height = 156
-    Top = 982
+    Top = 697
     Width = 1504
     Align = alBottom
     BevelOuter = bvNone
@@ -260,7 +260,7 @@ object FrmMain: TFrmMain
   end
   object pnMain: TPanel
     Left = 0
-    Height = 914
+    Height = 629
     Top = 68
     Width = 1504
     Align = alClient
@@ -270,7 +270,7 @@ object FrmMain: TFrmMain
     TabOrder = 2
     object pcActions: TPageControl
       Left = 6
-      Height = 912
+      Height = 627
       Top = 1
       Width = 1497
       ActivePage = tbWrite
@@ -282,18 +282,18 @@ object FrmMain: TFrmMain
       object tbRead: TTabSheet
         AutoSize = True
         Caption = 'Read'
-        ClientHeight = 878
+        ClientHeight = 593
         ClientWidth = 1489
         object sbRead: TScrollBox
           Left = 0
-          Height = 878
+          Height = 593
           Top = 0
           Width = 1489
           HorzScrollBar.Page = 1238
           VertScrollBar.Page = 711
           Align = alClient
           BorderStyle = bsNone
-          ClientHeight = 878
+          ClientHeight = 593
           ClientWidth = 1489
           TabOrder = 0
           object gbReadTpl: TGroupBox
@@ -1182,11 +1182,11 @@ object FrmMain: TFrmMain
       object tbWrite: TTabSheet
         AutoSize = True
         Caption = 'Write'
-        ClientHeight = 878
+        ClientHeight = 593
         ClientWidth = 1489
         object sbWrite: TScrollBox
           Left = 0
-          Height = 878
+          Height = 593
           Top = 0
           Width = 1489
           HorzScrollBar.Page = 1112
@@ -1194,7 +1194,7 @@ object FrmMain: TFrmMain
           Align = alClient
           AutoSize = True
           BorderStyle = bsNone
-          ClientHeight = 878
+          ClientHeight = 593
           ClientWidth = 1489
           TabOrder = 0
           object Memo1: TMemo
@@ -1826,18 +1826,18 @@ object FrmMain: TFrmMain
       object tbConv: TTabSheet
         AutoSize = True
         Caption = 'Convert'
-        ClientHeight = 878
+        ClientHeight = 593
         ClientWidth = 1489
         object sbConv: TScrollBox
           Left = 0
-          Height = 878
+          Height = 593
           Top = 0
           Width = 1489
           HorzScrollBar.Page = 1184
           VertScrollBar.Page = 745
           Align = alClient
           BorderStyle = bsNone
-          ClientHeight = 878
+          ClientHeight = 593
           ClientWidth = 1489
           TabOrder = 0
           object gbConvSrc: TGroupBox
@@ -2642,7 +2642,7 @@ object FrmMain: TFrmMain
       end
       object tbTools: TTabSheet
         Caption = 'Tools'
-        ClientHeight = 878
+        ClientHeight = 593
         ClientWidth = 1489
         object grbToolsOptions: TGroupBox
           Left = 0
@@ -3108,7 +3108,7 @@ object FrmMain: TFrmMain
       end
       object tbSettings: TTabSheet
         Caption = 'Settings'
-        ClientHeight = 878
+        ClientHeight = 593
         ClientWidth = 1489
         object grpSetDelays: TGroupBox
           Left = 0
